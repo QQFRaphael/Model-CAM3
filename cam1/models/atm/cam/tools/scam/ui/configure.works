@@ -1,0 +1,459 @@
+#!/bin/ksh
+#
+# $Id: configure.works,v 1.1.6.1 2004/05/18 20:51:51 jet Exp $
+#
+CCM_VERS=3
+NETCDF_HEADER=netcdf.h
+LIBNETCDF=libnetcdf.a
+
+path=`echo $PATH | tr ":" " "`
+# create list of directories to search for libraries
+search_path="$path $NCARG_ROOT $HOME .. ../.. ../../.. ../../../.."
+
+# name of the file to write output to
+CONFIG_OUT=config.out
+CONFIG_BAK=${CONFIG_OUT}~
+
+#
+# trap interrupts (including successful completion) to clean up and
+#  exit gracefully with error status
+# 
+ 
+trap "rm -f ; if [ -f $CONFIG_BAK ]; then mv -f $CONFIG_BAK $CONFIG_OUT; fi; exit 1" 2 3 15
+trap "rm -f ; exit 0" 0
+
+#
+#  save old config file
+#
+if [ -f $CONFIG_OUT ]; then
+    mv -f $CONFIG_OUT $CONFIG_BAK
+fi
+
+
+#
+# determine how to echo without a newline
+#
+if echo "aaa\c" | grep "c" 2>&1 > /dev/null; then
+    echo_nnl="echo -n"
+    nnl=""
+else
+    echo_nnl="echo"
+    nnl="\c"
+fi
+
+
+#############################################################
+# Check that the environment variable QTDIR is set, and that 
+#  the library exists
+#############################################################
+qt_libs="qt qt-mt"
+
+if [ ! "$QTDIR" ] ; then
+    echo;echo "ERROR: Environment variable QTDIR must be set! \nSee the INSTALL file that came with the QT distribution."
+    exit 1
+else
+    for qtlib in $qt_libs; do 
+	for i in $QTDIR/lib; do
+	    if [ -a $i/lib${qtlib}.a ]; then
+		QTLIB="-L $QTDIR/lib -l${qtlib}"
+		echo "Found QT LIBRARY $i/lib${qtlib}.a"
+		break 2
+	    fi
+	done
+    done
+fi
+
+if [ ! "$QTLIB" ]; then
+    for qtlib in $qt_libs; do 
+	for i in $QTDIR/lib; do
+	    if [ -a "$i/lib${qtlib}.so" ] ; then
+		QTLIB="-L $QTDIR/lib -l${qtlib}"
+		echo "Only found QT Dynamic lib $i/lib${qtlib}.so"
+		echo "Can not linkin qt statically"
+		break 2
+	    fi
+	done
+    done
+fi
+if [ ! "$QTLIB" ]; then
+    echo "Couldn't find the QT Libraries in $QTDIR/lib! (checked for $qt_libs)"
+    exit
+fi
+
+##########################################################################
+# Check that the necessary c++ compiler and libraries are present
+##########################################################################
+
+#
+# we specifically need to find the non-shared version of the c++ standard library
+#  so that we don't have any references to the shared c++ standard library
+#  which probably won't be installed on many of the systems 
+#
+
+CXX="g++"
+CXX_STANDARD_LIB="libstdc++.a"
+CC="gcc"
+
+for gccbindir in $path; do
+    if [ -x $gccbindir/$CXX ] ; then
+	foundCXX=1
+	break 
+    fi
+done
+
+if [ ! "$foundCXX" ]; then
+    echo "Couldn't find $CXX in your path!"
+    exit 1
+fi
+
+stdlibdir=`$CXX -print-file-name=libstdc++.a | sed s:/libstdc++.a::`
+
+if [ ! -f $stdlibdir/libstdc++.a ]; then
+    echo "Couldn't find $stdlibdir/libstdc++.a"
+    while [ 1 ]; do
+	$echo_nnl "Enter directory path to libstdc++.a : $nnl"
+	read stdlibdir
+	if [ ! -x $stdlibdir/libstdc++.a ]; then
+	    echo "$stdlibdir/libstdc++.a does not exist!"
+	    continue
+	else
+	    break
+	fi
+    done
+fi
+
+CXX_LIBS="-L$stdlibdir -lstdc++"
+
+######################################################################
+# determine the system type and set library options accordingly
+######################################################################
+
+SYSTEM=`uname`
+case "$SYSTEM" in 
+"SunOS")
+    CPPFLAGS="-DSUN"
+    RPCGEN='rpcgen -C'
+    SYS_LIBS="-L/opt/SUNWspro/lib -lF77 -lX11 -lsunmath -lsocket -lnsl -lm -lXext -lSM -lICE -ldl -lfsu -lGL -lpthread "
+    XTRA_LFLAGS="-R/opt/SUNWspro/lib -R/opt/local/lib -R/usr/openwin/lib"
+    SYSTEM="Solaris"
+    ;;
+"IRIX64")
+    CPPFLAGS="-DIRIX64"
+    SYS_LIBS="-lftn -lX11 -lm -lpthread -lICE -lSM -lXext -lGL"
+    RPCGEN="rpcgen"
+#    XTRA_LFLAGS="-mabi=64"
+#    CXXFLAGS="$CXXFLAGS -mabi=64"
+    ;;
+"Linux")
+    if [ ! "$PGI" ] ; then
+	echo "You must have the Portland Group pgf77 compiler installed and the environment variable \"PGI\" set to use NCAR graphics. Proceeding to build without NCAR graphics"
+	SYS_LIBS="-L/usr/X11R6/lib -lX11 -lm  -lXft -lXinerama -lSM -lICE"   
+    else
+	SYS_LIBS="-L$PGI/linux86/lib  -lpgftnrtl -lpgc -L/usr/X11R6/lib -lX11 -lm -lXext -lg2c  -lXrender -lXinerama -lICE -lSM -ldl"   
+    fi
+    RPCGEN="rpcgen"
+    CPPFLAGS="-DLINUX"
+    ;;
+"AIX")
+    SYS_LIBS="-lxlf -lxlf90 -lX11 -lm "
+    RPCGEN="rpcgen"
+    CPPFLAGS="-DRS6K"
+    ;;
+"OSF1")
+    RPCGEN="rpcgen"
+    CPPFLAGS="-DOSF1 -D_POSIX_SOURCE"
+    SYS_LIBS="-lfor -lots -L/usr/X11R6/lib -lX11 -lm"
+    ;;
+"HP-UX")
+    RPCGEN="rpcgen"
+    CPPFLAGS="-DHP"
+    SYS_LIBS="-L/opt/fortran/lib -lU77 -lf -lX11 -lm"
+    ;;
+*)
+    echo "**** UNSUPPORTED SYSTEM: $SYSTEM ****"
+    exit 1
+    ;;
+esac
+
+#
+#  GCC flags that will be used on all platforms
+#	
+CXXFLAGS="-Wall"
+DEBUG_FLAG="-g" 
+    
+# optimization flags: -DNDEBUG turns off any assert macros, as well
+#   as some extra debug output in error/warning messages
+OPTMZ_FLAG="-O2 -DNDEBUG"
+
+
+#######################################################################
+#
+# Get input on configuration options
+#
+#######################################################################
+echo
+while [ 1 ]; do
+    $echo_nnl "Generate optimized or debug code? (o/d) [o]: $nnl"
+    read option
+    case $option in
+	o | O | "" )
+	    CXXFLAGS="$CXXFLAGS $OPTMZ_FLAG"
+	    break
+	    ;;
+	d | D )
+	    CXXFLAGS="$CXXFLAGS $DEBUG_FLAG"
+	    break
+	    ;;
+	* )
+	    echo "Don't understand $option, please type o or d"
+	    ;;
+    esac
+done
+
+echo
+while [ 1 ]; do
+   $echo_nnl "Build CCM3 version 6 or 10? [10] : ${nnl}"  
+   read option
+   case "$option" in
+   "" | 3.10 | 10 )
+	CCM_MINOR_VERS=10
+	INIT_DIR=scm_init.new
+        echo "Building GUI for version 3.10"  
+	break 
+	;;
+    3.6 | 6 )
+	CCM_MINOR_VERS=6
+	INIT_DIR=scm_init_3.6
+	break 
+	;;
+        * )
+        ;;
+    esac
+done
+CPPFLAGS="$CPPFLAGS -DCCM_VERS=$CCM_VERS -DCCM_MINOR_VERS=$CCM_MINOR_VERS"
+while [ 1 ]; do
+    $echo_nnl "Save output in float or double precision? (f/d) [d]: $nnl"
+    read option
+    case $option in
+	f | F )
+	    CPPFLAGS="$CPPFLAGS -DREAL_TYPE=float"
+#	    RPCGEN="$RPCGEN -DREAL_TYPE=float"
+	    break
+	    ;;
+	d | D | "" )
+	    CPPFLAGS="$CPPFLAGS -DREAL_TYPE=double"
+#	    RPCGEN="$RPCGEN -DREAL_TYPE=double"
+	    break
+	    ;;
+	* )
+	    echo "Don't understand $option, please type 'f' or 'd'"
+	    ;;
+    esac
+done
+
+###################################################################
+#  try to find netCDF header and library
+###################################################################
+
+#
+#  check_nc_root: function that checks for correct version of netcdf
+#  - looks for the string NC_MAX_VAR_DIMS which is only present
+#    in version 3 or later of the header file
+#
+check_nc_root() 
+{
+    [ -r $NETCDF_ROOT/include/$NETCDF_HEADER ] && \
+    [ -r $NETCDF_ROOT/lib/$NETCDF_LIB ] && \
+    /bin/grep -i NC_MAX_VAR_DIMS ${NETCDF_ROOT}/include/$NETCDF_HEADER  2>&1 > /dev/null 
+}
+
+check_nc_lib() 
+{
+    [ -r $NETCDF_LIB/$LIBNETCDF ]
+}
+
+check_nc_inc() 
+{
+    [ -r $NETCDF_INC/$NETCDF_HEADER ] && \
+    /bin/grep -i NC_MAX_VAR_DIMS ${NETCDF_INC}/$NETCDF_HEADER  2>&1 > /dev/null 
+}
+
+
+
+echo; echo "Searching for netCDF library and header... "; echo
+
+
+for i in $search_path; do
+    for dir in $i $i/netcdf*; do
+	[ -d $dir ] || continue # only look at directories
+	NETCDF_ROOT=`(cd $dir;pwd)` # get absolute path
+	check_nc_root || {
+	    NETCDF_ROOT=""
+	    continue
+	}
+	$echo_nnl "Use header and library in $NETCDF_ROOT/include and $NETCDF_ROOT/lib ? [y] : ${nnl}"
+	read OK
+	case $OK in 
+	"" | [yY] | yes | YES )  
+            NETCDF_LIB=$NETCDF_ROOT/lib
+            NETCDF_INC=$NETCDF_ROOT/include
+	    break 2  # found it
+	    ;;
+        *)
+            NETCDF_ROOT=""
+            NETCDF_LIB=""
+            NETCDF_INC=""
+	    ;;
+        esac 
+    done
+done
+
+if [ ! "$NETCDF_ROOT" ]; then
+    echo "Couldn't find valid netCDF library and header files." ; echo
+    while [ 1 ]; do 
+	$echo_nnl "Enter path to netCDF lib directory: $nnl"
+	read NETCDF_LIB
+	{ 
+	    check_nc_lib && break 
+	} || {
+      	    echo "Invalid choice: netCDF not present or wrong version !"
+     	    NETCDF_LIB=""
+      	    continue
+	}
+    done
+    while [ 1 ]; do 
+	$echo_nnl "Enter path to netCDF include directory: $nnl"
+	read NETCDF_INC
+	{ 
+	    check_nc_inc && break 
+	} || {
+      	    echo "Invalid choice: netCDF not present or wrong version !"
+     	    NETCDF_INC=""
+      	    continue
+	}
+    done
+fi
+
+########################################################################
+# Try to find NCAR graphics, determine which libraries are present
+########################################################################
+ncarg_header=ncargC.h
+#
+#  check_ncarg_root: function that finds which ncarg libs are present
+#                    (newer versions have fewer libraries)
+#
+
+check_ncarg_root() 
+{
+    NCARG_LIBS=""
+    for i in ncarg_gksC ncargC ncarg ncarg_gks ncarg_c ncarg_loc
+    do
+	if [ -f ${NCARG_ROOT}/lib/lib${i}.a ]; then
+	    NCARG_LIBS="$NCARG_LIBS -l$i"
+	fi
+    done
+    [ -r ${NCARG_ROOT}/include/ncarg/$NCARG_HEADER ] && [ "$NCARG_LIBS" ] 
+}
+
+
+echo; echo "Searching for NCAR graphics libraries and header... ";echo
+
+
+for i in $search_path; do
+    for dir in $i $i/ncarg*; do
+	[ -d $dir ] || continue # only look at directories
+	NCARG_ROOT=`(cd $dir; pwd)` # get absolute path
+	check_ncarg_root || {
+	    NCARG_ROOT=""
+	    continue
+	}
+	$echo_nnl "Use header and libraries in ${NCARG_ROOT}/include and ${NCARG_ROOT}/lib  [y] : ${nnl}"
+	read OK
+	case $OK in 
+	"" | [yY] | yes | YES )  
+	    break 2 # found it
+	    ;;
+	*) # no
+	    NCARG_ROOT=""
+	    ;;
+	esac
+    done
+done
+    
+if [ ! "$NCARG_ROOT" ]; then
+    $echo_nnl "Couldn't find valid NCARG_ROOT directory\nEnter path to NCAR graphics root directory, or just press <return> to build SCCM without post-plotting capabilities : ${nnl}"
+    while [ 1 ]; do 
+	read NCARG_ROOT
+	if [ ! "$NCARG_ROOT" ]; then
+	    CPPFLAGS="$CPPFLAGS -DNO_NCARG"
+	    break
+	else
+	{ 
+	    check_ncarg_root && break
+	} || {
+	    echo "Invalid choice: NCAR graphics libraries or headers not present!"
+	}
+	fi
+    done
+fi
+  
+TOP_DIR=`(cd ..; pwd)`
+UI_DIR="$TOP_DIR/ui"
+INIT_DIR="$TOP_DIR/$INIT_DIR"
+INCLUDES="-I./ -I$UI_DIR -I$INIT_DIR -I$NETCDF_INC -I$QTDIR/include" 
+INCLUDES="-I$UI_DIR -I$INIT_DIR -I$NETCDF_INC -I$QTDIR/include" 
+
+if [ "$NCARG_ROOT" ]; then
+     CPPFLAGS="$CPPFLAGS -DNeedFuncProto"
+     INCLUDES="$INCLUDES -I$NCARG_ROOT/include"
+     NCARG_LIBS="-L$NCARG_ROOT/lib $NCARG_LIBS"
+fi
+
+  
+#######################################################
+#  write the configuration file
+#######################################################
+
+cat << EOF > $CONFIG_OUT
+
+# SCCM CONFIG generated `date` 
+INIT_DIR=        $INIT_DIR
+#
+#   compiler settings
+#
+SYSTEM =         $SYSTEM
+CC =             $CC
+CXX =            $CXX
+CXXFLAGS =       $CXXFLAGS
+CXX_LIBS =       $CXX_LIBS
+XTRA_LFLAGS =    $XTRA_LFLAGS
+CPPFLAGS =       $CPPFLAGS 
+RPCGEN   =       $RPCGEN
+SYS_LIBS =       $SYS_LIBS
+INCLUDES =       $INCLUDES
+UI_DIR   =       $UI_DIR
+INIT_DIR =       $INIT_DIR
+#
+#  netcdf and ncarg libraries
+#
+NETCDF_ROOT =    $NETCDF_ROOT
+NETCDF_LIB =    $NETCDF_LIB
+NETCDF_INC =    $NETCDF_INC
+NCARG_LIBS =     $NCARG_LIBS
+QT_LIBS =     $QTLIB
+CCM_VERS = $CCM_VERS
+CCM_MINOR_VERS = $CCM_MINOR_VERS
+EOF
+
+echo
+echo "****************************"
+echo
+echo "Configuration was successful."
+echo "Output is in \"$CONFIG_OUT\""
+echo
+
+exit
+
+
+
+

@@ -1,0 +1,8 @@
+usage: nctrans [-v varname,units,mult[,varname2,units,mult]] [-t timeunits] [-a] [-o <outputfile>] inputfile
+
+   -v: variables to rescale - name, new units, multiplication factor 
+   -t: convert time units; can be either seconds, hours, or days   -a: rescale all variables according to attributes plot_units, plot_multiplier contained in input dataset
+  -o: name of output file
+Example:
+  nctrans -v lev,mb,.01,divq,gm/kg/day,8.64e7 -t days -o foo.nc arm0795.nc
+This will convert the "lev" variable from Pascals to Millibars,the "divq" variable from kg/kg/sec to gm/kg/day, and the time/tsec variable from seconds to days, putting the output in "foo.nc", using "arm0795.nc" as the input.

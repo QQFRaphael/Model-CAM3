@@ -1,0 +1,33 @@
+#!/usr/bin/env csh
+
+if ( $1 == "" || $2 == "" ) then
+   echo "crm needs two arguments"   
+   goto usage
+endif 
+
+if ! ( -r $1 ) then
+   echo Could not read input file $1
+   goto usage
+endif	
+
+touch $2
+if ! ( -w $2 ) then
+   echo Could not write output file $2
+   goto usage
+endif	
+
+if ! ( -x ./scam ) then
+   echo Could not find executable file ./scam
+   goto usage
+endif	
+
+./scam -ng -i $1 -c $2 && echo Your CRM output is in $2.
+
+exit 0
+
+usage:
+  echo " "
+  echo "Usage: crm <inputfile> <outputfile>"
+  echo "  <inputfile> should be a CRM-style input file containg the same"
+  echo "  number of levels for which SCAM was compiled."
+  echo "  scam must be compiled before crm can be executed."

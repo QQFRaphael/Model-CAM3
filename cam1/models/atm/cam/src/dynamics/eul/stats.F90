@@ -1,0 +1,82 @@
+#include <misc.h>
+#include <params.h>
+subroutine stats(lat     ,pint    ,pdel    ,pstar   , &
+                 vort    ,div     ,t       ,q       ,nlon    )
+!----------------------------------------------------------------------- 
+! 
+! Purpose: 
+! Accumulation of diagnostic statistics for 1 latitude.
+! 
+! Method: 
+! 
+! Author: 
+! Original version:  J. Rosinski
+! Standardized:      J. Rosinski, June 1992
+! Reviewed:          D. Williamson, J. Hack, August 1992
+! Reviewed:          D. Williamson, March 1996
+!
+!-----------------------------------------------------------------------
+!
+! $Id: stats.F90,v 1.4.28.2 2004/09/23 17:29:30 erik Exp $
+! $Author: erik $
+!
+   use shr_kind_mod, only: r8 => shr_kind_r8
+   use pmgrid,       only: plon, plev, plevp, plat
+   use pspect
+   use commap
+
+   implicit none
+
+#include <comsta.h>
+!
+! Input arguments
+!
+   integer, intent(in) :: lat              ! latitude index (S->N)
+   integer, intent(in) :: nlon
+
+   real(r8), intent(in) :: pint(plon,plevp)   ! pressure at model interfaces
+   real(r8), intent(in) :: pdel(plon,plev)    ! pdel(k) = pint(k+1) - pint(k)
+   real(r8), intent(in) :: pstar(plon)        ! ps + psr (surface pressure)
+   real(r8), intent(in) :: vort(plon,plev)    ! vorticity
+   real(r8), intent(in) :: div(plon,plev)     ! divergence
+   real(r8), intent(in) :: t(plon,plev)       ! temperature
+   real(r8), intent(in) :: q(plon,plev)       ! moisture
+!
+!---------------------------Local workspace-----------------------------
+!
+   real(r8) prat                ! pdel(i,k)/pint(i,plevp)
+
+   integer i,k              ! longitude, level indices
+!
+!-----------------------------------------------------------------------
+!
+! Compute statistics for current latitude line
+!
+   rmsz (lat) = 0.
+   rmsd (lat) = 0.
+   rmst (lat) = 0.
+   stq  (lat) = 0.
+   psurf(lat) = 0.
+
+   do i=1,nlon
+      psurf(lat) = psurf(lat) + pstar(i)
+   end do
+
+   do k=1,plev
+      do i=1,nlon
+         prat = pdel(i,k)/pint(i,plevp)
+         rmsz(lat) = rmsz(lat) + vort(i,k)*vort(i,k)*prat
+         rmsd(lat) = rmsd(lat) + div(i,k)*div(i,k)*prat
+         rmst(lat) = rmst(lat) + (t(i,k)**2)*prat
+         stq(lat) = stq(lat) + q(i,k)*pdel(i,k)
+      end do
+   end do
+
+   psurf(lat)= w(lat)*psurf(lat)/nlon
+   rmsz(lat) = w(lat)*rmsz(lat)/nlon
+   rmsd(lat) = w(lat)*rmsd(lat)/nlon
+   rmst(lat) = w(lat)*rmst(lat)/nlon
+   stq (lat) = w(lat)*stq(lat)/nlon
+! 
+   return
+end subroutine stats

@@ -1,0 +1,106 @@
+LINUX   built on intrepid
+
+        used /home/jet/ncarg-4.3.0 for the ncarg library.
+
+	used standard g++ to build qt
+	configure -prefix /fs/cgd/data0/jet/install/LINUX/qt-3.1.1 \
+	-no-thread -static -disable-opengl -no-xkb -no-xrender \
+	-no-xinerama -no-sm -no-nis
+	
+	the install process stripped the library of symbols - not sure
+	why.  Had to copy the build directory /lib/* to 
+	/fs/cgd/data0/jet/install/LINUX/qt-3.1.1/lib after install 
+	to get correct libraries.
+        
+        used /fs/cgd/data0/jet/install/LINUX/ncarg-4.3.1
+        used /fs/cgd/data0/jet/install/LINUX/netcdf-3.5.0
+
+IBM
+        qt built on baby blue using /fs/cgd/data0/jet/install/AIX/bin/gcc
+        
+        configure -prefix /fs/cgd/data0/jet/install/AIX/qt-3.1.1 -static \
+	-no-sm -disable-opengl -platform aix-g++
+
+	Added libxlopt to syslibs for unresolved ncarg external.
+
+	Gui built with lib32/r4i4 version of ncar graphics
+
+	SCAM linked with lib32/r4i4 version of ncar graphics
+
+        NCARG_ROOT set to /fs/cgd/data0/jet/install/AIX32
+
+IRIX
+	built gcc-3.2.1 installed in /fs/cgd/data0/jet/install/IRIX32/gcc-3.2.1
+
+	built qtlib with /fs/cgd/data0/jet/install/IRIX32/gcc-3.2.1/bin/gcc/g++
+	configure -prefix /fs/cgd/data0/jet/install/IRIX32/qt-3.1.1 \
+	-static -no-thread -disable-opengl -no-thread -no-sm -platform irix-g++
+
+        setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:/fs/cgd/data0/jet/install/IRIX32/gcc-3.2.1/lib  
+	(need new libstd++ for 	uic and moc)
+
+        setenv QTDIR /fs/cgd/data0/jet/install/IRIX32/qt-3.1.1
+	setenv PATH /fs/cgd/data0/jet/install/IRIX32/gcc-3.2.1/bin:/fs/cgd/data0/jet/install/IRIX32/qt-3.1.1:${PATH}
+
+SUN
+        built qt using/contrib/gcc-3.1/bin/g++ 
+	configure -platform solaris-g++ -no-sm -no-nis -static \
+	-prefix /fs/cgd/data0/jet/install/SUN/qt-3.1.1 -disable-opengl -fast
+
+        need add  ${QTDIR}/lib to LD_LIBRARY_PATH to get qt uic to run since
+        qt built with contrib/gcc-3.1/bin/g++
+
+        built SUN version of ncarg using g77. Installed in 
+	/fs/cgd/data0/jet/install/SUN/ncarg-4.3.1 for ncarg
+        /fs/cgd/data0/jet/install/SUN/netcdf-3.5.0/ for netcdf
+
+        Here is Sun4Solaris config file for ncarg mucked with linux version
+        still didn't build every thing but was able to compile with just
+        gnu compilers.
+
+/*
+ *      $Id: Platform.Notes,v 1.1.6.2 2005/02/09 23:33:46 mvr Exp $
+ */
+/*
+ *  File:       LINUX
+ *
+ *  Author:     Tim Fredrick
+ *          National Center for Atmospheric Research
+ *          PO 3000, Boulder, Colorado
+ *
+ *  Date:       Wed Oct 25 14:56:41 MDT 1995
+ *
+ *  Description:    This file contains all the directives needed to
+ *          tell ymake how LINUX is different from a
+ *          default setup.
+ */
+#define HdfDefines  -DLINUX
+#define StdDefines  -DSYSV -D_POSIX_SOURCE -D_XOPEN_SOURCE
+#define Cstatic
+#define Cdynamic
+#define CppCommand '/usr/bin/cpp -traditional'
+#define CCompiler   gcc
+#define FCompiler   g77
+#define CtoFLibraries   -lg2c -lm -lfrtbegin
+#define CcOptions      -ansi
+#define XToolLibrary    -lXt -lSM -lICE
+#define BuildShared NO
+#define XLibrary -lXpm -lX11 -lXext
+
+#define ArchRecLibSearch    -L/usr/X11R6/lib
+#define ArchRecIncSearch    -I/usr/X11R6/include
+
+FC = $(F77)
+
+/*************** Redefine Macros from Rules ********************************/
+
+/*
+ * Macro:   MakeDir
+ *
+ * Description: This rule creates a directory - if a parent dir doesn't exist
+ *      it attempts to create it.
+ */
+#ifndef MakeDir
+#define MakeDir(dir)    @if (test ! -d dir); then ($(MKDIRHIER) dir); fi
+#endif
+

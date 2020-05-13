@@ -1,0 +1,26 @@
+Running gmake in this directory will create 3 executables.  Only defineqflux
+should be required to build the boundary dataset needed by SOM.  It reads
+monthly-averaged surface fluxes from a control run for some number of years,
+then defines 12 monthly mean QFLUX values.  The output file must already be
+defined on the desired resolution, and have yearly mean mixed layer depths on
+it.  This is most easily accomplished by running definemldbdy (cvs co ?????).
+
+Monthly time diddling a la Cecilia Bitz and Karl Taylor by default is then
+applied to guarantee that linear time interpolation as done during a model
+run will reproduce the observed monthly means.  The resulting set of
+equations is solved using general solvers from the C version of LAPACK
+(available from www.netlib.org).  So this library must be installed before
+defineqflux can be built.
+
+Defineqflux requires compile-time specification of resolution parameters PLON
+(number of longitudes) and PLAT (number of latitudes).  These are set in
+defineqflux.h.
+
+
+
+Another executable available (but hopefully unnecessary) in the definesomic
+module is (also) called definesomic.  It adds necessary SOM fields to an
+initial dataset if they are not already there.
+
+The third executable, testqflux, prints out some statistics about the file
+built by defineqflux.

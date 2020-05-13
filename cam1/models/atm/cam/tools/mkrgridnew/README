@@ -1,0 +1,28 @@
+This code interpolates data with xy data ordering in the first two
+dimensions.  Thus it is suitable for history and initial files which do not
+have xzy ordering.  In addition to PC-Linux, AIX, and IRIX64 architectures,
+it runs on Cray X1 machines.  It also properly handles history files with
+cloud simulator output.  So it can replace "mkrgrid" once xzy ordered initial
+files are abandoned.
+
+Running gnumake in this directory will create an executable named
+"mkrgridnew" in the current directory.  Its function is to take an input CAM
+history file and interpolate it either from a full grid to a reduced grid
+(the default), or from a reduced grid to a full grid ("-r" option).  When
+going full->reduced, a namelist defining the reduced grid must be specified
+to be read from stdin.  An example namelist for a 1-digit grid (nl.r1up) is
+contained in this directory.  When coverting reduced->full, no namelist is
+needed as this information is contained in the netcdf history file.
+
+Default interpolation is linear (-l).  Other options available are Fourier
+(-f), cubic (-c), and monotonic cubic (-m field_name).  Fourier and cubic
+options apply to the entire file, while monotonic cubic must be specified on
+a field by field basis.
+
+An example usage might be:
+
+mkrgridnew h0001.nc h0001.reduced.nc < nl.r1up
+
+then to reverse the operation:
+
+mkrgridnew -r h0001.reduced.nc h0001.nc

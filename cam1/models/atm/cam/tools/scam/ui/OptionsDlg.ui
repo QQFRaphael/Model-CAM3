@@ -1,0 +1,1468 @@
+<!DOCTYPE UI><UI version="3.1" stdsetdef="1">
+<class>OptionsDlg</class>
+<widget class="QDialog">
+    <property name="name">
+        <cstring>OptionsDlg</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>650</width>
+            <height>683</height>
+        </rect>
+    </property>
+    <property name="caption">
+        <string>Preferences</string>
+    </property>
+    <property name="sizeGripEnabled">
+        <bool>true</bool>
+    </property>
+    <widget class="QLayoutWidget">
+        <property name="name">
+            <cstring>Layout1</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>10</x>
+                <y>620</y>
+                <width>630</width>
+                <height>30</height>
+            </rect>
+        </property>
+        <hbox>
+            <property name="name">
+                <cstring>unnamed</cstring>
+            </property>
+            <property name="margin">
+                <number>0</number>
+            </property>
+            <property name="spacing">
+                <number>6</number>
+            </property>
+            <spacer>
+                <property name="name">
+                    <cstring>Horizontal Spacing2</cstring>
+                </property>
+                <property name="orientation">
+                    <enum>Horizontal</enum>
+                </property>
+                <property name="sizeType">
+                    <enum>Expanding</enum>
+                </property>
+                <property name="sizeHint">
+                    <size>
+                        <width>20</width>
+                        <height>20</height>
+                    </size>
+                </property>
+            </spacer>
+            <widget class="QPushButton">
+                <property name="name">
+                    <cstring>buttonOk</cstring>
+                </property>
+                <property name="text">
+                    <string>&amp;OK</string>
+                </property>
+                <property name="autoDefault">
+                    <bool>true</bool>
+                </property>
+                <property name="default">
+                    <bool>true</bool>
+                </property>
+            </widget>
+            <widget class="QPushButton">
+                <property name="name">
+                    <cstring>buttonCancel</cstring>
+                </property>
+                <property name="text">
+                    <string>&amp;Cancel</string>
+                </property>
+                <property name="autoDefault">
+                    <bool>true</bool>
+                </property>
+            </widget>
+        </hbox>
+    </widget>
+    <widget class="QTabWidget">
+        <property name="name">
+            <cstring>OptionsTW</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>10</x>
+                <y>10</y>
+                <width>630</width>
+                <height>600</height>
+            </rect>
+        </property>
+        <widget class="QWidget">
+            <property name="name">
+                <cstring>tab_1</cstring>
+            </property>
+            <attribute name="title">
+                <string>ModelOutput</string>
+            </attribute>
+            <widget class="QGroupBox">
+                <property name="name">
+                    <cstring>GroupBox1</cstring>
+                </property>
+                <property name="geometry">
+                    <rect>
+                        <x>20</x>
+                        <y>10</y>
+                        <width>610</width>
+                        <height>330</height>
+                    </rect>
+                </property>
+                <property name="title">
+                    <string>Select Fields to Save</string>
+                </property>
+                <widget class="QSpinBox">
+                    <property name="name">
+                        <cstring>SpinBox1_2</cstring>
+                    </property>
+                    <property name="geometry">
+                        <rect>
+                            <x>298</x>
+                            <y>383</y>
+                            <width>160</width>
+                            <height>25</height>
+                        </rect>
+                    </property>
+                </widget>
+                <widget class="QSpinBox">
+                    <property name="name">
+                        <cstring>SpinBox2_2</cstring>
+                    </property>
+                    <property name="geometry">
+                        <rect>
+                            <x>28</x>
+                            <y>383</y>
+                            <width>180</width>
+                            <height>25</height>
+                        </rect>
+                    </property>
+                </widget>
+                <widget class="FieldListBox">
+                    <property name="name">
+                        <cstring>FieldListBoxCW</cstring>
+                    </property>
+                    <property name="geometry">
+                        <rect>
+                            <x>0</x>
+                            <y>20</y>
+                            <width>490</width>
+                            <height>300</height>
+                        </rect>
+                    </property>
+                </widget>
+            </widget>
+            <widget class="QGroupBox">
+                <property name="name">
+                    <cstring>GroupBox5</cstring>
+                </property>
+                <property name="geometry">
+                    <rect>
+                        <x>280</x>
+                        <y>350</y>
+                        <width>251</width>
+                        <height>50</height>
+                    </rect>
+                </property>
+                <property name="title">
+                    <string>Model Step Length</string>
+                </property>
+                <widget class="QSpinBox">
+                    <property name="name">
+                        <cstring>ModelStepLengthSB</cstring>
+                    </property>
+                    <property name="geometry">
+                        <rect>
+                            <x>30</x>
+                            <y>20</y>
+                            <width>170</width>
+                            <height>25</height>
+                        </rect>
+                    </property>
+                    <property name="suffix">
+                        <string> seconds</string>
+                    </property>
+                    <property name="wrapping">
+                        <bool>true</bool>
+                    </property>
+                    <property name="maxValue">
+                        <number>4800</number>
+                    </property>
+                </widget>
+            </widget>
+            <widget class="QGroupBox">
+                <property name="name">
+                    <cstring>GroupBox4</cstring>
+                </property>
+                <property name="geometry">
+                    <rect>
+                        <x>20</x>
+                        <y>350</y>
+                        <width>250</width>
+                        <height>50</height>
+                    </rect>
+                </property>
+                <property name="title">
+                    <string>Output Frequency</string>
+                </property>
+                <widget class="QSpinBox">
+                    <property name="name">
+                        <cstring>OutputFrequencySB</cstring>
+                    </property>
+                    <property name="geometry">
+                        <rect>
+                            <x>20</x>
+                            <y>20</y>
+                            <width>160</width>
+                            <height>25</height>
+                        </rect>
+                    </property>
+                    <property name="prefix">
+                        <string>Every </string>
+                    </property>
+                    <property name="suffix">
+                        <string> step(s)</string>
+                    </property>
+                    <property name="wrapping">
+                        <bool>true</bool>
+                    </property>
+                </widget>
+            </widget>
+        </widget>
+        <widget class="QWidget">
+            <property name="name">
+                <cstring>tab_2</cstring>
+            </property>
+            <attribute name="title">
+                <string>LogicalSwitches</string>
+            </attribute>
+        </widget>
+        <widget class="QWidget">
+            <property name="name">
+                <cstring>tab_3</cstring>
+            </property>
+            <attribute name="title">
+                <string>Startup Files</string>
+            </attribute>
+            <widget class="QGroupBox">
+                <property name="name">
+                    <cstring>QuickStartGB</cstring>
+                </property>
+                <property name="geometry">
+                    <rect>
+                        <x>70</x>
+                        <y>20</y>
+                        <width>400</width>
+                        <height>80</height>
+                    </rect>
+                </property>
+                <property name="title">
+                    <string>Quick Start</string>
+                </property>
+                <vbox>
+                    <property name="name">
+                        <cstring>unnamed</cstring>
+                    </property>
+                    <property name="margin">
+                        <number>11</number>
+                    </property>
+                    <property name="spacing">
+                        <number>6</number>
+                    </property>
+                    <widget class="QCheckBox">
+                        <property name="name">
+                            <cstring>CreateQSCB</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Create a Quick-Start file for reproducing this run</string>
+                        </property>
+                    </widget>
+                    <widget class="QCheckBox">
+                        <property name="name">
+                            <cstring>ShowSettingCB</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Show Settings when loading Quick-Start files</string>
+                        </property>
+                    </widget>
+                </vbox>
+            </widget>
+            <widget class="QGroupBox">
+                <property name="name">
+                    <cstring>SaveDefaultsGB</cstring>
+                </property>
+                <property name="geometry">
+                    <rect>
+                        <x>70</x>
+                        <y>130</y>
+                        <width>400</width>
+                        <height>53</height>
+                    </rect>
+                </property>
+                <property name="title">
+                    <string>Save Defaults</string>
+                </property>
+                <vbox>
+                    <property name="name">
+                        <cstring>unnamed</cstring>
+                    </property>
+                    <property name="margin">
+                        <number>11</number>
+                    </property>
+                    <property name="spacing">
+                        <number>6</number>
+                    </property>
+                    <widget class="QCheckBox">
+                        <property name="name">
+                            <cstring>SetDefaultCB</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Make the current settings the startup defaults</string>
+                        </property>
+                    </widget>
+                </vbox>
+            </widget>
+            <widget class="QGroupBox">
+                <property name="name">
+                    <cstring>InitialConditionsGB</cstring>
+                </property>
+                <property name="geometry">
+                    <rect>
+                        <x>70</x>
+                        <y>210</y>
+                        <width>402</width>
+                        <height>53</height>
+                    </rect>
+                </property>
+                <property name="title">
+                    <string>Initial Conditions Dataset</string>
+                </property>
+                <vbox>
+                    <property name="name">
+                        <cstring>unnamed</cstring>
+                    </property>
+                    <property name="margin">
+                        <number>11</number>
+                    </property>
+                    <property name="spacing">
+                        <number>6</number>
+                    </property>
+                    <widget class="QCheckBox">
+                        <property name="name">
+                            <cstring>CreateInitialConditionsCB</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Create an Initial Conditions dataset using modified fields</string>
+                        </property>
+                    </widget>
+                </vbox>
+            </widget>
+            <widget class="QPushButton">
+                <property name="name">
+                    <cstring>CurrentSettingsPB</cstring>
+                </property>
+                <property name="geometry">
+                    <rect>
+                        <x>70</x>
+                        <y>320</y>
+                        <width>410</width>
+                        <height>35</height>
+                    </rect>
+                </property>
+                <property name="text">
+                    <string>Show Current Settings</string>
+                </property>
+            </widget>
+        </widget>
+        <widget class="QWidget">
+            <property name="name">
+                <cstring>tab_4</cstring>
+            </property>
+            <attribute name="title">
+                <string>IOPSettings</string>
+            </attribute>
+            <widget class="QGroupBox">
+                <property name="name">
+                    <cstring>EnsemblesGB</cstring>
+                </property>
+                <property name="geometry">
+                    <rect>
+                        <x>30</x>
+                        <y>30</y>
+                        <width>480</width>
+                        <height>90</height>
+                    </rect>
+                </property>
+                <property name="title">
+                    <string>Ensembles</string>
+                </property>
+                <widget class="QLayoutWidget">
+                    <property name="name">
+                        <cstring>Layout49</cstring>
+                    </property>
+                    <property name="geometry">
+                        <rect>
+                            <x>12</x>
+                            <y>20</y>
+                            <width>460</width>
+                            <height>29</height>
+                        </rect>
+                    </property>
+                    <hbox>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
+                        </property>
+                        <property name="margin">
+                            <number>0</number>
+                        </property>
+                        <property name="spacing">
+                            <number>6</number>
+                        </property>
+                        <widget class="QCheckBox">
+                            <property name="name">
+                                <cstring>PerturbInitialConditionsCB</cstring>
+                            </property>
+                            <property name="text">
+                                <string>Perturb initial conditions</string>
+                            </property>
+                        </widget>
+                        <spacer>
+                            <property name="name">
+                                <cstring>Spacer16</cstring>
+                            </property>
+                            <property name="orientation">
+                                <enum>Horizontal</enum>
+                            </property>
+                            <property name="sizeType">
+                                <enum>Expanding</enum>
+                            </property>
+                            <property name="sizeHint">
+                                <size>
+                                    <width>20</width>
+                                    <height>20</height>
+                                </size>
+                            </property>
+                        </spacer>
+                        <widget class="QLayoutWidget">
+                            <property name="name">
+                                <cstring>Layout43</cstring>
+                            </property>
+                            <hbox>
+                                <property name="name">
+                                    <cstring>unnamed</cstring>
+                                </property>
+                                <property name="margin">
+                                    <number>0</number>
+                                </property>
+                                <property name="spacing">
+                                    <number>6</number>
+                                </property>
+                                <widget class="QLabel">
+                                    <property name="name">
+                                        <cstring>SeedValueLabel</cstring>
+                                    </property>
+                                    <property name="text">
+                                        <string>Use Seed Value:</string>
+                                    </property>
+                                </widget>
+                                <widget class="QLineEdit">
+                                    <property name="name">
+                                        <cstring>SeedValLE</cstring>
+                                    </property>
+                                    <property name="text">
+                                        <string>None</string>
+                                    </property>
+                                </widget>
+                            </hbox>
+                        </widget>
+                    </hbox>
+                </widget>
+                <widget class="QCheckBox">
+                    <property name="name">
+                        <cstring>PerturbForcingCB</cstring>
+                    </property>
+                    <property name="geometry">
+                        <rect>
+                            <x>12</x>
+                            <y>53</y>
+                            <width>118</width>
+                            <height>22</height>
+                        </rect>
+                    </property>
+                    <property name="text">
+                        <string>Perturb forcing</string>
+                    </property>
+                </widget>
+            </widget>
+            <widget class="QGroupBox">
+                <property name="name">
+                    <cstring>ForcingGB</cstring>
+                </property>
+                <property name="geometry">
+                    <rect>
+                        <x>30</x>
+                        <y>160</y>
+                        <width>480</width>
+                        <height>190</height>
+                    </rect>
+                </property>
+                <property name="title">
+                    <string>Forcing</string>
+                </property>
+                <widget class="QLayoutWidget">
+                    <property name="name">
+                        <cstring>Layout9</cstring>
+                    </property>
+                    <property name="geometry">
+                        <rect>
+                            <x>0</x>
+                            <y>20</y>
+                            <width>251</width>
+                            <height>151</height>
+                        </rect>
+                    </property>
+                    <vbox>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
+                        </property>
+                        <property name="margin">
+                            <number>0</number>
+                        </property>
+                        <property name="spacing">
+                            <number>6</number>
+                        </property>
+                        <widget class="QCheckBox">
+                            <property name="name">
+                                <cstring>SpecifiedSurfPropCB</cstring>
+                            </property>
+                            <property name="text">
+                                <string>Use specified surface properties</string>
+                            </property>
+                        </widget>
+                        <widget class="QCheckBox">
+                            <property name="name">
+                                <cstring>ForcingCB</cstring>
+                            </property>
+                            <property name="text">
+                                <string>Use 3D forcing</string>
+                            </property>
+                        </widget>
+                        <widget class="QCheckBox">
+                            <property name="name">
+                                <cstring>RelaxationCB</cstring>
+                            </property>
+                            <property name="text">
+                                <string>Use relaxation</string>
+                            </property>
+                        </widget>
+                        <widget class="QCheckBox">
+                            <property name="name">
+                                <cstring>FixCamIOPCB</cstring>
+                            </property>
+                            <property name="text">
+                                <string>Correct 3D forcing for CAM BFB testing</string>
+                            </property>
+                        </widget>
+                        <widget class="QCheckBox">
+                            <property name="name">
+                                <cstring>DiurnalAvgCB</cstring>
+                            </property>
+                            <property name="text">
+                                <string>Use diurnal averaging</string>
+                            </property>
+                        </widget>
+                    </vbox>
+                </widget>
+            </widget>
+        </widget>
+        <widget class="QWidget">
+            <property name="name">
+                <cstring>tab_5</cstring>
+            </property>
+            <attribute name="title">
+                <string>Datasets</string>
+            </attribute>
+            <widget class="QGroupBox">
+                <property name="name">
+                    <cstring>InitialConditionGB</cstring>
+                </property>
+                <property name="geometry">
+                    <rect>
+                        <x>0</x>
+                        <y>10</y>
+                        <width>522</width>
+                        <height>126</height>
+                    </rect>
+                </property>
+                <property name="title">
+                    <string>Initial Conditions Datasets</string>
+                </property>
+                <widget class="QLayoutWidget">
+                    <property name="name">
+                        <cstring>Layout7</cstring>
+                    </property>
+                    <property name="geometry">
+                        <rect>
+                            <x>12</x>
+                            <y>31</y>
+                            <width>118</width>
+                            <height>80</height>
+                        </rect>
+                    </property>
+                    <vbox>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
+                        </property>
+                        <property name="margin">
+                            <number>0</number>
+                        </property>
+                        <property name="spacing">
+                            <number>6</number>
+                        </property>
+                        <widget class="QLabel">
+                            <property name="name">
+                                <cstring>TextLabel1</cstring>
+                            </property>
+                            <property name="frameShape">
+                                <enum>Box</enum>
+                            </property>
+                            <property name="frameShadow">
+                                <enum>Plain</enum>
+                            </property>
+                            <property name="lineWidth">
+                                <number>1</number>
+                            </property>
+                            <property name="text">
+                                <string>Global Analysis</string>
+                            </property>
+                        </widget>
+                        <widget class="QLabel">
+                            <property name="name">
+                                <cstring>TextLabel2</cstring>
+                            </property>
+                            <property name="frameShape">
+                                <enum>Box</enum>
+                            </property>
+                            <property name="frameShadow">
+                                <enum>Plain</enum>
+                            </property>
+                            <property name="text">
+                                <string>Global Model</string>
+                            </property>
+                        </widget>
+                    </vbox>
+                </widget>
+                <widget class="QLayoutWidget">
+                    <property name="name">
+                        <cstring>Layout5</cstring>
+                    </property>
+                    <property name="geometry">
+                        <rect>
+                            <x>136</x>
+                            <y>31</y>
+                            <width>290</width>
+                            <height>80</height>
+                        </rect>
+                    </property>
+                    <vbox>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
+                        </property>
+                        <property name="margin">
+                            <number>0</number>
+                        </property>
+                        <property name="spacing">
+                            <number>6</number>
+                        </property>
+                        <widget class="QLineEdit">
+                            <property name="name">
+                                <cstring>LineEdit1</cstring>
+                            </property>
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>7</hsizetype>
+                                    <vsizetype>7</vsizetype>
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                        </widget>
+                        <widget class="QLineEdit">
+                            <property name="name">
+                                <cstring>LineEdit2</cstring>
+                            </property>
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>7</hsizetype>
+                                    <vsizetype>7</vsizetype>
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                        </widget>
+                    </vbox>
+                </widget>
+                <widget class="QButtonGroup">
+                    <property name="name">
+                        <cstring>ButtonGroup5</cstring>
+                    </property>
+                    <property name="geometry">
+                        <rect>
+                            <x>430</x>
+                            <y>30</y>
+                            <width>82</width>
+                            <height>74</height>
+                        </rect>
+                    </property>
+                    <property name="sizePolicy">
+                        <sizepolicy>
+                            <hsizetype>1</hsizetype>
+                            <vsizetype>1</vsizetype>
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                        </sizepolicy>
+                    </property>
+                    <property name="frameShape">
+                        <enum>NoFrame</enum>
+                    </property>
+                    <property name="frameShadow">
+                        <enum>Plain</enum>
+                    </property>
+                    <property name="title">
+                        <string></string>
+                    </property>
+                    <vbox>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
+                        </property>
+                        <property name="margin">
+                            <number>1</number>
+                        </property>
+                        <property name="spacing">
+                            <number>10</number>
+                        </property>
+                        <widget class="QPushButton">
+                            <property name="name">
+                                <cstring>PushButton4</cstring>
+                            </property>
+                            <property name="enabled">
+                                <bool>true</bool>
+                            </property>
+                            <property name="text">
+                                <string>Choose</string>
+                            </property>
+                        </widget>
+                        <widget class="QPushButton">
+                            <property name="name">
+                                <cstring>PushButton5</cstring>
+                            </property>
+                            <property name="text">
+                                <string>Choose</string>
+                            </property>
+                        </widget>
+                    </vbox>
+                </widget>
+            </widget>
+            <widget class="QGroupBox">
+                <property name="name">
+                    <cstring>IOPGB</cstring>
+                </property>
+                <property name="geometry">
+                    <rect>
+                        <x>0</x>
+                        <y>490</y>
+                        <width>522</width>
+                        <height>72</height>
+                    </rect>
+                </property>
+                <property name="title">
+                    <string>IOP Dataset</string>
+                </property>
+                <widget class="QButtonGroup">
+                    <property name="name">
+                        <cstring>ButtonGroup7</cstring>
+                    </property>
+                    <property name="geometry">
+                        <rect>
+                            <x>430</x>
+                            <y>20</y>
+                            <width>82</width>
+                            <height>34</height>
+                        </rect>
+                    </property>
+                    <property name="sizePolicy">
+                        <sizepolicy>
+                            <hsizetype>1</hsizetype>
+                            <vsizetype>1</vsizetype>
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                        </sizepolicy>
+                    </property>
+                    <property name="frameShape">
+                        <enum>NoFrame</enum>
+                    </property>
+                    <property name="frameShadow">
+                        <enum>Plain</enum>
+                    </property>
+                    <property name="title">
+                        <string></string>
+                    </property>
+                    <vbox>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
+                        </property>
+                        <property name="margin">
+                            <number>1</number>
+                        </property>
+                        <property name="spacing">
+                            <number>6</number>
+                        </property>
+                        <widget class="QPushButton">
+                            <property name="name">
+                                <cstring>PushButton14</cstring>
+                            </property>
+                            <property name="text">
+                                <string>Choose</string>
+                            </property>
+                        </widget>
+                    </vbox>
+                </widget>
+                <widget class="QLineEdit">
+                    <property name="name">
+                        <cstring>LineEdit11</cstring>
+                    </property>
+                    <property name="geometry">
+                        <rect>
+                            <x>57</x>
+                            <y>27</y>
+                            <width>366</width>
+                            <height>25</height>
+                        </rect>
+                    </property>
+                </widget>
+                <widget class="QLabel">
+                    <property name="name">
+                        <cstring>TextLabel11</cstring>
+                    </property>
+                    <property name="geometry">
+                        <rect>
+                            <x>11</x>
+                            <y>21</y>
+                            <width>40</width>
+                            <height>38</height>
+                        </rect>
+                    </property>
+                    <property name="frameShape">
+                        <enum>Box</enum>
+                    </property>
+                    <property name="frameShadow">
+                        <enum>Plain</enum>
+                    </property>
+                    <property name="text">
+                        <string>IOP</string>
+                    </property>
+                </widget>
+            </widget>
+            <widget class="QGroupBox">
+                <property name="name">
+                    <cstring>BoundaryGB</cstring>
+                </property>
+                <property name="geometry">
+                    <rect>
+                        <x>0</x>
+                        <y>150</y>
+                        <width>522</width>
+                        <height>340</height>
+                    </rect>
+                </property>
+                <property name="title">
+                    <string>Boundary Datasets</string>
+                </property>
+                <widget class="QButtonGroup">
+                    <property name="name">
+                        <cstring>ButtonGroup6</cstring>
+                    </property>
+                    <property name="geometry">
+                        <rect>
+                            <x>430</x>
+                            <y>20</y>
+                            <width>84</width>
+                            <height>300</height>
+                        </rect>
+                    </property>
+                    <property name="sizePolicy">
+                        <sizepolicy>
+                            <hsizetype>1</hsizetype>
+                            <vsizetype>1</vsizetype>
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                        </sizepolicy>
+                    </property>
+                    <property name="frameShape">
+                        <enum>NoFrame</enum>
+                    </property>
+                    <property name="frameShadow">
+                        <enum>Plain</enum>
+                    </property>
+                    <property name="lineWidth">
+                        <number>0</number>
+                    </property>
+                    <property name="title">
+                        <string></string>
+                    </property>
+                    <property name="radioButtonExclusive">
+                        <bool>false</bool>
+                    </property>
+                    <widget class="QLayoutWidget">
+                        <property name="name">
+                            <cstring>layout11</cstring>
+                        </property>
+                        <property name="geometry">
+                            <rect>
+                                <x>0</x>
+                                <y>-3</y>
+                                <width>84</width>
+                                <height>310</height>
+                            </rect>
+                        </property>
+                        <vbox>
+                            <property name="name">
+                                <cstring>unnamed</cstring>
+                            </property>
+                            <widget class="QPushButton">
+                                <property name="name">
+                                    <cstring>PushButton6</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Choose</string>
+                                </property>
+                            </widget>
+                            <widget class="QPushButton">
+                                <property name="name">
+                                    <cstring>PushButton7</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Choose</string>
+                                </property>
+                            </widget>
+                            <widget class="QPushButton">
+                                <property name="name">
+                                    <cstring>PushButton8</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Choose</string>
+                                </property>
+                            </widget>
+                            <widget class="QPushButton">
+                                <property name="name">
+                                    <cstring>PushButton9</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Choose</string>
+                                </property>
+                            </widget>
+                            <widget class="QPushButton">
+                                <property name="name">
+                                    <cstring>PushButton10</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Choose</string>
+                                </property>
+                            </widget>
+                            <widget class="QPushButton">
+                                <property name="name">
+                                    <cstring>PushButton11</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Choose</string>
+                                </property>
+                            </widget>
+                            <widget class="QPushButton">
+                                <property name="name">
+                                    <cstring>PushButton12</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Choose</string>
+                                </property>
+                            </widget>
+                            <widget class="QPushButton">
+                                <property name="name">
+                                    <cstring>PushButton13</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Choose</string>
+                                </property>
+                            </widget>
+                        </vbox>
+                    </widget>
+                </widget>
+                <widget class="QLayoutWidget">
+                    <property name="name">
+                        <cstring>layout9</cstring>
+                    </property>
+                    <property name="geometry">
+                        <rect>
+                            <x>10</x>
+                            <y>22</y>
+                            <width>116</width>
+                            <height>300</height>
+                        </rect>
+                    </property>
+                    <vbox>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
+                        </property>
+                        <widget class="QLabel">
+                            <property name="name">
+                                <cstring>TextLabel3</cstring>
+                            </property>
+                            <property name="frameShape">
+                                <enum>Box</enum>
+                            </property>
+                            <property name="frameShadow">
+                                <enum>Plain</enum>
+                            </property>
+                            <property name="text">
+                                <string>CLM Initial Data</string>
+                            </property>
+                        </widget>
+                        <widget class="QLabel">
+                            <property name="name">
+                                <cstring>TextLabel4</cstring>
+                            </property>
+                            <property name="frameShape">
+                                <enum>Box</enum>
+                            </property>
+                            <property name="frameShadow">
+                                <enum>Plain</enum>
+                            </property>
+                            <property name="text">
+                                <string>CLM Srf Data</string>
+                            </property>
+                        </widget>
+                        <widget class="QLabel">
+                            <property name="name">
+                                <cstring>TextLabel5</cstring>
+                            </property>
+                            <property name="frameShape">
+                                <enum>Box</enum>
+                            </property>
+                            <property name="frameShadow">
+                                <enum>Plain</enum>
+                            </property>
+                            <property name="text">
+                                <string>Ozone</string>
+                            </property>
+                        </widget>
+                        <widget class="QLabel">
+                            <property name="name">
+                                <cstring>TextLabel6</cstring>
+                            </property>
+                            <property name="frameShape">
+                                <enum>Box</enum>
+                            </property>
+                            <property name="frameShadow">
+                                <enum>Plain</enum>
+                            </property>
+                            <property name="text">
+                                <string>Pressure Lvls</string>
+                            </property>
+                        </widget>
+                        <widget class="QLabel">
+                            <property name="name">
+                                <cstring>TextLabel7</cstring>
+                            </property>
+                            <property name="frameShape">
+                                <enum>Box</enum>
+                            </property>
+                            <property name="frameShadow">
+                                <enum>Plain</enum>
+                            </property>
+                            <property name="text">
+                                <string>Sea Surface Temp</string>
+                            </property>
+                        </widget>
+                        <widget class="QLabel">
+                            <property name="name">
+                                <cstring>TextLabel8</cstring>
+                            </property>
+                            <property name="frameShape">
+                                <enum>Box</enum>
+                            </property>
+                            <property name="frameShadow">
+                                <enum>Plain</enum>
+                            </property>
+                            <property name="text">
+                                <string>Radiation Abs/Ems</string>
+                            </property>
+                        </widget>
+                        <widget class="QLabel">
+                            <property name="name">
+                                <cstring>TextLabel9</cstring>
+                            </property>
+                            <property name="frameShape">
+                                <enum>Box</enum>
+                            </property>
+                            <property name="frameShadow">
+                                <enum>Plain</enum>
+                            </property>
+                            <property name="text">
+                                <string>Aerosol Optics</string>
+                            </property>
+                        </widget>
+                        <widget class="QLabel">
+                            <property name="name">
+                                <cstring>TextLabel10</cstring>
+                            </property>
+                            <property name="frameShape">
+                                <enum>Box</enum>
+                            </property>
+                            <property name="frameShadow">
+                                <enum>Plain</enum>
+                            </property>
+                            <property name="text">
+                                <string>Aerosol Mass</string>
+                            </property>
+                        </widget>
+                    </vbox>
+                </widget>
+                <widget class="QLayoutWidget">
+                    <property name="name">
+                        <cstring>layout10</cstring>
+                    </property>
+                    <property name="geometry">
+                        <rect>
+                            <x>140</x>
+                            <y>20</y>
+                            <width>280</width>
+                            <height>300</height>
+                        </rect>
+                    </property>
+                    <vbox>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
+                        </property>
+                        <widget class="QLineEdit">
+                            <property name="name">
+                                <cstring>LineEdit3</cstring>
+                            </property>
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>7</hsizetype>
+                                    <vsizetype>7</vsizetype>
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                        </widget>
+                        <widget class="QLineEdit">
+                            <property name="name">
+                                <cstring>LineEdit4</cstring>
+                            </property>
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>7</hsizetype>
+                                    <vsizetype>7</vsizetype>
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                        </widget>
+                        <widget class="QLineEdit">
+                            <property name="name">
+                                <cstring>LineEdit5</cstring>
+                            </property>
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>7</hsizetype>
+                                    <vsizetype>7</vsizetype>
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                        </widget>
+                        <widget class="QLineEdit">
+                            <property name="name">
+                                <cstring>LineEdit6</cstring>
+                            </property>
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>7</hsizetype>
+                                    <vsizetype>7</vsizetype>
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                        </widget>
+                        <widget class="QLineEdit">
+                            <property name="name">
+                                <cstring>LineEdit7</cstring>
+                            </property>
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>7</hsizetype>
+                                    <vsizetype>7</vsizetype>
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                        </widget>
+                        <widget class="QLineEdit">
+                            <property name="name">
+                                <cstring>LineEdit8</cstring>
+                            </property>
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>7</hsizetype>
+                                    <vsizetype>7</vsizetype>
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                        </widget>
+                        <widget class="QLineEdit">
+                            <property name="name">
+                                <cstring>LineEdit9</cstring>
+                            </property>
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>7</hsizetype>
+                                    <vsizetype>7</vsizetype>
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                        </widget>
+                        <widget class="QLineEdit">
+                            <property name="name">
+                                <cstring>LineEdit10</cstring>
+                            </property>
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>7</hsizetype>
+                                    <vsizetype>7</vsizetype>
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                        </widget>
+                    </vbox>
+                </widget>
+            </widget>
+        </widget>
+        <widget class="QWidget">
+            <property name="name">
+                <cstring>tab</cstring>
+            </property>
+            <attribute name="title">
+                <string>CRM</string>
+            </attribute>
+            <widget class="QGroupBox">
+                <property name="name">
+                    <cstring>QuickStartGB_2</cstring>
+                </property>
+                <property name="geometry">
+                    <rect>
+                        <x>70</x>
+                        <y>30</y>
+                        <width>400</width>
+                        <height>50</height>
+                    </rect>
+                </property>
+                <property name="title">
+                    <string>Column Radiation Model</string>
+                </property>
+                <vbox>
+                    <property name="name">
+                        <cstring>unnamed</cstring>
+                    </property>
+                    <property name="margin">
+                        <number>11</number>
+                    </property>
+                    <property name="spacing">
+                        <number>6</number>
+                    </property>
+                    <widget class="QCheckBox">
+                        <property name="name">
+                            <cstring>CRMCB</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Run the model in column radiation mode.</string>
+                        </property>
+                        <property name="toolTip" stdset="0">
+                            <string>In CRM mode, the radiation parameterization operates on the initial state.</string>
+                        </property>
+                    </widget>
+                </vbox>
+            </widget>
+            <widget class="QGroupBox">
+                <property name="name">
+                    <cstring>QuickStartGB_2_2</cstring>
+                </property>
+                <property name="geometry">
+                    <rect>
+                        <x>70</x>
+                        <y>110</y>
+                        <width>400</width>
+                        <height>50</height>
+                    </rect>
+                </property>
+                <property name="title">
+                    <string>CRM Text Output</string>
+                </property>
+                <vbox>
+                    <property name="name">
+                        <cstring>unnamed</cstring>
+                    </property>
+                    <property name="margin">
+                        <number>11</number>
+                    </property>
+                    <property name="spacing">
+                        <number>6</number>
+                    </property>
+                    <widget class="QCheckBox">
+                        <property name="name">
+                            <cstring>CRMTextFileCB</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Create a text file for output from the radiation parameterization.</string>
+                        </property>
+                        <property name="toolTip" stdset="0">
+                            <string>In CRM mode, the radiation parameterization operates on the initial state.</string>
+                        </property>
+                    </widget>
+                </vbox>
+            </widget>
+        </widget>
+    </widget>
+</widget>
+<customwidgets>
+    <customwidget>
+        <class>FieldListBox</class>
+        <header location="local">fieldlistbox.h</header>
+        <sizehint>
+            <width>-1</width>
+            <height>-1</height>
+        </sizehint>
+        <container>0</container>
+        <sizepolicy>
+            <hordata>5</hordata>
+            <verdata>5</verdata>
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+        </sizepolicy>
+        <pixmap>image0</pixmap>
+        <signal>selected(int)</signal>
+        <slot access="protected" specifier="">ClearAll()</slot>
+        <slot access="protected" specifier="">Reset()</slot>
+        <slot access="protected" specifier="">SetAll()</slot>
+        <slot access="public" specifier="">keyPressEvent(QKeyEvent* keyEvent)</slot>
+        <slot access="public" specifier="">focusOutEvent(QFocusEvent*)</slot>
+    </customwidget>
+</customwidgets>
+<images>
+    <image name="image0">
+        <data format="XPM.GZ" length="646">789c6dd2c10ac2300c00d07bbf2234b7229d1ddec44f503c0ae2a154410f53d0ed20e2bf6bdb656dd6861dd23d9a66591b0587fd1654235ebded6f0edcd53e419d87ae7b1f4f9b8f906d0bfe012317426a70b07bdc2f3ec77f8ed6b89559061a0343d06a124cc105596482585094bc0ae599b04646c9018926491b2205e140c485cace25755c175d0a967b622ff900b8cc9c7d29af594ea722d589167f813aa852ba07d94b9dce296e883fe7bb163f23896753</data>
+    </image>
+</images>
+<connections>
+    <connection>
+        <sender>CreateInitialConditionsCB</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>OptionsDlg</receiver>
+        <slot>SicFileName(bool)</slot>
+    </connection>
+    <connection>
+        <sender>CreateQSCB</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>OptionsDlg</receiver>
+        <slot>QuickStartFileName(bool)</slot>
+    </connection>
+    <connection>
+        <sender>CurrentSettingsPB</sender>
+        <signal>clicked()</signal>
+        <receiver>OptionsDlg</receiver>
+        <slot>ShowCurrentSettings()</slot>
+    </connection>
+    <connection>
+        <sender>buttonOk</sender>
+        <signal>clicked()</signal>
+        <receiver>OptionsDlg</receiver>
+        <slot>ApplyChanges()</slot>
+    </connection>
+    <connection>
+        <sender>buttonOk</sender>
+        <signal>clicked()</signal>
+        <receiver>OptionsDlg</receiver>
+        <slot>accept()</slot>
+    </connection>
+    <connection>
+        <sender>buttonCancel</sender>
+        <signal>clicked()</signal>
+        <receiver>OptionsDlg</receiver>
+        <slot>CancelChanges()</slot>
+    </connection>
+    <connection>
+        <sender>buttonCancel</sender>
+        <signal>clicked()</signal>
+        <receiver>OptionsDlg</receiver>
+        <slot>reject()</slot>
+    </connection>
+    <connection>
+        <sender>ButtonGroup5</sender>
+        <signal>clicked(int)</signal>
+        <receiver>OptionsDlg</receiver>
+        <slot>ChooseInitialDataset(int)</slot>
+    </connection>
+    <connection>
+        <sender>ButtonGroup6</sender>
+        <signal>clicked(int)</signal>
+        <receiver>OptionsDlg</receiver>
+        <slot>ChooseBoundaryDataset(int)</slot>
+    </connection>
+    <connection>
+        <sender>ButtonGroup7</sender>
+        <signal>clicked(int)</signal>
+        <receiver>OptionsDlg</receiver>
+        <slot>ChooseIOPDataset(int)</slot>
+    </connection>
+    <connection>
+        <sender>SeedValLE</sender>
+        <signal>returnPressed()</signal>
+        <receiver>OptionsDlg</receiver>
+        <slot>SetSeedValue()</slot>
+    </connection>
+    <connection>
+        <sender>CRMTextFileCB</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>OptionsDlg</receiver>
+        <slot>CRMTxtFileName(bool)</slot>
+    </connection>
+</connections>
+<slots>
+    <slot access="protected">ApplyChanges()</slot>
+    <slot>ButtonGroup7_clicked( int )</slot>
+    <slot access="protected">CancelChanges()</slot>
+    <slot>ChooseBoundaryDataset( int )</slot>
+    <slot>ChooseDataset( int )</slot>
+    <slot access="protected">ChooseInitialDataset( int )</slot>
+    <slot>ChooseIOPDataset( int )</slot>
+    <slot access="protected">init()</slot>
+    <slot access="protected">QuickStartFileName( bool )</slot>
+    <slot>SetSeedValue()</slot>
+    <slot>SetSeedValue( int )</slot>
+    <slot access="protected">ShowCurrentSettings()</slot>
+    <slot access="protected">SicFileName( bool )</slot>
+    <slot>CRMTxtFileName( bool )</slot>
+</slots>
+<layoutdefaults spacing="6" margin="11"/>
+<includehints>
+    <includehint>fieldlistbox.h</includehint>
+</includehints>
+</UI>

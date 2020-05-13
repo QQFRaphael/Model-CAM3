@@ -1,0 +1,235 @@
+<!DOCTYPE UI><UI version="3.1" stdsetdef="1">
+<class>SelectDataForm</class>
+<widget class="QDialog">
+    <property name="name">
+        <cstring>SelectDataForm</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>322</width>
+            <height>375</height>
+        </rect>
+    </property>
+    <property name="caption">
+        <string>Seclect Data Type</string>
+    </property>
+    <property name="toolTip" stdset="0">
+        <string>Select a column and starting date from the Global Model data</string>
+    </property>
+    <widget class="QButtonGroup">
+        <property name="name">
+            <cstring>SelectDataBG</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>60</x>
+                <y>20</y>
+                <width>214</width>
+                <height>272</height>
+            </rect>
+        </property>
+        <property name="frameShadow">
+            <enum>Raised</enum>
+        </property>
+        <property name="lineWidth">
+            <number>2</number>
+        </property>
+        <property name="title">
+            <string>Initial Model Data</string>
+        </property>
+        <vbox>
+            <property name="name">
+                <cstring>unnamed</cstring>
+            </property>
+            <property name="margin">
+                <number>11</number>
+            </property>
+            <property name="spacing">
+                <number>6</number>
+            </property>
+            <widget class="QPushButton">
+                <property name="name">
+                    <cstring>GlobalDataPB</cstring>
+                </property>
+                <property name="font">
+                    <font>
+                        <family>adobe-helvetica</family>
+                        <bold>1</bold>
+                    </font>
+                </property>
+                <property name="text">
+                    <string>Global &amp;Model Data</string>
+                </property>
+                <property name="buttonGroupId">
+                    <number>1</number>
+                </property>
+                <property name="toolTip" stdset="0">
+                    <string>Select a column and starting date from global model dataset</string>
+                </property>
+            </widget>
+            <widget class="QPushButton">
+                <property name="name">
+                    <cstring>GlobalAnalysisPB</cstring>
+                </property>
+                <property name="font">
+                    <font>
+                        <family>adobe-helvetica</family>
+                        <bold>1</bold>
+                    </font>
+                </property>
+                <property name="text">
+                    <string>Global &amp;Analysis Data</string>
+                </property>
+                <property name="buttonGroupId">
+                    <number>0</number>
+                </property>
+                <property name="toolTip" stdset="0">
+                    <string>Select a column and starting date from global analysis dataset</string>
+                </property>
+            </widget>
+            <widget class="QPushButton">
+                <property name="name">
+                    <cstring>IOPDataPB</cstring>
+                </property>
+                <property name="font">
+                    <font>
+                        <family>adobe-helvetica</family>
+                        <bold>1</bold>
+                    </font>
+                </property>
+                <property name="text">
+                    <string>I&amp;OP Data</string>
+                </property>
+                <property name="toolTip" stdset="0">
+                    <string>Select a starting date from intensive observation period dataset</string>
+                </property>
+            </widget>
+            <widget class="QPushButton">
+                <property name="name">
+                    <cstring>InitialConditionsPB</cstring>
+                </property>
+                <property name="font">
+                    <font>
+                        <family>adobe-helvetica</family>
+                        <bold>1</bold>
+                    </font>
+                </property>
+                <property name="text">
+                    <string>&amp;Initial Conditions Data</string>
+                </property>
+                <property name="buttonGroupId">
+                    <number>11</number>
+                </property>
+                <property name="toolTip" stdset="0">
+                    <string>Select a saved initial-conditions dataset</string>
+                </property>
+            </widget>
+            <widget class="QPushButton">
+                <property name="name">
+                    <cstring>UserDataPB</cstring>
+                </property>
+                <property name="font">
+                    <font>
+                        <family>adobe-helvetica</family>
+                        <bold>1</bold>
+                    </font>
+                </property>
+                <property name="text">
+                    <string>&amp;User Data</string>
+                </property>
+                <property name="buttonGroupId">
+                    <number>10</number>
+                </property>
+                <property name="toolTip" stdset="0">
+                    <string>Select a user generated dataset</string>
+                </property>
+            </widget>
+            <widget class="QPushButton">
+                <property name="name">
+                    <cstring>QuickStartPB</cstring>
+                </property>
+                <property name="font">
+                    <font>
+                        <family>adobe-helvetica</family>
+                        <bold>1</bold>
+                    </font>
+                </property>
+                <property name="text">
+                    <string>&amp;Quick Start</string>
+                </property>
+                <property name="buttonGroupId">
+                    <number>100</number>
+                </property>
+                <property name="toolTip" stdset="0">
+                    <string>Select a user-generated quick start file</string>
+                </property>
+            </widget>
+            <widget class="QPushButton">
+                <property name="name">
+                    <cstring>CRMPB</cstring>
+                </property>
+                <property name="font">
+                    <font>
+                        <family>adobe-helvetica</family>
+                        <bold>1</bold>
+                    </font>
+                </property>
+                <property name="text">
+                    <string>&amp;CRM Input file</string>
+                </property>
+                <property name="buttonGroupId">
+                    <number>101</number>
+                </property>
+                <property name="toolTip" stdset="0">
+                    <string>Select a text CRM input file</string>
+                </property>
+            </widget>
+        </vbox>
+    </widget>
+    <widget class="QPushButton">
+        <property name="name">
+            <cstring>CancelPB</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>100</x>
+                <y>310</y>
+                <width>127</width>
+                <height>35</height>
+            </rect>
+        </property>
+        <property name="font">
+            <font>
+                <family>adobe-helvetica</family>
+                <bold>1</bold>
+            </font>
+        </property>
+        <property name="text">
+            <string>&amp;Cancel</string>
+        </property>
+        <property name="toolTip" stdset="0">
+            <string>Cancel this dialog</string>
+        </property>
+    </widget>
+</widget>
+<connections>
+    <connection>
+        <sender>CancelPB</sender>
+        <signal>clicked()</signal>
+        <receiver>SelectDataForm</receiver>
+        <slot>reject()</slot>
+    </connection>
+    <connection>
+        <sender>SelectDataBG</sender>
+        <signal>clicked(int)</signal>
+        <receiver>SelectDataForm</receiver>
+        <slot>SetRunType(int)</slot>
+    </connection>
+</connections>
+<slots>
+    <slot access="protected">SetRunType(int)</slot>
+</slots>
+<layoutdefaults spacing="6" margin="11"/>
+</UI>

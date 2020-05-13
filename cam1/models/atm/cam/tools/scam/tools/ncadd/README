@@ -1,0 +1,1 @@
+ncadd is a simple utility to add a constant value to a variable in a netCDF file. An example of its use would be to change a temperature variable from Kelvin to Celsius by adding the value 273.1 (?) to it.

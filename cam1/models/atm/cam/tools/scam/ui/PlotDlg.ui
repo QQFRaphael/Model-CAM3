@@ -1,0 +1,732 @@
+<!DOCTYPE UI><UI version="3.0" stdsetdef="1">
+<class>PlotDlg</class>
+<widget class="QDialog">
+    <property name="name">
+        <cstring>PlotDlg</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>534</width>
+            <height>445</height>
+        </rect>
+    </property>
+    <property name="caption">
+        <string>PlotDlg</string>
+    </property>
+    <vbox>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <property name="margin">
+            <number>11</number>
+        </property>
+        <property name="spacing">
+            <number>6</number>
+        </property>
+        <widget class="QLayoutWidget">
+            <property name="name">
+                <cstring>Layout4</cstring>
+            </property>
+            <hbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <property name="margin">
+                    <number>0</number>
+                </property>
+                <property name="spacing">
+                    <number>6</number>
+                </property>
+                <widget class="QPushButton">
+                    <property name="name">
+                        <cstring>AutoscalePB</cstring>
+                    </property>
+                    <property name="font">
+                        <font>
+                            <family>adobe-helvetica</family>
+                            <pointsize>10</pointsize>
+                        </font>
+                    </property>
+                    <property name="text">
+                        <string>&amp;Autoscale</string>
+                    </property>
+                    <property name="accel">
+                        <number>276824129</number>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string>Rescale the plot to fit points lying outside current axis</string>
+                    </property>
+                </widget>
+                <widget class="QPushButton">
+                    <property name="name">
+                        <cstring>PointsPB</cstring>
+                    </property>
+                    <property name="sizePolicy">
+                        <sizepolicy>
+                            <hsizetype>1</hsizetype>
+                            <vsizetype>0</vsizetype>
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                        </sizepolicy>
+                    </property>
+                    <property name="backgroundOrigin">
+                        <enum>WidgetOrigin</enum>
+                    </property>
+                    <property name="font">
+                        <font>
+                            <family>adobe-helvetica</family>
+                            <pointsize>10</pointsize>
+                        </font>
+                    </property>
+                    <property name="text">
+                        <string>&amp;Points</string>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string>Popup a list of the data points</string>
+                    </property>
+                </widget>
+                <widget class="QPushButton">
+                    <property name="name">
+                        <cstring>SavePB</cstring>
+                    </property>
+                    <property name="font">
+                        <font>
+                            <family>adobe-helvetica</family>
+                            <pointsize>10</pointsize>
+                        </font>
+                    </property>
+                    <property name="text">
+                        <string>&amp;Save</string>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string>Save a picture of the plot to disk</string>
+                    </property>
+                </widget>
+                <widget class="QPushButton">
+                    <property name="name">
+                        <cstring>ResetPB</cstring>
+                    </property>
+                    <property name="sizePolicy">
+                        <sizepolicy>
+                            <hsizetype>1</hsizetype>
+                            <vsizetype>0</vsizetype>
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                        </sizepolicy>
+                    </property>
+                    <property name="palette">
+                        <palette>
+                            <active>
+                                <color>
+                                    <red>0</red>
+                                    <green>0</green>
+                                    <blue>0</blue>
+                                </color>
+                                <color>
+                                    <red>214</red>
+                                    <green>214</green>
+                                    <blue>214</blue>
+                                </color>
+                                <color>
+                                    <red>255</red>
+                                    <green>255</green>
+                                    <blue>255</blue>
+                                </color>
+                                <color>
+                                    <red>234</red>
+                                    <green>234</green>
+                                    <blue>234</blue>
+                                </color>
+                                <color>
+                                    <red>150</red>
+                                    <green>150</green>
+                                    <blue>150</blue>
+                                </color>
+                                <color>
+                                    <red>194</red>
+                                    <green>194</green>
+                                    <blue>194</blue>
+                                </color>
+                                <color>
+                                    <red>0</red>
+                                    <green>0</green>
+                                    <blue>0</blue>
+                                </color>
+                                <color>
+                                    <red>255</red>
+                                    <green>255</green>
+                                    <blue>255</blue>
+                                </color>
+                                <color>
+                                    <red>0</red>
+                                    <green>0</green>
+                                    <blue>0</blue>
+                                </color>
+                                <color>
+                                    <red>255</red>
+                                    <green>255</green>
+                                    <blue>255</blue>
+                                </color>
+                                <color>
+                                    <red>214</red>
+                                    <green>214</green>
+                                    <blue>214</blue>
+                                </color>
+                                <color>
+                                    <red>0</red>
+                                    <green>0</green>
+                                    <blue>0</blue>
+                                </color>
+                                <color>
+                                    <red>0</red>
+                                    <green>0</green>
+                                    <blue>156</blue>
+                                </color>
+                                <color>
+                                    <red>255</red>
+                                    <green>255</green>
+                                    <blue>255</blue>
+                                </color>
+                                <color>
+                                    <red>0</red>
+                                    <green>0</green>
+                                    <blue>0</blue>
+                                </color>
+                                <color>
+                                    <red>0</red>
+                                    <green>0</green>
+                                    <blue>0</blue>
+                                </color>
+                            </active>
+                            <disabled>
+                                <color>
+                                    <red>128</red>
+                                    <green>128</green>
+                                    <blue>128</blue>
+                                </color>
+                                <color>
+                                    <red>214</red>
+                                    <green>214</green>
+                                    <blue>214</blue>
+                                </color>
+                                <color>
+                                    <red>255</red>
+                                    <green>255</green>
+                                    <blue>255</blue>
+                                </color>
+                                <color>
+                                    <red>234</red>
+                                    <green>234</green>
+                                    <blue>234</blue>
+                                </color>
+                                <color>
+                                    <red>137</red>
+                                    <green>137</green>
+                                    <blue>137</blue>
+                                </color>
+                                <color>
+                                    <red>194</red>
+                                    <green>194</green>
+                                    <blue>194</blue>
+                                </color>
+                                <color>
+                                    <red>128</red>
+                                    <green>128</green>
+                                    <blue>128</blue>
+                                </color>
+                                <color>
+                                    <red>255</red>
+                                    <green>255</green>
+                                    <blue>255</blue>
+                                </color>
+                                <color>
+                                    <red>128</red>
+                                    <green>128</green>
+                                    <blue>128</blue>
+                                </color>
+                                <color>
+                                    <red>192</red>
+                                    <green>192</green>
+                                    <blue>192</blue>
+                                </color>
+                                <color>
+                                    <red>214</red>
+                                    <green>214</green>
+                                    <blue>214</blue>
+                                </color>
+                                <color>
+                                    <red>0</red>
+                                    <green>0</green>
+                                    <blue>0</blue>
+                                </color>
+                                <color>
+                                    <red>0</red>
+                                    <green>0</green>
+                                    <blue>156</blue>
+                                </color>
+                                <color>
+                                    <red>117</red>
+                                    <green>117</green>
+                                    <blue>117</blue>
+                                </color>
+                                <color>
+                                    <red>0</red>
+                                    <green>0</green>
+                                    <blue>0</blue>
+                                </color>
+                                <color>
+                                    <red>0</red>
+                                    <green>0</green>
+                                    <blue>0</blue>
+                                </color>
+                            </disabled>
+                            <inactive>
+                                <color>
+                                    <red>0</red>
+                                    <green>0</green>
+                                    <blue>0</blue>
+                                </color>
+                                <color>
+                                    <red>214</red>
+                                    <green>214</green>
+                                    <blue>214</blue>
+                                </color>
+                                <color>
+                                    <red>255</red>
+                                    <green>255</green>
+                                    <blue>255</blue>
+                                </color>
+                                <color>
+                                    <red>234</red>
+                                    <green>234</green>
+                                    <blue>234</blue>
+                                </color>
+                                <color>
+                                    <red>150</red>
+                                    <green>150</green>
+                                    <blue>150</blue>
+                                </color>
+                                <color>
+                                    <red>194</red>
+                                    <green>194</green>
+                                    <blue>194</blue>
+                                </color>
+                                <color>
+                                    <red>0</red>
+                                    <green>0</green>
+                                    <blue>0</blue>
+                                </color>
+                                <color>
+                                    <red>255</red>
+                                    <green>255</green>
+                                    <blue>255</blue>
+                                </color>
+                                <color>
+                                    <red>0</red>
+                                    <green>0</green>
+                                    <blue>0</blue>
+                                </color>
+                                <color>
+                                    <red>255</red>
+                                    <green>255</green>
+                                    <blue>255</blue>
+                                </color>
+                                <color>
+                                    <red>214</red>
+                                    <green>214</green>
+                                    <blue>214</blue>
+                                </color>
+                                <color>
+                                    <red>0</red>
+                                    <green>0</green>
+                                    <blue>0</blue>
+                                </color>
+                                <color>
+                                    <red>0</red>
+                                    <green>0</green>
+                                    <blue>156</blue>
+                                </color>
+                                <color>
+                                    <red>255</red>
+                                    <green>255</green>
+                                    <blue>255</blue>
+                                </color>
+                                <color>
+                                    <red>0</red>
+                                    <green>0</green>
+                                    <blue>0</blue>
+                                </color>
+                                <color>
+                                    <red>0</red>
+                                    <green>0</green>
+                                    <blue>0</blue>
+                                </color>
+                            </inactive>
+                        </palette>
+                    </property>
+                    <property name="backgroundOrigin">
+                        <enum>WidgetOrigin</enum>
+                    </property>
+                    <property name="font">
+                        <font>
+                            <family>adobe-helvetica</family>
+                            <pointsize>10</pointsize>
+                        </font>
+                    </property>
+                    <property name="text">
+                        <string>&amp;Reset</string>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string>Reset modified plot to its original state</string>
+                    </property>
+                </widget>
+                <widget class="QPushButton">
+                    <property name="name">
+                        <cstring>ResetPB_2</cstring>
+                    </property>
+                    <property name="sizePolicy">
+                        <sizepolicy>
+                            <hsizetype>1</hsizetype>
+                            <vsizetype>0</vsizetype>
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                        </sizepolicy>
+                    </property>
+                    <property name="palette">
+                        <palette>
+                            <active>
+                                <color>
+                                    <red>0</red>
+                                    <green>0</green>
+                                    <blue>0</blue>
+                                </color>
+                                <color>
+                                    <red>214</red>
+                                    <green>214</green>
+                                    <blue>214</blue>
+                                </color>
+                                <color>
+                                    <red>255</red>
+                                    <green>255</green>
+                                    <blue>255</blue>
+                                </color>
+                                <color>
+                                    <red>234</red>
+                                    <green>234</green>
+                                    <blue>234</blue>
+                                </color>
+                                <color>
+                                    <red>150</red>
+                                    <green>150</green>
+                                    <blue>150</blue>
+                                </color>
+                                <color>
+                                    <red>194</red>
+                                    <green>194</green>
+                                    <blue>194</blue>
+                                </color>
+                                <color>
+                                    <red>0</red>
+                                    <green>0</green>
+                                    <blue>0</blue>
+                                </color>
+                                <color>
+                                    <red>255</red>
+                                    <green>255</green>
+                                    <blue>255</blue>
+                                </color>
+                                <color>
+                                    <red>0</red>
+                                    <green>0</green>
+                                    <blue>0</blue>
+                                </color>
+                                <color>
+                                    <red>255</red>
+                                    <green>255</green>
+                                    <blue>255</blue>
+                                </color>
+                                <color>
+                                    <red>214</red>
+                                    <green>214</green>
+                                    <blue>214</blue>
+                                </color>
+                                <color>
+                                    <red>0</red>
+                                    <green>0</green>
+                                    <blue>0</blue>
+                                </color>
+                                <color>
+                                    <red>0</red>
+                                    <green>0</green>
+                                    <blue>156</blue>
+                                </color>
+                                <color>
+                                    <red>255</red>
+                                    <green>255</green>
+                                    <blue>255</blue>
+                                </color>
+                                <color>
+                                    <red>0</red>
+                                    <green>0</green>
+                                    <blue>0</blue>
+                                </color>
+                                <color>
+                                    <red>0</red>
+                                    <green>0</green>
+                                    <blue>0</blue>
+                                </color>
+                            </active>
+                            <disabled>
+                                <color>
+                                    <red>128</red>
+                                    <green>128</green>
+                                    <blue>128</blue>
+                                </color>
+                                <color>
+                                    <red>214</red>
+                                    <green>214</green>
+                                    <blue>214</blue>
+                                </color>
+                                <color>
+                                    <red>255</red>
+                                    <green>255</green>
+                                    <blue>255</blue>
+                                </color>
+                                <color>
+                                    <red>234</red>
+                                    <green>234</green>
+                                    <blue>234</blue>
+                                </color>
+                                <color>
+                                    <red>137</red>
+                                    <green>137</green>
+                                    <blue>137</blue>
+                                </color>
+                                <color>
+                                    <red>194</red>
+                                    <green>194</green>
+                                    <blue>194</blue>
+                                </color>
+                                <color>
+                                    <red>128</red>
+                                    <green>128</green>
+                                    <blue>128</blue>
+                                </color>
+                                <color>
+                                    <red>255</red>
+                                    <green>255</green>
+                                    <blue>255</blue>
+                                </color>
+                                <color>
+                                    <red>128</red>
+                                    <green>128</green>
+                                    <blue>128</blue>
+                                </color>
+                                <color>
+                                    <red>192</red>
+                                    <green>192</green>
+                                    <blue>192</blue>
+                                </color>
+                                <color>
+                                    <red>214</red>
+                                    <green>214</green>
+                                    <blue>214</blue>
+                                </color>
+                                <color>
+                                    <red>0</red>
+                                    <green>0</green>
+                                    <blue>0</blue>
+                                </color>
+                                <color>
+                                    <red>0</red>
+                                    <green>0</green>
+                                    <blue>156</blue>
+                                </color>
+                                <color>
+                                    <red>117</red>
+                                    <green>117</green>
+                                    <blue>117</blue>
+                                </color>
+                                <color>
+                                    <red>0</red>
+                                    <green>0</green>
+                                    <blue>0</blue>
+                                </color>
+                                <color>
+                                    <red>0</red>
+                                    <green>0</green>
+                                    <blue>0</blue>
+                                </color>
+                            </disabled>
+                            <inactive>
+                                <color>
+                                    <red>0</red>
+                                    <green>0</green>
+                                    <blue>0</blue>
+                                </color>
+                                <color>
+                                    <red>214</red>
+                                    <green>214</green>
+                                    <blue>214</blue>
+                                </color>
+                                <color>
+                                    <red>255</red>
+                                    <green>255</green>
+                                    <blue>255</blue>
+                                </color>
+                                <color>
+                                    <red>234</red>
+                                    <green>234</green>
+                                    <blue>234</blue>
+                                </color>
+                                <color>
+                                    <red>150</red>
+                                    <green>150</green>
+                                    <blue>150</blue>
+                                </color>
+                                <color>
+                                    <red>194</red>
+                                    <green>194</green>
+                                    <blue>194</blue>
+                                </color>
+                                <color>
+                                    <red>0</red>
+                                    <green>0</green>
+                                    <blue>0</blue>
+                                </color>
+                                <color>
+                                    <red>255</red>
+                                    <green>255</green>
+                                    <blue>255</blue>
+                                </color>
+                                <color>
+                                    <red>0</red>
+                                    <green>0</green>
+                                    <blue>0</blue>
+                                </color>
+                                <color>
+                                    <red>255</red>
+                                    <green>255</green>
+                                    <blue>255</blue>
+                                </color>
+                                <color>
+                                    <red>214</red>
+                                    <green>214</green>
+                                    <blue>214</blue>
+                                </color>
+                                <color>
+                                    <red>0</red>
+                                    <green>0</green>
+                                    <blue>0</blue>
+                                </color>
+                                <color>
+                                    <red>0</red>
+                                    <green>0</green>
+                                    <blue>156</blue>
+                                </color>
+                                <color>
+                                    <red>255</red>
+                                    <green>255</green>
+                                    <blue>255</blue>
+                                </color>
+                                <color>
+                                    <red>0</red>
+                                    <green>0</green>
+                                    <blue>0</blue>
+                                </color>
+                                <color>
+                                    <red>0</red>
+                                    <green>0</green>
+                                    <blue>0</blue>
+                                </color>
+                            </inactive>
+                        </palette>
+                    </property>
+                    <property name="backgroundOrigin">
+                        <enum>WidgetOrigin</enum>
+                    </property>
+                    <property name="font">
+                        <font>
+                            <family>adobe-helvetica</family>
+                            <pointsize>10</pointsize>
+                        </font>
+                    </property>
+                    <property name="text">
+                        <string>&amp;Zero</string>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string>Reset modified plot to its original state</string>
+                    </property>
+                </widget>
+                <widget class="QPushButton">
+                    <property name="name">
+                        <cstring>DismissPB</cstring>
+                    </property>
+                    <property name="font">
+                        <font>
+                            <family>adobe-helvetica</family>
+                            <pointsize>10</pointsize>
+                        </font>
+                    </property>
+                    <property name="text">
+                        <string>&amp;Dismiss</string>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string>Close this plot</string>
+                    </property>
+                </widget>
+            </hbox>
+        </widget>
+    </vbox>
+</widget>
+<connections>
+    <connection>
+        <sender>AutoscalePB</sender>
+        <signal>clicked()</signal>
+        <receiver>PlotDlg</receiver>
+        <slot>AutoScale()</slot>
+    </connection>
+    <connection>
+        <sender>DismissPB</sender>
+        <signal>clicked()</signal>
+        <receiver>PlotDlg</receiver>
+        <slot>HideSelf()</slot>
+    </connection>
+    <connection>
+        <sender>ResetPB</sender>
+        <signal>clicked()</signal>
+        <receiver>PlotDlg</receiver>
+        <slot>Reset()</slot>
+    </connection>
+    <connection>
+        <sender>SavePB</sender>
+        <signal>clicked()</signal>
+        <receiver>PlotDlg</receiver>
+        <slot>SavePlot()</slot>
+    </connection>
+    <connection>
+        <sender>PointsPB</sender>
+        <signal>clicked()</signal>
+        <receiver>PlotDlg</receiver>
+        <slot>ShowPlist()</slot>
+    </connection>
+    <connection>
+        <sender>ResetPB_2</sender>
+        <signal>pressed()</signal>
+        <receiver>PlotDlg</receiver>
+        <slot>Zero()</slot>
+    </connection>
+</connections>
+<slots>
+    <slot access="protected">AutoScale()</slot>
+    <slot access="protected">HideSelf()</slot>
+    <slot access="protected">Zero()</slot>
+    <slot access="protected">Reset()</slot>
+    <slot access="protected">SavePlot()</slot>
+    <slot access="protected">SetScaleType()</slot>
+    <slot access="protected">ShowPlist()</slot>
+</slots>
+<layoutdefaults spacing="6" margin="11"/>
+</UI>

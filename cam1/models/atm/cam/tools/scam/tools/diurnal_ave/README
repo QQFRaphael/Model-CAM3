@@ -1,0 +1,5 @@
+diurnal_ave creates a file containing an average day profile from a multiday dataset (i.e., if the original dataset contained data for 1 week, sampled at 1 hourly intervals, the resulting file (called "diurnal.nc") will contain 24 timepoints, each the result of averaging the 7 days of data at a particular hour.
+
+
+
+

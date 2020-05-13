@@ -1,0 +1,10 @@
+cd regrid
+gmake clean; env USER_FC=lf95 DEBUG=FALSE gmake
+REGRID.pl T42
+./regrid -i MODEL.had+oiv2.ice.mnly.49-01.unf.nc -s \
+            MODEL.had+oiv2.sst.mnly.49-01.unf.nc -o regrid.T42.nc -v
+cp regrid.T42.nc ../bcgen
+cd ../bcgen
+<edit prec.f90 to ensure r8 = selected_real_kind(6)>
+gmake clean; env USER_FC=pgf90 DEBUG=FALSE gmake
+./bcgen < namelist.T42.oldtt

@@ -1,0 +1,7 @@
+sdev computes the standard deviation, means, skew and kurtosis of all the variables from an ensemble of datasets and places the results in file called "sdev.nc", "ave.nc", "skew.nc", and "kurt.nc"
+
+If the -l option is used, it will also compute the top n L1 and L2 normalizations for each variable and print them to stdout.
+
+
+usage: sdev [-l[n]] files
+-l[n]: print out highest (n) L1 and L2 normalizations

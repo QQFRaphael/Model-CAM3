@@ -1,0 +1,6 @@
+#!/bin/sh
+for i in $1
+do
+ncmult -o ave_${i}_.nc.m -v Q2,-2498.8055 /data/jhack/aux0/scm_intercompare/arm/ave_${i}_.nc.m
+post ave_${i}_.nc.m $i "NCAR SCCM Simulation `echo $i | tr [a-z] [A-Z]` Ensemble Mean"
+done

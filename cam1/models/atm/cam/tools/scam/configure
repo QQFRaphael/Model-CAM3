@@ -1,0 +1,1046 @@
+#!/bin/sh
+#
+# First, handle command line options
+#
+DEBUG=1
+case $1 in
+"-debug" ) 
+        # trap interrupts (including successful completion) to clean up and exit gracefully with error status
+	DEBUG=1
+	;;
+"-batch")
+	batchmode="TRUE"
+	export batchmode
+	;;
+"")
+	;;
+    *)
+	echo "Unknown option \"${1}\" - ignoring."
+	;;
+esac
+
+MYDIR=`pwd`
+CONFIGUREDIR=`echo $0 | sed s%/configure%%`
+TOP_DIR=`cd $CONFIGUREDIR ; pwd`
+OBJ_DIR=$MYDIR/obj
+UI_DIR=$MYDIR/ui
+INIT_DIR=${TOP_DIR}/scm_init
+NETCDF_HEADER=netcdf.inc
+LIBNETCDF=libnetcdf.a
+CONFIG_OUT=${OBJ_DIR}/config.out
+FILEPATH=${OBJ_DIR}/Filepath
+PARAMS=${OBJ_DIR}/params.h
+PREPROC=${OBJ_DIR}/preproc.h
+MISC=${OBJ_DIR}/misc.h
+ROOTDIRFILE=${OBJ_DIR}/Rootdir
+CONFIG_BAK=${CONFIG_OUT}~
+CTESTSRC=${OBJ_DIR}/ctest.c
+CTESTOBJ=${OBJ_DIR}/ctest.o
+F77TESTSRC=${OBJ_DIR}/ftest.F
+F90TESTSRC=${OBJ_DIR}/ftest.F90
+F90TESTOBJ=${OBJ_DIR}/f90test.o
+F77TESTOBJ=${OBJ_DIR}/f77test.o
+TESTPROG=${OBJ_DIR}/testprg
+HP_COMP_DIRECT=${OBJ_DIR}/HP_compiler_directives
+
+PCNST_DEFAULT=3
+PNATS_DEFAULT=0
+path=`echo $PATH | tr ":" " "`
+
+# First make the object directory
+if [ ! -d $OBJ_DIR              ] ; then mkdir -p $OBJ_DIR                     ; fi
+if [ ! -r $OBJ_DIR/Makefile     ] ; then cp $TOP_DIR/obj/Makefile     $OBJ_DIR ; fi
+if [ ! -r $OBJ_DIR/makdep       ] ; then cp $TOP_DIR/obj/makdep       $OBJ_DIR ; fi
+if [ ! -r $OBJ_DIR/makdep.linux ] ; then cp $TOP_DIR/obj/makdep.linux $OBJ_DIR ; fi
+# Copy the Makefile to the local directory
+if [ ! -r $MYDIR/GNUmakefile    ] ; then cp $TOP_DIR/GNUmakefile $MYDIR        ; fi
+if [ ! -r $MYDIR/.scam_defaults ] ; then cp $TOP_DIR/.scam_defaults $MYDIR     ; fi
+if [ ! -d $MYDIR/userdata       ] ; then mkdir -p $MYDIR/userdata              ; fi
+if [ ! -d $UI_DIR               ] ; then mkdir -p $UI_DIR                      ; fi
+if [ ! -r $UI_DIR/GNUmakefile   ] ; then cp $TOP_DIR/ui/GNUmakefile $UI_DIR    ; fi
+if [ ! -r $UI_DIR/config.out    ] ; then
+    cd $UI_DIR ; $TOP_DIR/ui/configure ; cd $MYDIR
+else
+    echo '*************************'
+    echo The GUI has been successfully configured.  If you wish to reconfigure 
+    echo the gui, you must remove the file 
+    echo $UI_DIR/config.out.
+    echo '*************************'
+fi
+
+# search path is the list of directories to look for ncar graphics and
+#  netcdf libraries
+#
+search_path="`echo $path | sed s:/bin::g` $HOME $TOP_DIR/.. $TOP_DIR/../.. $TOP_DIR/../../.. $LIB_NETCDF/.. $NCARG_ROOT"
+
+stat=1 # DEFAULT EXIT STATUS; RESET TO 0 BEFORE NORMAL EXIT
+
+if [ ! "$DEBUG" ]; then
+    trap 'rm -f $CTESTSRC $CTESTOBJ $F77TESTSRC $F90TESTSRC $F77TESTOBJ  $F90TESTOBJ $TESTPROG $HP_COMP_DIRECT; if [ -f $CONFIG_BAK ]; then mv -f $CONFIG_BAK $CONFIG_OUT; fi; exit 1' 2 3 15
+    trap 'rm -f $CTESTSRC $CTESTOBJ $F77TESTSRC $F77TESTOBJ $F90TESTSRC $F90TESTOBJ $TESTPROG; exit $stat' 0
+fi
+
+
+#
+#  save old config file
+#
+if [ -f $CONFIG_OUT ]; then
+    mv -f $CONFIG_OUT $CONFIG_BAK
+fi
+
+
+#
+# determine how to echo without a newline
+#
+
+if echo "aaa\c" | grep "c" 2>&1 > /dev/null; then
+    echo_nnl="echo -n"
+    nnl=""
+else
+    echo_nnl="echo"
+    nnl="\c"
+fi
+
+########################################################################
+# look for compilers in $PATH
+########################################################################
+
+echo
+echo "Setting compiler options."
+
+CC=""
+FC77=""
+FC90=""
+
+C_compilers="cc gcc xlC"
+F77_compilers="xlf_r pgf77 lf95 f77 fort77 "
+F90_compilers="xlf90_r pgf90 lf95 f90"
+
+for cc in $C_compilers; do 
+    for i in $path; do
+        if [ -x $i/$cc ] ; then
+	    CC=$cc
+	    CCPATH="$i"
+	    $echo_nnl "Use C compiler $i/$CC [y] :${nnl}"
+	    if [ $batchmode ]; then
+		OK=""
+	    else
+		read OK
+	    fi
+	    case $OK in 
+		"" | [yY] | yes | YES )  
+		;;
+		*)
+		CC=""
+		CCPATH=""
+	    esac 
+	    if [ "$CC" ]; then
+		break 2		# found it
+	    fi
+	    break
+        fi
+    done
+done
+
+for fc in $F77_compilers; do 
+    for i in $path; do
+        if [ -x $i/$fc ] ; then
+	    FC77="$fc"
+	    FC77PATH="$i"
+	    $echo_nnl "Use FORTRAN77 compiler $i/$FC77 [y] :${nnl}"
+	    if [ $batchmode ]; then
+		OK=""
+	    else
+		read OK
+	    fi
+	    case $OK in 
+		"" | [yY] | yes | YES )  
+		;;
+		*)
+		FC77=""
+		FC77PATH=""
+	    esac 
+	    if [ "$FC77" ]; then
+		break 2		# found it
+	    fi
+	    break
+	fi
+    done
+done
+
+for fc in $F90_compilers; do 
+    for i in $path; do
+        if [ -x $i/$fc ] ; then
+	    FC90="$fc"
+	    FC90PATH="$i"
+	    $echo_nnl "Use FORTRAN90 compiler $i/$FC90 [y] :${nnl}"
+	    if [ $batchmode ]; then
+		OK=""
+	    else
+		read OK
+	    fi
+	    case $OK in 
+		"" | [yY] | yes | YES )  
+		;;
+		*)
+		FC90=""
+		FC90PATH=""
+	    esac 
+	    if [ "$FC90" ]; then
+		break 2		# found it
+	    fi
+	    break
+	fi
+    done
+done
+
+
+if [ ! "$CC" ]; then
+    echo "Couldn't find a C compiler in your path! (checked for $C_compilers)"
+    exit
+fi
+
+
+if [ ! "$FC77" ]; then
+    echo "Couldn't find a FORTRAN77 compiler in your path! (checked for $F_compilers)"
+    exit
+fi
+if [ ! "$FC90" ]; then
+    echo "Couldn't find a FORTRAN90 compiler in your path! (checked for $F_compilers)"
+    exit
+fi
+
+###################################################################
+# determine the system type and set compiler options accordingly
+###################################################################
+
+MISC_INCLUDES=" "
+MODULE_INCLUDE_FLAG="-I"
+	
+SYSTEM=`uname`
+case "$SYSTEM" in 
+"SunOS")
+    CFLAGS="-I/usr/openwin/include -DREAL_TYPE=double -c"
+    OPTMZ_CFLAGS="-O2"
+    FC77="f77"
+    FC90="f90"
+    LINKER=$FC90
+    F77FLAGS="-xtypemap=integer:32 -xtypemap=real:64 -r8const -c -stackvar"
+    F90FLAGS="-xs -Qoption f90comp -r8const -c -stackvar"
+    STATIC_F77FLAGS="-xtypemap=integer:32 -xtypemap=real:64 -c "
+    STATIC_F90FLAGS="-xs -Qoption f90comp -r8const -c"
+    DEBUG_FFLAGS="-g "
+    DEBUG_CFLAGS="-g "
+    OPTMZ_F90FLAGS="-fast"
+    OPTMZ_F77FLAGS="-O3"
+    SYS_LIBS="-lsocket -lnsl -lm -lf77compat"
+    CPP="/usr/ccs/lib/cpp"
+    CPPFLAGS="-DSUNOS"
+    GENDEP="CPP"
+    GENDEP="MAKDEP"
+    STRIP="strip -x"
+    RPCGEN='rpcgen -C'
+    SYSTEM="Solaris"
+    FIXED_SOURCE_FLAGS=""
+    FREE_SOURCE_FLAGS=""
+    ESMF_ARCH="solaris"
+    MODULE_INCLUDE_FLAG="-M"
+    ;;
+"AIX")
+    cc="xlc"
+    FC77="xlf_r"
+    FC90="xlf90_r"
+    CFLAGS="-Wall  -DREAL_TYPE=double -c"
+    CFLAGS="-DREAL_TYPE=double -c"
+    F90FLAGS="-c -qsuffix=f=f90:cpp=F90 -qrealsize=8 -qintsize=4"
+    F77FLAGS="-c -qfixed=132 -qrealsize=8 -qintsize=4"
+    STATIC_F77FLAGS="$F77FLAGS"
+    STATIC_F90FLAGS="$F90FLAGS"
+    OPTMZ_F90FLAGS="-O2"
+    OPTMZ_F77FLAGS="-O2"
+    SYS_LIBS="-lm -lpthreads -llapack -lblas"
+    LINKER=$FC90
+    FFLAGS="-qrealsize=8 -qintsize=4 -qflttrap=overflow:zerodivide:invalid:enable -qsave -d"
+    DEBUG_FFLAGS=" -g -qinitauto=FF911299 -qflttrap=ov:zero:inv:en "
+    DEBUG_CFLAGS=" -g "
+    CPP="cpp -P"
+    GENDEP="MAKEDEPEND"
+    CPPFLAGS="-DAIX"
+    NETCDF_INC="/usr/local/include"
+    NETCDF_LIB="/usr/local/lib32/r4i4"
+    STRIP="strip"
+    RPCGEN="rpcgen"
+    TESTFLAGS=""
+    ESMF_ARCH="rs6000_sp"
+    ;;
+"IRIX64")
+    cc="cc"
+    FC77="f90"
+    FC90="f90"
+    CFLAGS="-Wall  -DREAL_TYPE=double -c"
+    CFLAGS="-64 -DREAL_TYPE=double -c"
+    F90FLAGS="-c -64  -r8 -i4 -c -cpp -extend_source "
+    F77FLAGS="-c -64  -r8 -i4 -c -cpp -extend_source "
+    STATIC_F77FLAGS="-static $F77FLAGS"
+    STATIC_F90FLAGS="-static $F90FLAGS"
+    OPTMZ_F90FLAGS="-O2"
+    OPTMZ_F77FLAGS="-O2"
+    SYS_LIBS=
+    LINKER="$FC90 -64"
+    FFLAGS=" -64 -r8 -i4 -c -cpp -extend_source "
+    DEBUG_FFLAGS=" -g "
+    DEBUG_CFLAGS=" -g "
+    CPP="cpp -P"
+    GENDEP="MAKEDEPEND"
+    CPPFLAGS="-DIRIX64"
+    NETCDF_INC="/usr/local/include"
+    NETCDF_LIB="/usr/local/lib64/r4i4"
+    STRIP="strip"
+    RPCGEN="rpcgen"
+    TESTFLAGS=""
+    ESMF_ARCH="IRIX64"
+    ;;
+"Linux")
+    SETLINUX="TRUE"
+    CFLAGS="-Wall  -DREAL_TYPE=double -c"
+    OPTMZ_CFLAGS="-O2"
+    case "$FC90" in
+    "pgf90")
+    FC77="pgf77"
+    FC90="pgf90"
+    ESMF_ARCH="linux_pgi"
+    FFLAGS="-c -r8 -i4  -Mrecursive -Mdalign -Mbounds"
+    DEBUG_FFLAGS="-g"
+    FREE_SOURCE_FLAGS="-Mfree"
+    FIXED_SOURCE_FLAGS="-Mnofree"
+    CPPFLAGS='-DLINUX -DPGF90 -DNO_R16 '
+    OPTMZ_F77FLAGS="-fast"
+    OPTMZ_F90FLAGS="-fast"
+    ;;
+    "lf95")
+    FC77="lf95"
+    FC90="lf95"
+    ESMF_ARCH="linux_lf95"
+    FFLAGS="-c -CcdRR8 -DHIDE_SHR_MSG --trace --trap"
+    DEBUG_FFLAGS="-g --chk esau"
+    FREE_SOURCE_FLAGS=""
+    FIXED_SOURCE_FLAGS=""
+    CPPFLAGS='-DLINUX '
+    OPTMZ_F77FLAGS="-O"
+    OPTMZ_F90FLAGS="-O"
+    ;;
+    * )
+    echo "Unsupported Linux compiler option"
+    ;;
+    esac
+    TESTFLAGS=""
+    SYS_LIBS=""
+    F90FLAGS="$FFLAGS"
+    F90FLAGS_NODBG="$FFLAGS"
+    F77FLAGS="$FFLAGS"
+    DEBUG_CFLAGS="-g"
+    MISC_INCLUDES=""
+    STATIC_F77FLAGS="$F77FLAGS"
+    STATIC_F90FLAGS="$F90FLAGS"
+    LINKER="$FC90"
+    GENDEP="MAKDEP" 
+    DEPGEN="makdep.linux" 
+    CPP="/lib/cpp"
+    STRIP="strip -g"
+    RPCGEN="rpcgen"
+    MODULE_INCLUDE_FLAG="-I"
+    ;;
+*)
+    echo "**** UNSUPPORTED SYSTEM: $SYSTEM ****"
+    exit
+    ;;
+esac
+
+######################################################################
+# Get Path to cam source
+######################################################################
+echo
+CAM_SRC_PATH_DEFAULT=`echo $TOP_DIR | sed s%tools/scam%src%`
+ROOTDIR=`cd ${TOP_DIR}/../../../../.. ; pwd `
+if [ ! $batchmode ]; then
+    while [ 1 ]; do
+	$echo_nnl "Path to search for cam source files? (Use full pathnames) [$CAM_SRC_PATH_DEFAULT] : ${nnl}" 
+	read CAM_SOURCE_PATH
+	if [ ! "$CAM_SOURCE_PATH" ]; then
+	    CAM_SOURCE_PATH=$CAM_SRC_PATH_DEFAULT
+	    break
+	else
+	    CAM_SOURCE_PATH=`echo $CAM_SOURCE_PATH | tr " " ":" | tr "," ":"`
+#confirm that CAM_SOURCE_PATH directories actually exist
+	    dirs=`echo $CAM_SOURCE_PATH | tr ":" " "`
+	    for i in $dirs; do
+		if [ ! -d $i ]; then
+		    echo "$i does not exist!"
+		    CAM_SOURCE_PATH=""
+		    break
+		fi
+	    done
+	    if [ "$CAM_SOURCE_PATH" ]; then
+		break;  # all directories are ok
+	    fi
+	fi
+    done
+fi
+
+#####################################################################
+#  Query user for model parameters
+#####################################################################
+
+echo
+CAM_VERS=2
+CAM_MINOR_VERS=0
+MODL_DIR=$CAM_SOURCE_PATH/models/atm/cam1/src/physics
+INIT_DIR=$TOP_DIR/scm_init
+echo "Building CAM2"  
+
+echo
+
+if [ ! $batchmode ]; then
+    $echo_nnl "Number of vertical levels (PLEV)? [26] : ${nnl}" 
+    read PLEV
+fi
+if [ ! "$PLEV" ]; then
+    PLEV=26
+fi
+
+echo
+if [ ! $batchmode ]; then
+$echo_nnl "Number of advected constituents (PCNST) ? [$PCNST_DEFAULT] : ${nnl}" 
+read PCNST
+fi
+if [ "$PCNST" = "" ]; then
+    PCNST=$PCNST_DEFAULT
+fi
+
+echo
+if [ ! $batchmode ]; then
+$echo_nnl "Number of non-advected constituents (PNATS) ? [$PNATS_DEFAULT] : ${nnl}"
+read PNATS
+fi
+if [ "$PNATS" = "" ]; then
+    PNATS=$PNATS_DEFAULT
+fi
+
+#####################################################################
+#  set ALT_SOURCE_PATH (VPATH)
+####################################################################
+
+echo
+ALT_SRC_PATH_DEFAULT="$TOP_DIR/mymods"
+if [ ! $batchmode ]; then
+while [ 1 ]; do
+    $echo_nnl "Dir to search for alternate source files? (Use full pathnames) [$ALT_SRC_PATH_DEFAULT] : ${nnl}" 
+    read ALT_SOURCE_PATH
+    if [ ! "$ALT_SOURCE_PATH" ]; then
+	ALT_SOURCE_PATH=$ALT_SRC_PATH_DEFAULT
+	break
+    else
+	ALT_SOURCE_PATH=`echo $ALT_SOURCE_PATH | tr " " ":" | tr "," ":"`
+	#confirm that ALT_SOURCE_PATH directories actually exist
+	dirs=`echo $ALT_SOURCE_PATH | tr ":" " "`
+	for i in $dirs; do
+	    if [ ! -d $i ]; then
+		echo "$i does not exist!"
+		ALT_SOURCE_PATH=""
+		break
+	    fi
+	done
+	if [ "$ALT_SOURCE_PATH" ]; then
+	    break;  # all directories are ok
+	fi
+    fi
+done
+fi
+if [ ! $batchmode ]; then
+while [ 1 ]; do
+    echo
+    $echo_nnl "Additional Modified Source Directories? [n] ${nnl}"
+    read NEXT_ALT_PATH
+    NEXT_ALT_PATH=`echo $NEXT_ALT_PATH | tr " " ":" | tr "," ":"`
+    case $NEXT_ALT_PATH in
+    "" | [nN] | no | No | NO )
+	break
+	;;
+    *)
+	dirs=`echo $NEXT_ALT_PATH | tr ":" " "`
+	for i in $dirs; do
+	   if [ ! -d $i ]; then
+		echo "$i does not exist!"
+		NEXT_ALT_PATH=""
+		break
+	    fi
+	done
+       ;;
+    esac
+    if [ "$NEXT_ALT_PATH" ]; then
+	ALT_SOURCE_PATH="${ALT_SOURCE_PATH}:${NEXT_ALT_PATH}"
+    fi
+done
+fi
+#####################################################################
+#  try to find netCDF header and library
+####################################################################
+
+#
+#  check_nc_root: function that checks for correct version of netcdf
+#  - looks for the string NF_MAX_VAR_DIMS which is only present
+#    in version 3 or later of the header file
+#
+check_nc_root() 
+{
+    [ -r $NETCDF_ROOT/include/$NETCDF_HEADER ] && \
+    [ -r $NETCDF_ROOT/lib/$LIBNETCDF ] && \
+    /bin/grep -i NF_MAX_VAR_DIMS ${NETCDF_ROOT}/include/$NETCDF_HEADER  2>&1 > /dev/null 
+}
+
+check_nc_lib() 
+{
+    [ -r $NETCDF_LIB/$LIBNETCDF ]
+}
+
+check_nc_inc() 
+{
+    [ -r $NETCDF_INC/$NETCDF_HEADER ] && \
+    /bin/grep -i NF_MAX_VAR_DIMS ${NETCDF_INC}/$NETCDF_HEADER  2>&1 > /dev/null 
+}
+
+
+if [ -n $NETCDF_ROOT ] && check_nc_root
+then
+    NETCDF_LIB=$NETCDF_ROOT/lib
+    NETCDF_INC=$NETCDF_ROOT/include
+else
+    echo; echo "Searching for netCDF library and header... "
+    for i in $search_path; do
+	for dir in $i $i/netcdf*; do
+	    if [ -d $dir ]; then	# only look at directories
+		NETCDF_ROOT=`(cd $dir;pwd)` # get absolute path
+		check_nc_root || {
+		    NETCDF_ROOT=""
+		    continue
+		}
+		if [ ! $batchmode ]; then
+		    echo
+		    $echo_nnl "Use header and library in $NETCDF_ROOT/include and $NETCDF_ROOT/lib? [y] :${nnl}"
+		    read OK
+		    case $OK in 
+			"" | [yY] | yes | YES )  
+			;;
+			*)
+			    NETCDF_ROOT=""
+			    NETCDF_LIB=""
+			    NETCDF_INC=""
+		    esac 
+		fi
+	    fi
+	    if [ "$NETCDF_ROOT" ]; then
+		NETCDF_LIB=$NETCDF_ROOT/lib
+		NETCDF_INC=$NETCDF_ROOT/include
+		break 2		# found it
+	    fi
+	done
+    done
+fi
+
+if ([ ! "$NETCDF_ROOT" ]); then
+    echo "Couldn't find valid netCDF library and header files." ; echo
+    while [ 1 ]; do 
+	$echo_nnl "Enter location of netCDF library directory: $nnl"
+	read NETCDF_LIB
+	{ 
+	    check_nc_lib && break 
+	} || {
+      	    echo "Invalid choice: netCDF lib not present or wrong version !"
+     	    NETCDF_LIB=""
+      	    continue
+	}
+    done
+    while [ 1 ]; do 
+	$echo_nnl "Enter location of netCDF include directory: $nnl"
+	read NETCDF_INC
+	{ 
+	    check_nc_inc && break 
+	} || {
+      	    echo "Invalid choice: netCDF headers not present or wrong version !"
+     	    NETCDF_INC=""
+      	    continue
+	}
+    done
+fi
+
+############################################################
+# set static vs. stack and debug vs. optimize options
+############################################################
+echo
+while [ 1 ]; do
+    $echo_nnl "Generate static or stack based code? (Statically compiled code is larger, but may fix crashing problem seen with some versions of netCDF libraries.) [static]: $nnl"
+    if [ $batchmode ]; then
+	option=""
+    else
+	read option
+    fi
+    case $option in
+	stat* | STAT* | "" )
+	    F90FLAGS="$STATIC_F90FLAGS"
+	    F77FLAGS="$STATIC_F77FLAGS"
+	    break
+	    ;;
+	stac* | STAC* )
+	    break
+	    ;;
+	* )
+	    echo "Don't understand $option, please type static or stack"
+	    ;;
+    esac
+done
+
+echo
+while [ 1 ]; do
+    $echo_nnl "Generate optimized or debug code? (o/d) [d]: $nnl"
+    if [ $batchmode ]; then
+	option=""
+    else
+	read option
+    fi
+    case $option in
+	o | O )
+	    F77FLAGS="$F77FLAGS $OPTMZ_F77FLAGS"
+	    F90FLAGS="$F90FLAGS $OPTMZ_F90FLAGS"
+	    CFLAGS="$CFLAGS $OPTMZ_CFLAGS"
+	    break
+	    ;;
+	d | D  | "" )
+	    F90FLAGS_NODBG="$F90FLAGS"
+	    F77FLAGS="$F77FLAGS $DEBUG_FFLAGS"
+	    F90FLAGS="$F90FLAGS $DEBUG_FFLAGS"
+	    CFLAGS="$CFLAGS $DEBUG_CFLAGS"
+	    break
+	    ;;
+	* )
+	    echo "Don't understand $option, please type o or d"
+	    ;;
+    esac
+done
+
+###################################################################
+# Create a link to the data directory if one doesn't already exist
+###################################################################
+
+check_datadir() 
+{
+    [ -r $datadir/atm/cam2/scam ]
+}
+
+if [ ! -d ./data/global ]; then
+
+    if ([ ! "$CSMDATA" ]); then
+	if [ ! -d /fs/cgd/csm/inputdata/atm/cam2/scam ]; then
+	    while [ 1 ]; do 
+		$echo_nnl "Enter top level scam data directory: $nnl"
+		read datadir
+		{ 
+		    check_datadir && break 
+		} || {
+		    echo "Invalid choice: scam data not found!"
+		    datadir=""
+		    continue
+		}
+	    done
+	else
+	    datadir="/fs/cgd/csm/inputdata"
+	    echo "Using /fs/cgd/csm/inputdata/atm/cam2/scam for scam data"
+	fi
+    else
+	datadir="$CSMDATA"
+	while [ 1 ]; do 
+	    { 
+		check_datadir && break  
+	    } || {
+		echo "environment variable CSMDATA is set incorrectly: scam data not found!"
+		$echo_nnl "Enter top level scam data directory: $nnl"
+		read datadir
+		continue
+	    }
+	done
+	echo;echo "Using $CSMDATA/atm/cam2/scam as scam data directory"
+    fi
+    
+    ln -s $datadir/atm/cam2/scam/* ./data || {
+	echo "Unable to create link for scam data!: Please create manually before running scam.";echo;}
+    
+fi
+#####################################################################
+# source for compiler test program
+#####################################################################
+
+cat << EOF > $F77TESTSRC
+
+      subroutine test_double77( din, dout )
+      real din(4), dout(4)
+      integer i
+      do i=1,4
+          dout(i) = din(i)
+      enddo
+      return
+      end
+
+      subroutine test_int77( iin, iout )
+      integer iin(4), iout(4)
+      integer i
+      do i=1,4
+          iout(i) = iin(i)
+      enddo
+      return
+      end
+      
+EOF
+
+cat << EOF > $F90TESTSRC
+subroutine test_double90( din, dout )
+!
+  integer, parameter :: r8 = selected_real_kind(12)
+!
+  real(r8) din(4), dout(4)
+  integer i
+  do i=1,4
+    dout(i) = din(i)
+  enddo
+  return
+end subroutine test_double90
+!
+!
+subroutine test_int90( iin, iout )
+!
+  integer iin(4), iout(4)
+  integer i
+  do i=1,4
+      iout(i) = iin(i)
+  enddo
+  return
+end subroutine test_int90
+      
+EOF
+
+
+cat << EOF > $CTESTSRC
+#include <stdlib.h>
+#include <stdio.h>
+#include "fortran.h"
+extern void test_int77( int* i, int* ii);
+extern void test_double77( double* i, double* ii);
+extern void test_int90( int* i, int* ii);
+extern void test_double90( double* i, double* ii);
+
+int run_tests() {
+    int k,j;
+    double d[4] = { 2.0, 4.0, 8.0, 16.0 };
+    double dout[4] = { 0.0, 0.0, 0.0, 0.0 };
+    int i[4] = { 2, 4, 8, 16 };
+    int iout[4] = { 0, 0, 0, 0 };
+    if ( sizeof(i[0]) != 4 ) {
+	fprintf( stderr, "ERROR - C compiler uses %d byte integers\n", sizeof(i[0]) );
+	exit( 1 );
+    }
+    if ( sizeof(d[0]) != 8 )  {
+	fprintf( stderr, "ERROR - C compiler uses %d byte doubles\n", sizeof(d[0]) );
+	exit( 1 );
+    }
+/*
+ * Test the size of integers for fortran 77 code
+ */    
+    test_int77( i, iout );
+    for ( k=0; k<4; k++ ) 
+	if ( i[k] != iout[k] ) {
+	    fprintf( stderr, "ERROR - FORTRAN compiler not using 4 byte integers\n" );
+	    for (j=0;j<4;j++)
+		fprintf(stderr,"%d: in->%d, out->%d\n", j, i[j], iout[j] );
+	    exit( 1 );
+       }
+/*
+ * Test the size of integers for fortran 90 code
+ */    
+    test_int90( i, iout );
+    for ( k=0; k<4; k++ ) 
+	if ( i[k] != iout[k] ) {
+	    fprintf( stderr, "ERROR - FORTRAN compiler not using 4 byte integers\n" );
+	    for (j=0;j<4;j++)
+		fprintf(stderr,"%d: in->%d, out->%d\n", j, i[j], iout[j] );
+	    exit( 1 );
+       }
+/*
+ * Test the size of doubles for f77 code
+ */
+    test_double77( d, dout );
+    for ( k=0; k<4; k++ ) 
+	if ( d[k] != dout[k] ) {
+	    fprintf( stderr, "ERROR - FORTRAN 77 compiler not using 8 byte reals" );
+	    exit( 1 );
+       }
+/*
+ * Test the size of doubles for f90 code
+ */
+    test_double90( d, dout );
+    for ( k=0; k<4; k++ ) 
+	if ( d[k] != dout[k] ) {
+	    fprintf( stderr, "ERROR - FORTRAN 90 compiler not using 8 byte reals" );
+	    exit( 1 );
+       }
+      
+    return( 0 );
+}
+
+int main() 
+{
+    return run_tests();
+}
+
+EOF
+
+
+#####################################################################
+#  test the compilers/linker
+#  On some systems, we can't use the fortran compiler for linking
+#   so we have the TESTFLAGS to compile the  C and Fortran source
+#   files appropriately. (need to have "main()" or "program" statements
+#   present in appropriate file)
+#####################################################################
+
+echo
+$echo_nnl "Checking C compiler ($CC)... ${nnl}"
+compile_line="$CC -c $CFLAGS -o $CTESTOBJ $CPPFLAGS $TESTFLAGS -I$INIT_DIR $CTESTSRC"
+if [ "$DEBUG" ]; then 
+    echo $compile_line
+fi    
+eval "$compile_line > /dev/null 2>&1" || {
+    echo "failed."
+    echo "Command that failed:"
+    echo $compile_line
+    eval "$compile_line"
+    exit
+}
+
+echo "ok."
+
+$echo_nnl "Checking FORTRAN77 compiler ($FC77)... ${nnl}"
+compile_line="$FC77 -c $F77FLAGS -o $F77TESTOBJ $CPPFLAGS $TESTFLAGS -I$INIT_DIR $F77TESTSRC"
+if [ "$DEBUG" ]; then 
+    echo $compile_line
+fi
+eval "$compile_line > /dev/null 2>&1" || {
+    echo "failed."
+    echo "Command that failed:"
+    echo $compile_line
+    eval "$compile_line"
+    exit
+}
+
+echo "ok."
+
+
+$echo_nnl "Checking FORTRAN90 compiler ($FC90)... ${nnl}"
+compile_line="$FC90 -c $F90FLAGS -o $F90TESTOBJ $CPPFLAGS $TESTFLAGS -I$INIT_DIR $F90TESTSRC"
+if [ "$DEBUG" ]; then 
+    echo $compile_line
+fi
+eval "$compile_line > /dev/null 2>&1" || {
+    echo "failed."
+    echo "Command that failed:"
+    echo $compile_line
+    eval "$compile_line"
+    exit
+}
+
+echo "ok."
+
+
+$echo_nnl "Checking linker ($LINKER)... ${nnl}"
+compile_line="$LINKER -o $TESTPROG $CTESTOBJ $F90TESTOBJ $F77TESTOBJ $SYS_LIBS"
+if [ "$DEBUG" ]; then 
+    echo $compile_line
+fi
+eval "$compile_line > /dev/null 2>&1" || {
+    echo "failed."
+    echo "Command that failed:"
+    echo $compile_line
+    eval "$compile_line"
+    exit
+}
+
+echo "ok."
+
+#
+# check that netcdf libraries are linkable
+#  this is especially important on SGI because of possibilty
+#  of getting wrong binary formats 
+#
+
+$echo_nnl "Checking netCDF library for linking... ${nnl}"
+compile_line="$LINKER -o $TESTPROG $CTESTOBJ $F77TESTOBJ $F90TESTOBJ -L${NETCDF_LIB} -lnetcdf $SYS_LIBS"
+if [ "$DEBUG" ]; then 
+    echo $compile_line
+fi
+eval "$compile_line > /dev/null 2>&1"  || {
+    echo "failed."
+    echo "Command that failed:"
+    echo $compile_line
+    eval "$compile_line"
+    exit
+}
+
+echo "ok."
+
+#
+# run the test program - checks that sizes of FORTRAN reals and integers are 
+#   the same size as C doubles and ints: 8 and 4 bytes respectively
+#
+$echo_nnl "Running test program... ${nnl}"
+$TESTPROG ||  { echo "failed."; exit; }
+
+echo "ok."
+
+rm -f $CTESTSRC $CTESTOBJ $F77TESTSRC $F90TESTSRC $F90TESTOBJ $F77TESTOBJ $TESTPROG
+echo "ok1"
+
+###################################################################
+#  write the RootDir file
+###################################################################
+
+cat << EOF0 > $ROOTDIRFILE
+$ROOTDIR
+EOF0
+echo "ok2"
+###################################################################
+#  write the params
+###################################################################
+
+cat << EOF1 > $PARAMS
+#ifndef PARAMS_SET
+#define PARAMS_SET
+#undef STAGGERED
+#undef COUP_SOM
+#endif
+EOF1
+echo "ok3"
+###################################################################
+#  write the preproc file
+###################################################################
+
+cat << EOF2 > $PREPROC
+#ifndef PREPROC_SET
+#define PREPROC_SET
+#define COUP_CAM
+#define LSMLON 1
+#define LSMLAT 1
+#endif
+EOF2
+echo "ok4"
+###################################################################
+#  write the misc file
+###################################################################
+
+cat << EOF3 > $MISC
+#ifndef MISC_SET
+#define MISC_SET
+#undef PERGRO
+#undef SPMD
+#define SCAM
+#endif
+EOF3
+
+###################################################################
+#  write the Filepath file
+###################################################################
+dirs=`echo $ALT_SOURCE_PATH | tr ":" " "`
+if [ -r $FILEPATH ] ; then rm $FILEPATH ; fi
+touch $FILEPATH
+for i in $dirs; do
+    echo $i >> $FILEPATH
+done
+
+cat << EOF4 >> $FILEPATH
+$INIT_DIR
+$ROOTDIR/models/atm/cam/src/dynamics/eul
+$ROOTDIR/models/atm/cam/src/control
+$ROOTDIR/models/atm/cam/src/advection/slt
+$ROOTDIR/models/atm/cam/src/physics/cam1
+$ROOTDIR/models/atmlnd_share
+$ROOTDIR/models/csm_share
+$ROOTDIR/models/csm_share/shr
+$ROOTDIR/models/atm/cam/src/ocnsice/dom
+$ROOTDIR/models/ice/csim4
+$ROOTDIR/models/atm/cam/src/utils
+$ROOTDIR/models/utils/pilgrim
+$ROOTDIR/models/utils/timing
+$ROOTDIR/models/lnd/clm2/src/main
+$ROOTDIR/models/lnd/clm2/src/biogeophys
+$ROOTDIR/models/lnd/clm2/src/biogeochem
+$ROOTDIR/models/lnd/clm2/src/mksrfdata
+$ROOTDIR/models/lnd/clm2/src/ecosysdyn
+EOF4
+###################################################################
+#  write the configuration file
+###################################################################
+
+cat << EOF5 > $CONFIG_OUT
+
+# SCAM CONFIG generated `date` 
+
+#
+#   compiler settings
+#
+SYSTEM          = $SYSTEM
+CC              = $CC 
+FC90              = $FC90
+FC77              = $FC77
+CFLAGS          = $CFLAGS
+F77FLAGS          = $F77FLAGS
+F90FLAGS          = $F90FLAGS
+F90FLAGS_NODBG    = $F90FLAGS_NODBG
+FIXED_SOURCE_FLAGS = $FIXED_SOURCE_FLAGS
+FREE_SOURCE_FLAGS = $FREE_SOURCE_FLAGS
+STRIP           = $STRIP
+RPCGEN          = $RPCGEN
+LINKER          = $LINKER
+CPP             = $CPP
+GENDEP          = $GENDEP
+ESMF_ARCH       = $ESMF_ARCH
+DEPGEN          = $DEPGEN
+CPPFLAGS        = $CPPFLAGS
+SYS_LIBS        = $SYS_LIBS
+#
+#  netcdf 
+#
+NETCDF_ROOT =     $NETCDF_ROOT
+NETCDF_LIB =     $NETCDF_LIB
+NETCDF_INC =     $NETCDF_INC
+#
+#  model parameters
+#
+CAM_VERS =        $CAM_VERS
+CAM_MINOR_VERS =  $CAM_MINOR_VERS
+USE_CW =          $USE_CW
+MODL_DIR =        $MODL_DIR
+ROOTDIR =         $ROOTDIR
+INIT_DIR =        $INIT_DIR
+PLEV =            $PLEV
+PCNST =           $PCNST
+PNATS =           $PNATS
+PTRM = 42
+PTRN = 42
+PTRK = 42
+ALT_SOURCE_PATH = $ALT_SOURCE_PATH
+MODULE_INCLUDE_FLAG = $MODULE_INCLUDE_FLAG
+MISC_INCLUDES = $MISC_INCLUDES
+EOF5
+
+echo
+echo "Configuration successful: output is in \"${CONFIG_OUT}\"."
+echo
+
+stat=0 #successful
+exit $stat

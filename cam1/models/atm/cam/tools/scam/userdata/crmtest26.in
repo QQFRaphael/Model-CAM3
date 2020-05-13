@@ -1,0 +1,52 @@
+RADIATION CODE INPUT FILE: crm.dat
+Clear Sky, Tropical, Location and Date Indicated
+Andrew Gettelman, January 2003, crm Format
+   72.358174   Julian Day / time (greenwich 1.5 = noon Jan 1 GMT)
+   -0.900000   Latitude (deg N -90 to 90)
+     Level   P [hPa]     T [K]   H2O mmr    O3 mmr   cld frc   cld LWP
+         1     229.900    226.35 7.057e-05 4.929e-08     0.000     0.000
+         2     238.725    228.37 8.602e-05 4.884e-08     0.000     0.000
+         3     247.750    230.42 0.0001063 4.842e-08     0.000     0.000
+         4     257.038    232.52 0.0001282 4.859e-08     0.000     0.000
+         5     266.587    234.61 0.0001531 4.938e-08     0.000     0.000
+         6     276.500    236.67 0.0001860 5.033e-08     0.000     0.000
+         7     286.525    238.70 0.0002182 5.120e-08     0.000     0.000
+         8     296.962    240.72 0.0002588 5.207e-08     0.000     0.000
+         9     307.600    242.69 0.0003161 5.194e-08     0.000     0.000
+        10     318.513    244.62 0.0003879 5.120e-08     0.000     0.000
+        11     329.825    246.53 0.0004841 5.037e-08     0.000     0.000
+        12     341.387    248.42 0.0005834 4.987e-08     0.000     0.000
+        13     353.263    250.31 0.0006721 4.958e-08     0.000     0.000
+        14     365.450    252.22 0.0007601 4.987e-08     0.000     0.000
+        15     377.988    254.14 0.0008320 5.070e-08     0.000     0.000
+        16     390.850    256.06 0.0009060 5.165e-08     0.000     0.000
+        17     404.062    257.93  0.001022 5.252e-08     0.000     0.000
+        18     417.513    259.65  0.001213 5.290e-08     0.000     0.000
+        19     431.438    261.22  0.001447 5.314e-08     0.000     0.000
+        20     445.688    262.68  0.001688 5.277e-08     0.000     0.000
+        21     460.400    264.07  0.001940 5.223e-08     0.000     0.000
+        22     575.412    265.41  0.002230 5.140e-08     0.000     0.000
+        23     690.975    266.78  0.002526 5.037e-08     0.000     0.000
+        24     706.750    268.18  0.002818 4.888e-08     0.000     0.000
+        25     823.175    269.62  0.003167 4.710e-08     0.000     0.000
+        26     939.662    271.05  0.003548 4.515e-08     0.000     0.000
+       1008.   Surface Pressure (hPa)
+       301.3   Surface Temperature
+       301.3   Ground (Skin) Temperature
+       0.000   Surface type flag (0=ocn, 1=lnd, 2=sea ice)
+    0.010000   Surface aerodynamic roughness [m] (obsolete)
+       0.000   Snow cover liquid water equivalent [m]
+      0.1000   Albedo (Vis, direct)
+      0.1000   Albedo (Vis, diffuse)
+      0.1000   Albedo (NIR, direct)
+      0.1000   Albedo (NIR, diffuse)
+       0.000   Fraction strong zenith angle dep. sfc. (obsolete)
+   0.0003650   CO2 volume mixing ratio
+   3.150E-07   N2O volume mixing ratio
+   1.750E-06   CH4 volume mixing ratio
+   2.700E-10   CFC11 volume mixing ratio
+   5.350E-10   CFC12 volume mixing ratio
+      0.1400   Aerosol visible extinction optical depth
+       683.5   Solar Constant (w m-2)
+       1998.   Year (AD)
+       0.000   Longitude (deg E 0-360)

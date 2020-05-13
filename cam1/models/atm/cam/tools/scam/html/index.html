@@ -1,0 +1,338 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="GENERATOR" content="Mozilla/4.78 [en] (X11; U; Linux 2.4.8-26mdkenterprise i686) [Netscape]">
+   <title> NCAR SCAM Home Page  </title>
+</head>
+<body bgcolor="#FFFFF0">
+
+<center>
+<h1>
+<a NAME="top"></a><img SRC="http://www.cgd.ucar.edu/cms/scam/gif/g2.gif" NOSAVE height=32 width=32>
+Welcome to the
+<font color="#FF0000">SCAM</font> Home Page&nbsp;<img SRC="http://www.cgd.ucar.edu/cms/scam/gif/g2.gif" NOSAVE height=32 width=32></h1></center>
+
+<center>
+<h2>
+The NCAR <font color="#FF0000">S</font>ingle-column <font color="#FF0000">C</font>ommunity
+<font color="#FF0000">A</font>tmosphere
+<font color="#FF0000">M</font>odel</h2></center>
+
+<hr>
+<ul>
+<li>
+<a href="#desc">What is SCAM?</a>- description of the model framework.</li>
+
+<li>
+<a href="#download">SCAM-2 Released</a>- new version of single column model
+based on CAM2</li>
+
+<li>
+<a href="http://www.cgd.ucar.edu/cms/scam/userguide.html">SCAM-2&nbsp;
+Online User's Guide</a></li>
+
+<li>
+<a href="#_Bulletin">Bulletins!</a> - Important Announcements, News and
+Information.</li>
+
+<li>
+<a href="#Release History">Release History</a> - outline of changes between
+version releases</li>
+
+<li>
+<a href="#download">Download</a> Source Code, Datasets, Documentation.</li>
+
+<li>
+<a href="#patches">Patches </a>- new versions of source code that fix problems
+or improve functionality.</li>
+
+<li>
+<a href="#related_sites">Links to Related Sites</a></li>
+
+<li>
+<a href="#bugs">Known Bugs, Problems</a></li>
+</ul>
+
+<hr>
+<h3>
+<a NAME="desc"></a>What is SCAM2?</h3>
+The SCAM is a one-dimensional time-dependent version of the NCAR Community
+Atmosphere Model, often referred to as a Single Column Model (SCM). A single
+column model will predict the local time-rate-of-change of the large-scale
+state variables (e.g., temperature, moisture, momentum, cloud water, etc.)
+using specified horizontal flux divergences, a specified vertical motion
+field (from which the large-scale vertical advection terms are evaluated),
+and subgrid-scale sources, sinks and eddy transports. The subgrid-scale
+contributions are determined by an arbitrary collection of user-selected
+subgrid-scale physics parameterizations.
+<p>SCAM-2 is the latest version of the NCAR Single Column Model based on
+its 3D global climate
+<br>model CAM2.&nbsp; Previous versions of the single column model based
+on older releases of the global model are no longer being maintained although
+they can still be downloaded from&nbsp; <a href="http://www.cgd.ucar.edu/cms/sccm/sccm.html">www.cgd.ucar.edu/cms/sccm/sccm.html</a>.
+<p>This software distribution will build a single column version of the
+<a href="http://www.ccsm.ucar.edu/models/atm-cam/">CAM2.0</a>
+model released on May 17, 2002.&nbsp; The single column framework was redesigned to use much of the original CAM2 code and data structures as possible.&nbsp;
+Therefore all physics parameterizations and surface components are identical
+in coding structure to their respective counterparts in the 3D global model
+making it trivial to migrate components between the two modeling frameworks.
+<p>The overall design includes the provision of a graphical user interface
+(GUI) to the model.&nbsp; The point-and-click graphical interface streamlines
+the control of code flow including: dataset selection; column location
+(latitude/longitude) selection; modification of control variables (such
+as termination conditions, update frequencies, specification of history
+data, etc.); modification of initial data and the associated large-scale
+forcing (e.g., modification of vertical structures, amplitudes, etc.);
+and the visualization of output data (vertical profiles, time series, etc.).
+In particular, we have emphasized a tight coupling of interactive graphical
+analysis capabilities with the integration component of the model.&nbsp;
+Presently only Eulerian vertical advection capabilities have been incorporated
+into the modeling framework.
+<p>Like its 3D counterpart SCAM-2 uses many of the same <a href="http://www.unidata.ucar.edu/packages/netcdf">netCDF</a>
+formatted boundary datasets. In addition to using CAM2-generated initial
+and boundary condition datasets the modeling framework has been constructed
+to incorporate data (e.g., initial conditions and forcing terms) as diagnosed
+from various field experiments. The current standard "library" of field
+program forcing/budget data includes <a href="http://kiwi.atmos.colostate.edu/scm/gate.html">GATE</a>,
+<a href="http://www.ncdc.noaa.gov/coare/">TOGA
+COARE</a>, and <a href="http://www.arm.gov/">ARM</a> IOP datasets. These
+initial condition and forcing data are dynamically specifiable from the
+GUI, as are global initial conditions and steady-state vertical motion
+forcing data from ECMWF analyses and CCM climate integrations. The IOP
+data serves a dual role by providing the necessary boundary forcing for
+the one-dimensional model, and providing validation data for the time-dependent
+solutions generated by the collection of physical parameterizations which
+are being evaluated.
+<p>This modeling framework has been under development for several years,
+with support from the Computer Hardware Advanced Mathematics Model Physics
+(CHAMMP) Program, currently known as the Climate Change Prediction Program
+(CCPP), which is administered by the Office of Energy Research under the
+Office of Health and Environmental Research in the Department of Energy
+Environmental Sciences Division. During this development period we have
+been systematically evaluating the strengths and weaknesses of an SCM approach
+(a manuscript is in preparation). Despite certain limitations, it has proven
+to be an economical numerical experimentation environment for facilitating
+the investigation and improvement of parameterizations of radiative and
+moist processes in atmospheric general circulation models. We believe that
+the current code distribution is sufficiently stable so that the community
+will be able to build and execute the code in any of the common UNIX environments
+to which is has been ported:&nbsp; currently supported systems are Sun/Solaris,
+IBM RS6000/AIX, SGI/IRIX64,&nbsp; and Intel PC/Linux. in the near future.
+<p>The code is an UNSUPPORTED contribution to the university modeling community,
+although we do wish to receive feedback on any problems users may encounter
+(<a href="mailto:scam@ucar.edu">scam@ucar.edu</a>). Users are strongly
+encouraged to register their use of SCAM so that they may automatically
+receive notification of program updates, new dataset availability, etc.&nbsp;
+Users may register by sending email to <a href="mailto:scam@ucar.edu">scam@ucar.edu</a>
+with the subject "registration."
+<p>
+<hr>
+<h2>
+<a NAME="_Bulletin"></a>!!! Bulletins !!!</h2>
+
+<ul>
+<li>
+SCAM-2 is available for downloading.&nbsp; See <a href="#Release History">Release
+History</a> for changes from previous versions.</li>
+</ul>
+
+<hr>
+<h2>
+<a NAME="bugs"></a>Known Problems and Bugs</h2>
+
+<ul>
+<li>
+Having too few colors available on your display can result in scam crashing
+when trying to post-plot data (due to a bug in some versions of NCAR graphics).
+This can occur if you are simultaneously running Netscape (a notorious
+color-map hog) or any application that uses a large number of colors and
+your screen is using 8 bit color.</li>
+
+<li>
+Some versions of netCDF libraries have a bug in them that causes scam to
+crash itself during model initialization. This only occurs when the model
+is *not* compiled statically, so the fix is to specify static compilation
+during the configuration stage (this is the default).</li>
+
+<br>
+<hr></ul>
+
+<h2>
+<a NAME="Release History"></a>Release History</h2>
+
+<ul>
+<li>
+scam-2 - beta release.</li>
+</ul>
+
+<ul>
+<hr></ul>
+
+<h2>
+<a NAME="download"></a>SCAM Source Code, GUI, and Dataset Distribution</h2>
+
+<h4>
+The graphical user interface (GUI) is only available as a precompiled binary
+so you must download the correct version for your system and compiler.
+This distribution contains all of the datasets required to run SCAM, including
+three basic IOP datasets from GATE, TOGA, and ARM observations.</h4>
+
+<ul>
+<li>
+Download the <a href="ftp://ftp.cgd.ucar.edu/pub/scam/INSTALL">INSTALL</a>
+readme file</li>
+
+<li>
+Download <a href="ftp://ftp.cgd.ucar.edu/pub/scam/scam.Solaris.tar.gz">SCAM&nbsp;
+Latest source code, datasets, and GUI for SUN SPARC/Solaris 2.4-2.x</a>(~40Mb gzipped tarfile)</li>
+
+<li>
+Download <a href="ftp://ftp.cgd.ucar.edu/pub/scam/scam.AIX.tar.gz">SCAM&nbsp;
+Latest source code, datasets, and GUI for IBM RS6000/Aix 4.2 </a>(~40Mb gzipped tarfile)</li>
+
+<li>
+Download <a href="ftp://ftp.cgd.ucar.edu/pub/scam/scam.IRIX64.tar.gz">SCAM&nbsp;
+Latest source code, datasets, and GUI for SGI Mips/IRIX</a>(~40Mb gzipped tarfile)</li>
+
+<li>
+Download <a href="ftp://ftp.cgd.ucar.edu/pub/scam/scam.Linux.tar.gz">SCAM&nbsp;
+Latest source code, datasets, and GUI for&nbsp; Intel x86/Linux </a>(~40Mb gzipped tarfile)
+and <a href="http://www.unidata.ucar.edu/packages/netcdf">netCDF</a> (71Kb
+gzipped tarfile).</li>
+</ul>
+
+<hr WIDTH="100%">
+<p><b>IOP Dataset Descriptions</b>
+<p>The following is a description of the datasets included in the scam
+distribution.
+<center>
+<p><b><u>ARM</u></b></center>
+
+<ul>
+<li>
+Download the latest ARM IOP dataset <a href="ftp://ftp.cgd.ucar.edu/pub/scam/iop/arm0795v1.2.nc">arm0795v1.2.nc</a>.
+This dataset is derived from observations made at the ARM site in Oklahoma
+from July 18 to August 4, 1995.&nbsp; The observational data was subjected
+to a variational analysis procedure at SUNY-Stonybrook, and subsequently
+interpolated (using cubic spline interpolation) to 20 minute intervals
+to be consistent with the standard CCM dynamical time step. Changes from
+v1.0 include fixing some small negative values in some fields (namely Prec,&nbsp;
+lowcld,&nbsp; midcld, hghcld, and totcld) that were caused by the interpolation
+scheme. Changes from v1.1 include fixing a units conversion error in the
+Q1 and Q2 fields, and modification of the vertical advection terms to add
+an energy conversion term for use in 3D forcing. Note that none of the
+changed fields are used to force the model (except for the vertical advection
+terms), so the same results should be obtained as with the previous versions.</li>
+
+<li>
+A version that contains only the data on the original observation timepoints
+(3 hour),&nbsp; <a href="ftp://ftp.cgd.ucar.edu/pub/scam/iop/arm0795v1.2.3hour.nc">arm0795v1.2.3hour.nc</a>,
+is also available.</li>
+
+<li>
+You can find the original data in ascii format <a href="http://atmgcm.msrc.sunysb.edu/arm/arm9507/main9507.html">here.</a></li>
+</ul>
+
+<center><b><u>GATE</u></b></center>
+
+<ul>
+<li>
+Download the latest GATE IOP dataset <a href="ftp://ftp.cgd.ucar.edu/pub/scam/iop/gate0874v1.2.nc">gate0874v1.2.nc</a>.
+This dataset contains data from observations made at the GATE site in the
+Atlantic off the west coast of Senegal from August 30 to September 19,
+1974.&nbsp; The original data was interpolated (using cubic spline interpolation)
+to 20 minute intervals to be consistent with the standard CCM dynamical
+time step. Changes from v1.0 include fixing the Q1 and Q2 fields which
+had been put into incorrect units. Note that neither of the changed fields
+are used to force the model, so the same results should be obtained as
+with the previous version.</li>
+
+<li>
+A version that contains only the data on the original observation timepoints
+(3 hour),&nbsp; <a href="ftp://ftp.cgd.ucar.edu/pub/scam/iop/gate0874v1.2.3hour.nc">gate0874v1.2.3hour.nc</a>,
+is also available.</li>
+
+<li>
+You can find the original data in ascii format <a href="http://kiwi.atmos.colostate.edu/scm/gate.html">here.</a></li>
+</ul>
+
+<center><b><u>TOGA</u></b></center>
+
+<ul>
+<li>
+Download the latest GCSS IOP dataset <a href="ftp://ftp.cgd.ucar.edu/pub/scam/iop/gcss1292v1.2.nc">gcss1292v1.2.nc</a>.
+This dataset contains data from observations made over the TOGA IFA in
+the tropical west Pacific from December 20, 1992 to December 27, 1992.
+The original data has been interpolated (using cubic spline interpolation)
+to 20 minute intervals to be consistent with the standard dynamical time
+step in the CCM.</li>
+
+<li>
+A version that contains only the data on the original observation timepoints
+(6 hour),&nbsp; <a href="ftp://ftp.cgd.ucar.edu/pub/scam/iop/gcss1292v1.2.6hour.nc">gcss1292v1.2.6hour.nc</a>,
+is also available.</li>
+
+<li>
+You can find the original data in ascii format <a href="http://www.met.utah.edu/skrueger/gcss/case2.html">here.</a></li>
+</ul>
+
+<hr>
+<h2>
+<a NAME="patches"></a>Patches</h2>
+There are none at this time.
+<p>
+<hr>
+<dl>
+<h2>
+<a NAME="related_sites"></a>Related Sites</h2>
+
+<h4>
+NCAR Community Climate Models</h4>
+
+<h4>
+<a href="http://www.ccsm.ucar.edu/models/atm-cam/">CAM2</a></h4>
+
+<h4>
+<a href="http://www.ncar.ucar.edu/ncar/index.html">NCAR Home Page</a></h4>
+
+<h4>
+<a href="http://www.cgd.ucar.edu/cms/">NCAR/CMS Home Page</a></h4>
+
+<h4>
+<a href="http://www.ncdc.noaa.gov/coare/">TOGA COARE Home Page</a></h4>
+
+<h4>
+<a href="http://kiwi.atmos.colostate.edu/scm/gate.html">GATE</a></h4>
+
+<h4>
+<a href="http://www.arm.gov/docs/scm/">ARM SCM Intercomparison Home Page</a></h4>
+</dl>
+<b><a href="http://kiwi.atmos.colostate.edu/scm/scm.html">Single Column
+Modeling Home Page</a></b>
+<dl>
+<hr>
+<center>
+<h4>
+Send email to:</h4></center>
+
+<center>
+<address>
+&nbsp;<a href="mailto:scam@ucar.edu">scam@ucar.edu</a></address></center>
+
+<p>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<center>
+<p><a href="#top">Back to top of page</a></center>
+
+<center>
+<h5>
+Page last modified February 4, 2003</h5></center>
+</dl>
+
+</body>
+</html>

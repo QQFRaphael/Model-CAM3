@@ -1,0 +1,74 @@
+This file documents the installation of the NCAR Single Column Atmospheric 
+Model (SCAM)
+
+Supported OS/architecture/compiler combinations
+************************************************
+
+SCAM is only supported on the Intel platform. 
+
+Note: In the past SCAM has been ported to SUN, IBM, and HP architectures 
+and can most likely be made to run on those platforms again with a few
+code changes and modifications to the configure script and Makefile. 
+
+Installing SCAM
+****************
+
+SCAM is now a part of the CAM distribution.  To run CAM in single
+column mode requires a fortran compiler and all of the libraries
+needed to compile CAM.  In addition you will need the QT library which
+is freely available for the Linux platform from
+www.trolltech.com. Most distributions of Linux already have a
+version of QT installed and most likely you will be able to use the
+installed code. Just make sure that the installed QT package has the
+QT 'moc' and 'uic' binaries available.  (You can check this using your
+distribution's package manager or by using the locate utility.
+Ex. typing 'locate uic | grep bin' will list all files containing the
+letters uic and residing in a bin directory.)  If you don't have QT
+installed or are lacking the required QT binaries you can download and
+build the QT library from trolltech.
+
+The following instructions assume that you have downloaded the CAM tar
+file, along with all of the required datasets. (See  
+http://www.ccsm.ucar.edu/php/ccsmAgreement.php?indexId=4 for a link to
+the CAM Source and datasets)
+
+1.  Setup environment variables
+
+	NCARG_ROOT (point to the root of the ncarg library)
+        QTDIR  (point to the root of the QT header files, binaries, and libraries)
+	PGI (point to root of pgf compiler)
+        LD_LIBRARY_PATH (points to library directories for QT, NCARG)
+        PATH (add bin directories for the compiler, netcdf, qt, and 
+              ncarg packages to your search path) 
+        CSMDATA (point to root of CAM dataset directory)
+
+2.  Untar the CAM distribution and cd into the scam directory.
+
+    tar xvf cam3.0.tar
+    cd cam1/models/atm/cam/tools/scam
+
+3   Untar the cam datasets.  Make sure the environment variable CSMDATA
+    points to this location.
+
+    tar xvf cam3.0_datasets.tar
+
+4   Configure and compile the GUI and model executable by typing
+
+    gmake
+
+    The first time gmake is run it will begin by trying to configure both the
+    SCAM GUI as well as the model executable.  If you setup the environment
+    variables properly the configure scripts should find everything needed 
+    to compile the model.  You should be able to choose the default values 
+    for most of the configuration questions.
+
+    If the configure works properly the SCAM GUI and model executable will
+    start to compile.
+
+5.  After a successful compile you should be ready to run SCAM: just type 
+    `scam' at the command line. Please read the SCAM User's Guide 
+    for detailed instructions on using SCAM, and for more detailed 
+    information on installation and troubleshooting. The user's guide 
+    can be read using a web browser and is located in the html subdirectory.
+
+

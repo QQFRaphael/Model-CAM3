@@ -1,0 +1,1 @@
+ncmult is a simple utility to multiply a variable in a netCDF file by a constant value. An example of its use would be to change a pressure variable from millibars to pascals by multiplying it by 100.

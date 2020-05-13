@@ -1,0 +1,225 @@
+<!DOCTYPE UI><UI version="3.1" stdsetdef="1">
+<class>PlistLayout</class>
+<widget class="QDialog">
+    <property name="name">
+        <cstring>PlistLayout</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>349</width>
+            <height>490</height>
+        </rect>
+    </property>
+    <property name="caption">
+        <string>Form1</string>
+    </property>
+    <widget class="QLayoutWidget">
+        <property name="name">
+            <cstring>Layout5</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>60</x>
+                <y>30</y>
+                <width>229</width>
+                <height>430</height>
+            </rect>
+        </property>
+        <vbox>
+            <property name="name">
+                <cstring>unnamed</cstring>
+            </property>
+            <property name="margin">
+                <number>0</number>
+            </property>
+            <property name="spacing">
+                <number>6</number>
+            </property>
+            <widget class="QLayoutWidget">
+                <property name="name">
+                    <cstring>Layout1</cstring>
+                </property>
+                <hbox>
+                    <property name="name">
+                        <cstring>unnamed</cstring>
+                    </property>
+                    <property name="margin">
+                        <number>0</number>
+                    </property>
+                    <property name="spacing">
+                        <number>6</number>
+                    </property>
+                    <widget class="QLabel">
+                        <property name="name">
+                            <cstring>theLevelLbl</cstring>
+                        </property>
+                        <property name="text">
+                            <string>TextLabel1</string>
+                        </property>
+                    </widget>
+                    <widget class="QLabel">
+                        <property name="name">
+                            <cstring>theValuesLabel</cstring>
+                        </property>
+                        <property name="text">
+                            <string>TextLabel2</string>
+                        </property>
+                    </widget>
+                    <widget class="QLabel">
+                        <property name="name">
+                            <cstring>theUnitsLabel</cstring>
+                        </property>
+                        <property name="text">
+                            <string>TextLabel3</string>
+                        </property>
+                    </widget>
+                </hbox>
+            </widget>
+            <widget class="QListBox">
+                <item>
+                    <property name="text">
+                        <string>New Item</string>
+                    </property>
+                </item>
+                <property name="name">
+                    <cstring>theValueList</cstring>
+                </property>
+                <property name="minimumSize">
+                    <size>
+                        <width>0</width>
+                        <height>210</height>
+                    </size>
+                </property>
+                <property name="vScrollBarMode">
+                    <enum>AlwaysOn</enum>
+                </property>
+            </widget>
+            <widget class="QLayoutWidget">
+                <property name="name">
+                    <cstring>Layout3</cstring>
+                </property>
+                <hbox>
+                    <property name="name">
+                        <cstring>unnamed</cstring>
+                    </property>
+                    <property name="margin">
+                        <number>0</number>
+                    </property>
+                    <property name="spacing">
+                        <number>6</number>
+                    </property>
+                    <widget class="QLabel">
+                        <property name="name">
+                            <cstring>TextLabel4</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Edit Value:</string>
+                        </property>
+                    </widget>
+                    <widget class="QLineEdit">
+                        <property name="name">
+                            <cstring>theValueEditorLE</cstring>
+                        </property>
+                    </widget>
+                </hbox>
+            </widget>
+            <widget class="QLayoutWidget">
+                <property name="name">
+                    <cstring>Layout4</cstring>
+                </property>
+                <hbox>
+                    <property name="name">
+                        <cstring>unnamed</cstring>
+                    </property>
+                    <property name="margin">
+                        <number>0</number>
+                    </property>
+                    <property name="spacing">
+                        <number>6</number>
+                    </property>
+                    <spacer>
+                        <property name="name">
+                            <cstring>Spacer1</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Horizontal</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>20</width>
+                                <height>20</height>
+                            </size>
+                        </property>
+                    </spacer>
+                    <widget class="QPushButton">
+                        <property name="name">
+                            <cstring>theDismissBtn</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Dismiss</string>
+                        </property>
+                        <property name="autoDefault">
+                            <bool>false</bool>
+                        </property>
+                    </widget>
+                    <spacer>
+                        <property name="name">
+                            <cstring>Spacer2</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Horizontal</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>20</width>
+                                <height>20</height>
+                            </size>
+                        </property>
+                    </spacer>
+                </hbox>
+            </widget>
+        </vbox>
+    </widget>
+</widget>
+<connections>
+    <connection>
+        <sender>theValueList</sender>
+        <signal>highlighted(int)</signal>
+        <receiver>PlistLayout</receiver>
+        <slot>UpdateValueEditor(int)</slot>
+    </connection>
+    <connection>
+        <sender>theValueList</sender>
+        <signal>selected(int)</signal>
+        <receiver>PlistLayout</receiver>
+        <slot>EditPointValue(int)</slot>
+    </connection>
+    <connection>
+        <sender>theValueEditorLE</sender>
+        <signal>returnPressed()</signal>
+        <receiver>PlistLayout</receiver>
+        <slot>SetPointValue()</slot>
+    </connection>
+    <connection>
+        <sender>theDismissBtn</sender>
+        <signal>clicked()</signal>
+        <receiver>PlistLayout</receiver>
+        <slot>HideSelf()</slot>
+    </connection>
+</connections>
+<slots>
+    <slot access="protected">EditPointValue(int)</slot>
+    <slot access="protected">SetPointValue()</slot>
+    <slot access="protected">UpdateValueEditor(int)</slot>
+    <slot>HideSelf()</slot>
+</slots>
+<layoutdefaults spacing="6" margin="11"/>
+</UI>

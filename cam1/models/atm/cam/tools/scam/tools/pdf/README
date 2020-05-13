@@ -1,0 +1,14 @@
+pdf generates a probability density plot of a variable 
+from an ensemble of datasets
+
+
+
+usage: pdf -v <variable> [-l <level>] [-h] [-t <timeslice>] [-b <bin-size>] [-s <stencil diameter>] [-o <outputfile>] <input sccm history files>
+   -v : name of variable to extract from the input files
+   -l : index of level to process (if not specified, all levels will be processed)
+   -h : show histogram on stdout
+   -t : index of timeslice to process (if not specified, all timeslices will be processed)
+   -b : bin size (default divides range into10 equal bins)
+   -s : stencil size in level and time dimension (default is 1)
+   -o : name of output file (if not specified, output will be in pdf.<pid>.nc)
+

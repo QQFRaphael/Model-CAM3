@@ -1,0 +1,1415 @@
+  
+                                   
+-------------------------------------------------------------------------------
+                         Commands Reference, Volume 3
+-------------------------------------------------------------------------------
+
+ld Command
+
+Purpose
+
+Links object files.
+
+Syntax
+
+ld [ -DNumber ] [ -eLabel ] [ -G ] [ -HNumber ] [ -K ] [ -m ] [ -M ] [ -oName ]
+[ -r ] [ -s ] [ -SNumber ] [ -TNumber ] [ -u Name ] ... [ -v ] [ -z ] [ -ZString
+] ... [ -bOption ] ... [ -LDirectory ] ... { -fFileID ... -lName ... InputFile
+... }
+
+Description
+
+The ld command, also called the linkage editor or binder, combines object files,
+archives, and import files into one output object file, resolving external
+references. It produces an executable object file that can be run. In addition,
+if you specify the ld command without the -s flag, you can use the output file
+as an InputFile parameter in another call to the ld command. By default, the ld
+command creates and places its output in the a.out file.
+
+The ld command can relink a program without requiring that you list all input
+object files again. For example, if one object file from a large program has
+changed, you can relink the program by listing the new object file and the old
+program on the command line, along with any shared libraries required by the
+program. See Example 3 .
+
+The ld command links input files in the order you specify on the command line.
+If you specify a file more than once, only the first occurrence of the file is
+processed. You must specify at least one input file, either with the -bI
+(uppercase letter i), -bimport, -bkeepfile, -f, or -l (lowercase letter L) flag
+or as an InputFile parameter. (The -bI, -bimport, or -bkeepfile flag is the -b
+flag used with the I, import, or keepfile option.)
+
+You should use the cc command to link files when you are producing programs that
+run under the operating system. Since the cc command calls the ld command with
+common options and necessary support libraries, you do not need to specify them
+on the command line. (This information is read from the /etc/xlC.cfg or
+/etc/vac.cfb configuration file.)
+
+Linking Mode
+
+The ld command can link 32-bit objects and programs as well as 64-bit objects
+and programs, but 32-bit and 64-bit objects may not be linked together. To
+specify the mode for linking, you may use the OBJECT_MODE environment variable
+or the -b32 or -b64 options.
+
+Archive Files
+
+Archive files are composite objects, which usually contain import files and
+object files, including shared objects. If an archive file contains another
+archive file or a member whose type is not recognized, the ld command issues a
+warning and ignores the unrecognized member. If an object file contained in an
+archive file has the F_LOADONLY bit set in the XCOFF header, the ld command
+ignores the member. This bit is usually used to designate old versions of shared
+objects that remain in the archive file to allow existing applications to load
+and run. New applications link with the new version of the shared object, that
+is, another member of the archive.
+
+Shared Objects
+
+A shared object, usually created by another call to the ld command, is an object
+file with the F_SHROBJ bit set in the XCOFF header. A shared object defines
+external symbols that are resolved at run time. If you specify the -bnso or
+-bnoautoimp option, the ld command processes a shared object as an ordinary
+object file, and if the file is stripped, the link fails.
+
+Ordinarily, a shared object used as input is only listed in the loader section
+of the output file if a symbol in the shared object is actually referenced. When
+the run-time linker is used, however, you may want shared objects to be listed
+even if there are no symbols referenced. When the -brtl option is used, all
+shared objects listed on the command-line that are not archive members are
+listed in the output file. The system loader loads all such shared objects when
+the program runs, and the symbols exported by these shared objects may be used
+by the run-time linker. Shared objects that are archive members are not loaded
+automatically unless automatic loading is enabled by an import file in the
+archive. To enable automatic loading, see Import and Export File Format .
+
+Import and Export Files
+
+Import files are ASCII files that identify the external symbols to resolve at
+run time. An import file identifies the shared object defining the imported
+symbols. The system loader finds and resolves those symbols at run time. If the
+first line of an import file begins with #! (pound sign, exclamation point), you
+can specify the file on the command line as an ordinary InputFile. Otherwise,
+you must use the -bI or -bimport option to specify the import file.
+
+Export files are ASCII files that identify external symbols that are made
+available for another executable object file to import. The file format of an
+export file is the same as the file format of an import file.
+
+Libraries
+
+Libraries are files whose names end in .a, or possibly .so. To designate a
+library, you can specify an absolute or relative path name or use the -l
+(lowercase letter L) flag in the form -lName. The last form designates a
+libName.a file, or in dynamic mode, a libName.so file, to be searched for in
+several directories. These search directories include any directories specified
+by -L flags and the standard library directories /usr/lib and /lib.
+
+    Note: If you specify a shared object, or an archive file containing a shared
+    object, with an absolute or relative path name, instead of with the -lName
+    flag, the path name is included in the import file ID string in the loader
+    section of the output file. You can override this behavior with the
+    -bnoipath option.
+
+Processing
+
+The ld command processes all input files in the same manner, whether they are
+archives or not. It includes the symbol tables of all objects, discarding only
+symbol definitions that duplicate existing symbols. Unlike some other versions
+of the ld command, you do not need to order archive files so references precede
+definitions. Furthermore, you do not need to list an archive file more than once
+on the command line.
+
+The order of the ld command flags does not affect how they are processed, except
+for the flags used with input object files, libraries, and import files. These
+flags are: -L, -f, -l (lowercase letter L), -bkeepfile, and -bI (uppercase
+letter i). The flags are processed in the following order:
+
+  1. The -L flag adds a directory to the list of search directories to locate
+     libraries specified by the -l (lowercase letter L) flag. The directories
+     are searched in the order specified. All -L flags are processed before any
+     -l flags are processed.
+  2. The ld command processes the InputFile parameters, the files specified by
+     the -f flag and libraries specified by the -l (lowercase letter L) flag in
+     the order specified.
+  3. The ld command processes import files specified by the -bI (uppercase
+     letter i) flag in the order specified after processing all other object
+     files and libraries. You can specify an import file as an input file
+     without the -bI flag if it is necessary to process the file before
+     processing some object files. In this case, the first line of the import
+     file must begin with the #! (pound sign, exclamation point) symbols, and
+     the import file is processed with other input files as described in step 2.
+  4. The -bkeepfile option names an input file on which the ld command does not
+     perform garbage collection. If the specified input file is also specified
+     as an InputFile parameter or listed in a file specified by the -f flag, the
+     -bkeepfile option does not affect the order in which the file is processed.
+     Otherwise, the file is processed in order along with other input files, as
+     described in step 2.
+
+An output file produced by the ld command has execute permission set, unless you
+specify the -r flag or -bnox option or errors were reported while linking. An
+existing output file is not overwritten if any severe errors occurred, or if the
+output file was specified as an input file and any errors occurred.
+
+Symbols
+
+The ld command uses the following predefined symbols to provide special address
+locations and can be declared in C syntax as extern char name[ ].The symbol
+names are:
+
+_text Specifies the first location of the program.
+
+_etext Specifies the first location after the program.
+
+_data Specifies the first location of the data.
+
+_edata Specifies the first location after the initialized data
+
+_end or end Specifies the first location after all data.
+
+The only way to use these symbols is to take their addresses. If an input file
+redefines any of these symbols, there may be unpredictable results. An
+additional predefined symbol, _ptrgl, is used by compilers to implement calls
+using function pointers.
+
+Garbage Collection
+
+By default, the ld command performs garbage collection, deleting control
+sections (CSECTs) that are not referenced when generating the output file.
+
+A CSECT is an indivisible unit of coding or data. A CSECT references another
+CSECT if it contains a relocation entry (RLD) referring to a symbol contained in
+the other CSECT. A referenced CSECT causes all CSECTs it references to be
+referenced as well. In addition, a CSECT is referenced if it contains exported
+symbols, symbols specified with the -u flag, or the symbol designated as the
+entry point with the -e flag.
+
+If a symbol is not referenced but is needed in the output file, you can export
+the symbol, specify the symbol with the -u flag, or suppress garbage collection.
+To suppress garbage collection, use the -r flag or -bnogc option. To suppress
+garbage collection for individual object files, use the -bkeepfile option or the
+-bgcbypass option. Even when garbage collection is suppressed, unreferenced
+internal symbols are deleted.
+
+Ignored and Unsupported Flags
+
+For compatibility with other versions of the ld command, some flags are
+recognized but ignored. These flags produce a message stating that the flag and
+its operand were ignored. An ignored flag does not cause the ld command to stop
+without further processing. The following flags are ignored:
+-ANumber         -bnostrcmpct     -n
+
+-bfilelist       -bstrcmpct       -N
+
+-bfl             -BNumber         -Q
+
+-bforceimp       -d               -RNumber
+
+-bi              -i               -VNumber
+
+-binsert         -j[Key:]Number   -x
+
+-bnoforceimp     -kKey:Path       -YNumber
+
+Flags that the ld command does not support result in an error message. After all
+unsupported flags are diagnosed, the ld command stops without further
+processing.
+
+Flags
+
+The ld command conforms to the XPG Utility Syntax Guidelines, except that the
+argument -- only applies to the next operand, not to the remaining operands on
+the command line. For example, in the command line:
+ld -- -s -v
+
+The -s is treated as a filename and the -v is treated as a flag. To have -v
+treated as a filename, specify:
+ld -- -s -- -v
+
+    Note: Enter a flag with an operand with or without a space between the flag
+    and the operand. You can specify numeric values in decimal, octal (with a
+    leading 0), or hexadecimal (with a leading 0x or 0X) format. If you specify
+    conflicting flags on the command line, the ld command accepts the latest
+    flag and ignores earlier ones.
+
+-bOption Sets special processing options. This flag can be repeated. For more
+information on these options, see Options .
+
+-DNumber Sets the starting address for the initialized data (the data section)
+of the output file to Number. If the specified number is -1, the data section
+starts immediately after the text section. By default, the data section begins
+at location 0.
+
+    Note: The system loader relocates the data section at run time, so the
+    specified number only affects addresses listed in address maps or printed by
+    utilities such as the dump or nm command.
+
+-eLabel Sets the entry point of the executable output file to Label. The default
+entry point is __start (double underscore start).
+
+-fFileID Specifies a file containing a list of input files to process. FileID
+must contain a list of input file names. Each line in FileID is treated as if it
+were listed separately on the ld command line. Lines in the file can contain
+shell pattern characters * (asterisk), [ (left bracket), ] (right bracket), and
+? (question mark), which are expanded using the glob subroutine and can
+designate multiple object files.
+
+-G Produces a shared object enabled for use with the run-time linker. The -G
+flag is equivalent to specifying the erok, rtl, nortllib, nosymbolic, noautoexp,
+and M:SRE options with the -b flag. Subsequent options can override these
+options. This flag only applies to AIX Version 4.2 or later.
+
+-HNumber Aligns the text, data, and loader sections of the output file so that
+each section begins on a file offset that is a multiple of Number. If the
+specified number is 1, no alignment occurs. If the specified number is 0, the
+loader section is aligned on a word boundary, and the text and data sections are
+aligned on a boundary so as to satisfy the alignment of all CSECTs in the
+sections. The default value is 0.
+
+If the specified Number causes any CSECTS to be unaligned within the output
+file, the ld command issues a warning and the output executable file may not
+load or run.
+
+-K Aligns the header, text, data, and loader sections of the output file so that
+each section begins on a page boundary. This flag is equivalent to specifying
+-HNumber, where Number is the page size of the machine on which ld is running.
+
+-lName (Lowercase L) In non-dynamic mode, processes the libName.a file. In
+dynamic mode, processes the libName.so or libName.a file. In all cases,
+directories specified by the -L flag or in the standard library directories
+(/usr/lib and /lib) are searched to find the file. In dynamic mode, the first
+directory containing either libName.so or libName.a satisfies the search. If
+both files are found in the same directory, libName.so is used. You can repeat
+this flag. For more information about dynamic mode, see "Run-time Linking" .
+
+    Note: The first definition of a symbol is kept, even if no reference to the
+    symbol has been seen when the archive is read. In other versions of the ld
+    command, a symbol defined in an archive is ignored if no reference to the
+    symbol has been seen when the archive is read.
+
+-LDirectory Adds Directory to the list of search directories used for finding
+libraries designated by the -l (lowercase letter L) flag. The list of
+directories, including the standard library directories, is also recorded in the
+output object file loader section for use by the system loader unless you use
+the -blibpath or -bnolibpath option. You can repeat this flag.
+
+-m or -M Lists to standard output the names of all files and archive members
+processed to create the output file. Shared objects and import files are not
+listed.
+
+-oName Names the output file Name. By default, the name of the output file is
+a.out.
+
+-r Produces a nonexecutable output file to use as an input file in another ld
+command call. This file may also contain unresolved symbols. The -r flag is
+equivalent to specifying the erok, noglink, nox, and nogc options with the -b
+flag. (Subsequent options can override these options.)
+
+-s Strips the symbol table, line number information, and relocation information
+when creating the output file. Stripping saves space but impairs the usefulness
+of the debuggers. You can also strip an existing executable by using the strip
+command.
+
+    Note: Non-shared objects cannot be linked if they are stripped. A shared
+    object can be stripped, but a stripped, shared object cannot be used when
+    linking statically.
+
+-SNumber Sets the maximum size (in bytes) allowed for the user stack when the
+output executable program is run. This value is saved in the auxiliary header
+and used by the system loader to set the soft ulimit. The default value is 0.
+
+For more information on large user stacks and 32-bit programs, see "Large
+Program Support Overview" in AIX General Programming Concepts: Writing and
+Debugging Programs.
+
+-TNumber Sets the starting address of the text section of the output file to
+Number. The default value is 0.
+
+    Note: The system loader relocates the text section at run time, so the
+    specified number affects only addresses listed in address maps or printed by
+    utilities such as the nm or the dump command.
+
+-uName Prevents garbage collection of the external symbol Name. If the specified
+symbol does not exist, a warning is reported. You can repeat this flag.
+
+-v Writes additional information about binder command execution to the loadmap
+file.
+
+-z Functions the same as the -K flag.
+
+-ZString Prefixes the names of the standard library directories with String when
+searching for libraries specified by the -l (lowercase letter L) flag. For
+example, with the -Z/test and -lxyz flags, the ld command looks for the
+/test/usr/lib/libxyz.a and /test/lib/libxyz.a files. When the -ZString flag is
+used, the standard library directories are not searched. This flag has no effect
+on the library path information saved in the loader section of the output file.
+This flag is useful when developing a new version of a library. You can repeat
+this flag.
+
+The Binder
+
+The ld command verifies the command-line arguments and calls the binder (by
+default the /usr/ccs/bin/bind file), passing a generated list of binder
+subcommands. The binder program actually links the files. Although the binder is
+usually called by the ld command, you can start the binder directly. In this
+case, the binder reads commands from standard input.
+
+Two options affect the calling of the binder. The binder option specifies which
+binder to call, and the nobind option prevents the ld command from calling a
+binder. Other binder options affect the binder subcommands that are generated.
+
+If the ld command does not detect any errors in the options or command-line
+arguments, it calls the binder. The binder is called with a command line of the
+form:
+bind [quiet_opt] [loadmap_opt]
+
+The default value for quiet_opt is quiet and the default value for the
+loadmap_opt is the null string, so the default command line is:
+/usr/ccs/bin/bind quiet
+
+Options (-bOptions)
+
+The following values are possible for the Options variable of the -b flag. You
+can list more than one option after the -b flag, separating them with a single
+blank.
+
+    Notes:
+
+      1. In the binder options listed below, two option names separated by the
+         word "or" are synonymous.
+      2. FileID indicates an AIX path name. You can use either a relative or a
+         full path name.
+      3. For a non-repeatable option that is followed by an argument, you can
+         negate the option using a null argument. That is, specify only the
+         option and the colon.
+      4. If you specify conflicting options, the last one takes precedence.
+
+32 Specifies 32-bit linking mode. In this mode, all input object files must be
+XCOFF32 files, or an error is reported. XCOFF64 archive members are ignored. For
+import or export files specifying the mode of certain symbols, 64-bit symbols
+are ignored. If both -b32 and -b64 options are specified, the last specified
+option is used. If neither option is specified, the mode is determined from the
+value of environment variable OBJECT_MODE.
+
+64 Specifies 64-bit linking mode. In this mode, all input object files must be
+XCOFF64 files, or an error will be reported. XCOFF32 archive members are
+ignored. For import or export files specifying the mode of certain symbols,
+32-bit symbols are ignored. If both -b32 and -b64 options are specified, the
+last specified option is used. If neither option is specified, the mode is
+determined from the value of environment variable OBJECT_MODE.
+
+asis Processes all external symbols in mixed case. This is the default. To
+process all external symbols in uppercase, see the caps option.
+
+autoexp Automatically exports some symbols from the output module without having
+to list them in an export file. (This option does not export all symbols from
+the output module. Use the -bexpall option to export all symbols.)This is the
+default. Use this option when linking a main program. The linker assumes that
+you are linking a main program when you do not specify a module type (with the M
+or modtype option) beginning with S and you do not use the noentry option. This
+option only applies to AIX Version 4.2 or later.
+
+When you use the autoexp option, if any shared object listed on the command-line
+imports a symbol from the special file . (dot), and the module being linked
+contains a local definition of the symbol, the symbol is exported automatically.
+
+Other symbols are also exported automatically when you link with the rtl option.
+If a symbol defined in the module being linked has one or more additional
+definitions exported from a shared object listed on the command-line, and if any
+of the definitions is a BSS symbol, the symbol is exported automatically. If the
+definition in the module being linked is a BSS symbol, the symbol is exported
+with the nosymbolic attribute. Otherwise, the symbol is exported with the
+symbolic attribute. If the symbol is listed in an export file with another
+export attribute, the explicit attribute is used.
+
+If the autoexp option would automatically export a symbol, but the symbol is
+listed in an export file with the list attribute, the symbol is not exported.
+
+autoimp or so Imports symbols from any shared objects specified as input files.
+The shared objects are referenced but not included as part of the output object
+file. This is the default.
+
+bigtoc Generates extra code if the size of the table of contents (TOC) is
+greater than 64KB. Extra code is needed for every reference to a TOC symbol that
+cannot be addressed with a 16-bit offset. Because a program containing generated
+code may have poor performance, you should reduce the number of TOC entries
+needed by the program before using this option. The default is the nobigtoc
+option.
+
+bindcmds:FileID Writes a copy of the binder commands generated by the ld command
+to FileID. You can redirect the resultant file as standard input to the binder
+program when the binder program is called as a standalone program. By default,
+no file is produced.
+
+binder:FileID Uses FileID as the binder called by the ld command. The default
+binder is the /usr/ccs/bin/bind file.
+
+bindopts:FileID Writes a copy of the binder program arguments to FileID. You can
+use the resultant file to start the binder program as a standalone program. By
+default, no file is produced.
+
+C:FileID or calls:FileID Writes an address map of the output object file to
+FileID. Symbols are sorted by section and then by address. For each symbol
+listed in the map, references from the symbol to other symbols are listed. By
+default, no file is produced. To learn more about the calls option, see "Address
+Maps" .
+
+caps Processes all external symbols in uppercase. The default is the asis
+option.
+
+comprld or crld Combines multiple relocation entries (RLDs) at the same address
+into a single RLD when possible. This is the default.
+
+cror15 Uses the cror 15,15,15 (0x4def7b82) instruction as the special no-op
+instruction following a call instruction. The default value is ori 0, 0, 0
+(0x60000000). See the nop option.
+
+Use this option when linking object files on the current level of the system
+that you intend to relink on Version 3.1 release of the operating system.
+
+cror31 Uses the cror 31,31,31 (0x4ffffb82) instruction as the special no-op
+instruction following a call instruction. The default value is ori 0, 0, 0
+(0x60000000). See the nop option.
+
+Use this option when linking object files on the current level of the system
+that you intend to relink on Version 3.2 release of the operating system.
+
+D: Number or maxdata:Number Sets the maximum size (in bytes) allowed for the
+user data area (or user heap) when the executable program is run. This value is
+saved in the auxiliary header and used by the system loader to set the soft data
+ulimit. The default value is 0.
+
+When this option is used, the specified number of bytes are reserved for the
+user data area. The program may not explicitly map objects, using shmat or mmap
+functions, to virtual addresses that are reserved for the user data area.
+
+For a 32-bit program, the maximum value allowed by the system is 0x80000000.
+When a non-zero value is specified, the user data area begins in segment 3, and
+the program uses as many segments as necessary to provide for the bytes
+specified. For more information on large user data areas and 32-bit programs,
+see "Large Program Support Overview" in AIX General Programming Concepts:
+Writing and Debugging Programs.
+
+For a 64-bit program, any value may be specified, but the heap may not extend
+past 0x06FFFFFFFFFFFFF8, regardless of the value specfied.
+
+dbg:Option or debugopt:Option Sets a special debugging or control option. By
+default, no debug option is set.
+
+The dbg:loadabs or debugopt:loadabs option is used to indicate that the output
+program is loaded at the same address as the address specified by the -T and -D
+flags. In this case, a branch-absolute instruction is never changed to a
+(relative) branch instruction even if its target is a relocatable symbol.
+Similarly, a branch instruction is never changed to a branch-absolute
+instruction.
+
+delcsect Deletes all symbols in a CSECT if any symbol in the CSECT was defined
+by a previously read object file. This option prevents more than one instance of
+the same function from existing in the same program. For example, if a.o defines
+function a() and b.o defines functions a() and b(), linking a.o and b.o with the
+-bdelcsect option deletes symbols a() and b() from b.o. Thus, two instances of
+a() do not exist. The default is the nodelcsect option.
+
+dynamic or shared Cause the linker to process subsequent shared objects in
+dynamic mode. This is the default. In dynamic mode, shared objects are not
+statically included in the output file. Instead, the shared objects are listed
+in the loader section of the output file. When you specify the rtl option and
+dynamic mode is in effect, files ending in .so as well as .a satisfy searches
+for libraries specified with the -l (lowercase L) flag. This option only applies
+to AIX Version 4.2 or later.
+
+E:FileID or export:FileID Exports the external symbols listed in the file
+FileID. Exported symbols are listed in the loader section of the output file.
+There is no default export file.
+
+ernotok or f Reports an error if there are any unresolved external references.
+This is the default.
+
+erok Produces the output object file without errors even if there are unresolved
+external references. The default is the ernotok option.
+
+errmsg Writes error messages to standard error if the error level of the message
+is greater than or equal to the value of the halt option and the quiet option is
+used or standard output is redirected. This is the default.
+
+ex1:FileID, ex2:FileID, ex3:FileID, ex4:FileID, and ex5:FileID
+
+Provide user exits in the normal binder subcommand sequence. Each file specified
+by FileID must contain a list of binder subcommands, which will be run as
+follows:
+
+ex1:FileID Before reading any InputFiles
+
+ex2:FileID Immediately before symbol resolution
+
+ex3:FileID Immediately after symbol resolution
+
+ex4:FileID Immediately before writing the output file
+
+ex5:FileID Immediately after writing the output file
+
+expall Exports all global symbols, except imported symbols, unreferenced symbols
+defined in archive members, and symbols beginning with an underscore (_). You
+may export additional symbols by listing them in an export file. This option
+does not affect symbols exported by the autoexp option. This option only applies
+to AIX Version 4.2 or later.
+
+When you use this option, you may be able to avoid using an export file. On the
+other hand, using an export file provides explicit control over which symbols
+are exported, and allows you to use other global symbols within your shared
+object without worrying about conflicting with names exported from other shared
+objects. The default is noexpall.
+
+export:FileID Functions the same as the E:FileID option.
+
+f Functions the same as the ernotok option.
+
+gc Performs garbage collection. Use the nogc, gcbypass, or keepfile option to
+prevent garbage collection for some or all object files. This is the default.
+
+gcbypass:Number Specifies the number of files to bypass when garbage collecting
+if the gc option is specified. This option is ignored if the nogc option is
+used. If Number is 0, this option is equivalent to the gc option and garbage
+collection is performed for all files. The default value is 0.
+
+glink:FileID Uses the global linkage prototype code specified by FileID.
+Global-linkage interface code is generated for each imported or undefined
+function. In 32-bit mode, the default is the /usr/lib/glink.o file. In 64-bit
+mode, the default is the /usr/lib/glink64.o file.
+
+h:Number or halt:Number Specifies the maximum error level for binder command
+processing to continue. The default value is 4. If any binder subcommand has a
+return value greater than Number, no additional binder subcommands are
+processed. If the halt level value is 8 or greater, the output file may not be
+executable if it is produced at all. Return values are:
+
+0 No error
+
+4 Warning
+
+8 Error
+
+12 Severe error
+
+16 Internal program error
+
+I:FileID or import:FileID (Uppercase i) Imports the symbols listed in FileID.
+There is no default import file.
+
+initfini:[ Initial][:Termination][:Priority] Specifies a module initialization
+and termination function for a module, where Initial is an initialization
+routine, Termination is a termination routine, and Priority is a signed integer,
+with values from -2,147,483,648 to 2,147,483,647. You must specify at least one
+of Initial and Termination, and if you omit both Termination and Priority, you
+must omit the colon after Initial as well. If you do not specify Priority, 0 is
+the default. This option may be repeated. This option only applies to AIX
+Version 4.2 or later.
+
+This option sorts routines by priority, starting with the routine with the
+smallest (most negative) priority. It invokes initialization routines in order,
+and termination routines in reverse order.
+
+This option invokes routines with the same priority in an unspecified order, but
+if multiple initfini options specify the same priority and both an
+initialization and termination routine, it preserves the relative order of the
+routines. For example, if you specify the options initfini:i1:f1 and
+initfini:i2:f2, then function i1 and i2 are invoked in an unspecified order, but
+if i1 is invoked before i2 when the module is loaded, f2 will be invoked before
+f1 when the module is unloaded.
+
+    Note: IBM will only use priorities in the following inclusive ranges:
+
+-2,147,483,640 to -2,147,000,000
+
+-1,999,999,999 to -1,000,000,000
+
+   -99,999,999 to -50,000,000
+
+             0
+
+    50,000,000 to 99,999,999
+
+ 1,000,000,000 to 1,999,999,999
+
+ 2,147,000,000 to 2,147,483,640
+
+ipath For shared objects listed on the command-line, rather than specified with
+the -l flag, use the path component when listing the shared object in the loader
+section of the output file. This is the default. This option only applies to AIX
+Version 4.2 or later.
+
+keepfile:FileID Prevents garbage collection of FileID. By default, the binder
+deletes unreferenced CSECTS in all files. You can repeat this option.
+
+lazy Enables lazy loading of a module's dependent modules. This option adds a
+-lrtl option following other flags and options. If the -brtl option is
+specified, the -blazy option is ignored and lazy loading is not enabled. This
+option only applies to AIX Version 4.2.1 or later.
+
+When a module is linked, a list of its dependent modules is saved in the
+module's loader section. The system loader automatically loads the dependent
+modules once the module is loaded. When lazy loading is enabled, loading is
+deferred for some dependents until a function is called in the module for the
+first time.
+
+A module is lazy loaded when all references to the module are function calls. If
+variables in the module are referenced, the module is loaded in the normal way.
+
+    Note: Be careful while comparing function pointers if you are using lazy
+    loading. Usually a function has a unique address in order to compare two
+    function pointers to determine whether they refer to the same function. When
+    using lazy loading to link a module, the address of a function in a lazy
+    loaded module is not the same address computed by other modules. Programs
+    that depend upon the comparison of function pointers should not use lazy
+    loading.
+
+For more information about lazy loading, refer to "Shared Libraries and Lazy
+Loading" in the in AIX General Programming Concepts: Writing and Debugging
+Programs.
+
+l:FileID or loadmap:FileID (Lowercase L)Writes each binder subcommand and its
+results to FileID. By default, no file is produced.
+
+libpath:Path Uses Path as the library path when writing the loader section of
+the output file. Path is neither checked for validity nor used when searching
+for libraries specified by the -l flag. Path overrides any library paths
+generated when the -L flag is used.
+
+If you do not specify any -L flags, or if you specify the nolibpath option, the
+default library path information is written in the loader section of the output
+file. The default library path information is the value of the LIBPATH
+environment variable if it is defined, and /usr/lib:/lib, otherwise.
+
+loadmap:FileID Functions the same as the l:FileID option.
+
+M:ModuleType or modtype:ModuleType Sets the two-character module-type field and
+the shared object flag in the object file. The module type is not checked by the
+binder, but it should be set to one of the following values:
+
+1L Single use. Module requires a private copy of the data section for each load.
+
+RE Reusable. Module requires a private copy of the data area for each process
+dependent on the module.
+
+RO Read only. Module is read-only, and can be used by several processes at once.
+
+If an S prefix is used on any of the preceding options, the shared flag in the
+object file is set. The system loader attempts to share a single instance of the
+data section of an RO module. Otherwise, the module type is ignored by the
+system loader. The default value is 1L.
+
+map:FileID or R:FileID Writes an address map of the output object file to
+FileID. Symbols are sorted by section and then by address. By default, no file
+is produced. To learn more about the map option, see "Address Maps" .
+
+maxdata:Number Functions the same as the D:Number option.
+
+maxstack:Number or S:Number Functions the same as the -S flag.
+
+modtype:ModuleType Functions the same as the M:ModuleType option.
+
+nl or noloadmap Does not write the binder subcommands and their results to a
+load map file. This is the default.
+
+noautoexp Prevents automatic exportation of any symbols. The default is the
+autoexp option. This option only applies to AIX Version 4.2 or later.
+
+noautoimp or nso Links any unstripped, shared objects as ordinary object files.
+When you use this option, the loader section of shared objects is not used. The
+default is the autoimp or so option.
+
+    Note: By using either of these flags, you statically link a shared object
+    file into an application. Any application that is statically linked is NOT
+    binary portable from any fix or release level of AIX to any other fix or
+    release level.
+
+nobigtoc Generates a severe error message if the size of the TOC is greater than
+64KB. If an output file is produced, it will not execute correctly. This is the
+default.
+
+nobind Omits calling the binder. Instead, the ld command writes the generated
+list of binder subcommands to standard output. By default, the ld command calls
+the binder.
+
+nocomprld or nocrld Does not combine multiple relocation entries (RLDs) at the
+same address into a single RLD. The default is the comprld or crld option.
+
+nodelcsect Allows all symbols in the CSECT to be considered during symbol
+resolution, even if some symbol in the CSECT is defined in a previously read
+object file. For more information, see the delcsect option . The nodelcsect
+option is the default.
+
+noexpall Does not export symbols unless you list them in an export file or you
+export them with the autoexp option. This is the default. This option only
+applies to AIX Version 4.2 or later.
+
+noentry Indicates that the output file has no entry point. To retain any needed
+symbols, specify them with the -u flag or with an export file. You can also use
+the -r flag or the nogc or gcbtpass options to keep all external symbols in some
+or all object files. If neither the noentry nor the nox option is used and the
+entry point is not found, a warning is issued.
+
+noerrmsg Does not write error messages to standard error. Use this option if you
+specify the noquiet option and you pipe standard output to a command such as tee
+or pg.
+
+nogc Prevents garbage collection. CSECTs in all object files that contain global
+symbols are kept, whether thay are referenced or not. The default is the gc
+option.
+
+noglink Prevents the ld command from inserting global linkage code. By default,
+the binder inserts the global linkage code.
+
+noipath For shared objects listed on the command-line, rather than specified
+with the -l flag, use a null path component when listing the shared object in
+the loader section of the output file. A null path component is always used for
+shared objects specified with the -l flag. This option does not affect the
+specification of a path component by using a line beginning with #! in an import
+file. The default is the ipath option. This option only applies to AIX Version
+4.2 or later.
+
+nolibpath Overrides any previous library path generated by the -L flag or
+specified by the libpath option. Instead, the default library path information
+is written in the loader section of the output file. The default library path
+information is the value of the LIBPATH environment variable if it is defined,
+and /usr/lib:/lib otherwise.
+
+noloadmap Functions the same as the nl option.
+
+nom Does not list the object files used to create the output file. This option
+overrides the -m flag. This is the default.
+
+noobjreorder Does not use the depth-first CSECT reordering logic. The CSECTs in
+the output file are arranged in the same order that the object files and library
+files were specified on the command line, except as follows:
+
+  o CSECTs are placed in their correct text, data, or BSS section of the object
+    file, based on the storage-mapping class field of each CSECT.
+  o All CSECTs with a storage-mapping class of XMC_TC (TOC address constant) or
+    XMC_TD (TOC variable) are grouped together.
+
+If both the noobjreorder and noreorder options are specified, the noreorder
+option takes precedence. The default is the reorder option.
+
+nop:Nop Specifies the no-op instruction used after branches to local routines.
+Nop can be one of the special values cror15, cror31, ori, or an eight-digit
+hexadecimal number. The ori instruction is the default. Specifying the
+-bnop:cror15 option is equivalent to specifying the -bcror15 option; specifying
+the -bnop:cror31 option is equivalent to specifying the -bcror31 option. If you
+specify one of the special nop options, all previous nop options are overridden
+
+If Nop is an eight-digit hexadecimal number, it specifies an arbitrary machine
+instruction. This machine instruction overrides any previously specified special
+value for Nop instruction. When you use this form, you can repeat this option.
+
+The last machine instruction specified is the instruction generated by the
+binder after intramodule branches. Other specified machine instructions are
+recognized as no-op instructions, but are converted to the preferred no-op
+instruction.
+
+noquiet Writes each binder subcommand and its results to standard output. The
+default is the quiet option.
+
+noreorder Does not reorder CSECTs, except to combine all XMC_TC (TOC address
+constant) and XMC_TD (TOC variable) CSECTs and place them in the data section,
+and combine all BSS symbols and place them in the bss section. All other CSECTs
+are placed in the text section, so text and data are mixed in the output file.
+When the noreorder option is used, the text section of the output file may no
+longer be position-independent and the system loader will not load a module if
+the text section is not position-independent. Therefore, this option should not
+be used for AIX programs and kernel extensions. If both noobjreorder and
+noreorder options are specified, the noreorder option takes precedence. The
+default is the reorder option.
+
+nortl Disables run-time linking for the output file. This option implies the
+nortllib and nosymbolic- options. Furthermore, additional actions described
+under the rtl option are not taken. This is the default. This option only
+applies to AIX Version 4.2 or later.
+
+nortllib Does not include a reference to the run-time linker. If a main program
+is linked with this option, no run-time linking will take place in the program,
+regardless of the way any shared modules were linked that are used by the
+program. This is the default. This option only applies to AIX Version 4.2 or
+later.
+
+nostrip Does not generate a stripped output file. Thus, the symbol table and
+relocation information is written in the output file. This option overrides the
+-s flag. This is the default.
+
+nosymbolic Assigns the nosymbolic attribute to most symbols exported without an
+explicit attribute. For more information, see "Attributes of Exported Symbols" .
+The default is the nosymbolic- option. This option only applies to AIX Version
+4.2 or later.
+
+nosymbolic- Assigns the nosymbolic- attribute to most symbols exported without
+an explicit attribute. For more information, see "Attributes of Exported
+Symbols" . This is the default. This option only applies to AIX Version 4.2 or
+later.
+
+notextro or nro Does not check to ensure that there are no load time relocation
+entries for the text section of the output object file. This is the default.
+
+notypchk Does not check function-parameter types between external functional
+calls. The default is the typchk option.
+
+nov Does not write additional information to the load map file. This option is
+the default and overrides the -v flag.
+
+nox Does not make the output file executable. Neither the auxiliary header nor
+the loader section is written. Flags and options that specify values written in
+the auxiliary header or loader section have no effect when this option is used.
+The default is the x option.
+
+nro Functions the same as the notextro option.
+
+nso Functions the same as the noautoimp option.
+
+pD:Origin Specifies Origin as the address of the first byte of the file page
+containing the beginning of the data section. For example, if the data section
+begins at offset 0x22A0 in the object file, and pD:0x20000000 is specified, the
+first byte of the data section is assigned address 0x200002A0. This assumes a
+page size of 4096 (0x1000) bytes.
+
+pT:Origin Specifies Origin as the address of the first byte of the file page
+containing the beginning of the text section. For example, if the text section
+begins at offset 0x264 in the object file, and pT:0x10000000 is specified, the
+first byte of the text section is assigned address 0x10000264.
+
+quiet Does not write binder subcommands and their results to standard output.
+This is the default.
+
+R:FileID Functions the same as the map:FileID option.
+
+r or reorder Reorders CSECTs as part of the save command processing. The reorder
+process arranges CSECTs of the same storage-mapping class by proximity of
+reference. This is the default.
+
+rename:Symbol, NewName Renames the external symbol Symbol to NewName. In effect,
+it is as if all definitions and references to Symbol in all object files were
+renamed to NewName before the files were processed. By default, symbols are not
+renamed.
+
+reorder Functions the same as the r option.
+
+ro or textro Ensures that there are no load time relocation entries for the text
+section of the resultant object file. The default is the nro option.
+
+rtl Enables run-time linking for the output file. This option implies the rtllib
+and symbolic options. This option only applies to AIX Version 4.2 or later.
+
+When dynamic mode is in effect (see the dynamic and static options), the rtl
+option allows input files specified with the -l flag to end in .so as well as in
+.a.
+
+All input files that are shared objects are listed as dependents of your program
+in the output files loader section. The shared objects are listed in the same
+order as they were specified on the command line.
+
+A shared object contained in an archive is only listed if the archive specifies
+automatic loading for the shared object member. You specify automatic loading
+for an archive member foo.o by creating a file with the following lines:
+# autoload
+
+#! (foo.o)
+
+and adding the file as a member to the archive.
+
+rtllib Includes a reference to the run-time linker. The run-time linker is
+defined in librtl.a, and an implicit -lrtl flag is added automatically to the
+command line. This option (implied by the rtl option) must be used when linking
+a main program or no run-time linking will occur. Shared objects do not have to
+be linked with this option. The default is the nortllib option. This option only
+applies to AIX Version 4.2 or later.
+
+S:Number Functions the same as the -S flag.
+
+scalls:FileID Writes an address map of the object file to FileID. Symbols are
+listed alphabetically. For each symbol listed in the map, references from the
+symbol to the other symbols are listed. By default, no file is produced. To
+learn more about the scalls option, see "Address Maps" .
+
+shared Functions the same as the dynamic option. This option only applies to AIX
+Version 4.2 or later.
+
+smap:FileID Writes an address map of the object file to FileID. Symbols are
+listed alphabetically. By default, no file is produced. To learn more about the
+smap option, see "Address Maps" .
+
+so Functions the same as the autoimp option.
+
+stabcmpct:Level Specifies the level of compaction for stabstrings in the debug
+section. Stabstrings are strings that are longer than eight characters. Each
+substring in the symbol table has its own offset in the debug section. The
+following values are valid for Level:
+
+0 Does not compact. Separate copies of duplicate stabstrings are written to the
+debug section.
+
+1 Deletes duplicates. Each stabstring is written once to the .debug section.
+Duplicate stabstrings in the symbol table specifies the same offset into the
+debug section.
+
+2 Renumbers the stabstrings and deletes most duplicates. (In some instances,
+multiple stabstrings can exist. They describe the same type but use different
+type numbers.) The scope of a type number is the entire output file, rather than
+a single input file as indicated by a C_FILE symbol table entry.
+
+If the binder does not recognize a stabstring, it returns an error message and
+the resulting executable file does not have valid stabstrings. The rest of the
+file is unaffected by the error.
+
+static Causes the linker to process subsequent shared objects in static mode. In
+static mode, shared objects are statically linked in the output file.
+Furthermore, files ending in .so are not found when searching for libraries
+specified with the -l flag. This option only applies to AIX Version 4.2 or
+later.
+
+sxref:FileID Writes an address map of the object file to FileID. Symbols are
+listed alphabetically. For each symbol listed in the map, references to the
+symbol from other symbols are listed. By default, no file is produced. To learn
+more about the sxref option, see "Address Maps" .
+
+symbolic Assigns the symbolic attribute to most symbols exported without an
+explicit attribute. For more information, see "Attributes of Exported Symbols" .
+The default is the nosymbolic- option. This option only applies to AIX Version
+4.2 or later.
+
+textro Same as the ro option.
+
+typchk Performs function-parameter type checking between external functional
+calls. Parameter-type checking information can be included in object files by
+compilers and assemblers. This is the default.
+
+For more information on type checking, see the "XCOFF (a.out) File Format" in
+AIX Files Reference.
+
+x Makes the output file executable, if no errors exist. This is the default
+option.
+
+X or xref:FileID Writes an address map of the object file to FileID. Symbols are
+sorted by section and then by address. For each symbol listed in the map,
+references to the symbol from other symbols are listed. By default, no file is
+produced. To learn more about the xref option, see "Address Maps" .
+
+Run-time Linking
+
+    Note: This section applies to AIX Version 4.2 or later.
+
+By default, references to symbols in shared objects are bound at link time. That
+is, the output module associates an imported symbol with a definition in a
+specific shared object. At load time, the definition in the specified shared
+object is used even if other shared objects export the same symbol.
+
+You can cause your program to use the run-time linker, allowing some symbols to
+be rebound at load time. To create a program that uses the run-time linker, link
+the program with the -brtl option. The way that shared modules are linked
+affects the rebinding of symbols.
+
+You can build shared objects enabled for run-time linking by using the -G flag.
+You can fully enable run-time linking for existing shared objects by relinking
+them with the rtl_enable command, as long as they have not been stripped.
+
+Import and Export File Format (-bI: and -bE: Flags)
+
+Each line within an import or export file must list a single symbol, followed by
+an optional keyword or address. Keywords are svc, svc32, svc3264, svc64,
+syscall, syscall32, syscall3264, syscall64, symbolic, nosymbolic, nosymbolic-,
+list, cm, and bss. You can specify an address in decimal, octal (with a leading
+0), or hexadecimal (with a leading 0x).
+
+In an import file, you can specify an address after the symbol to map data
+CSECTs to a shared memory segment and eliminate the need to use the assembler.
+You can also use the keyword cm or bss to specify the storage class of an
+imported symbol. When the autoexp option is used, the storage class of an
+imported symbol affects which symbols are automatically exported. If any other
+keyword is specified in an import file, the keyword is ignored.
+
+In an export file, you can use the svc or syscall keyword after a name to
+indicate that it is a system call. This is needed when linking kernel
+extensions. You can use the symbolic, nosymbolic, or nosymbolic- keyword to
+associate an attribute with an exported symbol. For more information, see
+"Attributes of Exported Symbols" . You can use the list keyword to cause a
+symbol to be listed in the loader section of the output file, although it will
+not be marked as an exported symbol. This can be used for applications that want
+to process some symbols at run time. Listed symbols are not processed by the
+system loader or the run-time linker. A symbol address and the keywords cm and
+bss are ignored in an export file.
+
+The ld command treats import and export files according to the following
+guidelines:
+
+  o A blank line is ignored.
+  o A line beginning with an * (asterisk) is a comment and is ignored.
+  o A line beginning with a # (pound sign, blank space) provides operands to the
+    setopt binder subcommand (-bdbg:Option). For example, a line containing #
+    verbose causes the binder to list each symbol as it is read from the file.
+    These option settings are active only while processing the file. The # 32, #
+    64, # no32, and # no64 options can be used to specify whether the listed
+    symbols should be used for 32-bit links, 64-bit links, or both.
+
+    32-bit and 64-bit Import File Options
+
+    32 This option is used in an import or export file to specify that
+    subsequent symbols should be processed when linking in 32-bit mode, but
+    ignored when linking in 64-bit mode. If no 32 or 64 option is specified, all
+    symbols are processed in both 32- and 64-bit modes.
+
+    64 This option is used in an import or export file to specify that
+    subsequent symbols should be processed when linking in 64-bit mode, but
+    ignored when linking in 32-bit mode. If no 32 or 64 option is specified, all
+    symbols are processed in both 32- and 64-bit modes.
+
+    no32 or no64 Override a previous 32 or 64. Subsequent symbols are processed
+    in both 32- and 64-bit modes.
+  o When processing an import file, a line beginning with a #! (pound sign,
+    exclamation point) provides the shared library name to be associated with
+    subsequent import symbols. The line can occur more than once and applies to
+    subsequent symbols until the next line beginning with #! is read. This file
+    name information is placed in the loader section of the XCOFF object file.
+    It is used by the system loader to locate the appropriate object file at
+    execution time. If the import file name is ipath/ifile (imember), the file
+    name placed in the loader section is determined based on the import file
+    name and the contents of the #! line of the import file, as follows:
+
+    #! (Nothing after the #!) Use null path, null file, and null number. This is
+    treated as a deferred import by the system loader.
+
+    #! () Use ipath, ifile, and imember. This line can be used if the import
+    file is specified as an InputFile parameter on the command line. The file
+    must begin with #! in this case. This line can also be used to restore the
+    default name if it was changed by another #! line.
+
+    #! path/file (member)
+
+    Use the specified path, file, and member.
+
+    #! path/file Use the specified path and file, and a null member.
+
+    #! file Use a null path, the specified file, and a null member. At run time,
+    a list of directories is searched to find the shared object.
+
+    #! (member) Use ipath, ifile, and the specified member. At run time, a list
+    of directories is searched to find the shared object.
+
+    #! file (member) Use a null path and specified file and member. At run time,
+    a list of directories is searched to find the shared object.
+
+Two special file names are also available on AIX Version 4.2 or later.
+
+#! . (A single dot) This name refers to the main executable. Use this file name
+when you are creating a shared object that imports symbols from multiple main
+programs with different names. The main program must export symbols imported by
+other modules, or loading will fail. This import file name can be used with or
+without the run-time linker.
+
+#! .. (Two dots) Use this name to list symbols that will be resolved by the
+run-time linker. Use this file name to create shared objects that will be used
+by programs making use of the run-time linker. If you use a module that imports
+symbols from .. in a program that was not linked with the rtllib option, symbols
+will be unresolved, and references to such symbols will result in undefined
+behavior.
+
+To automatically load archive members when the -brtl option is used, you can
+create an import file as follows. If shr.so is a shared object in an archive,
+create an import file:
+# autoload
+
+#! (shr.so)
+
+You can list additional member names on additional lines, if appropriate. You do
+not need to list symbol names in the import file, since the symbols imported
+from shr.so will be read from shr.so itself.
+
+For more information on creating a shared library, see "How to Create a Shared
+Library" in AIX General Programming Concepts: Writing and Debugging Programs.
+For more information on loading and binding, see the load subroutine in AIX
+Technical Reference: Base Operating System and Extensions Volume 1.
+
+Attributes of Exported Symbols
+
+    Note: This section applies to AIX Version 4.2 or later.
+
+When you use run-time linking, a reference to a symbol in the same module can
+only be rebound if the symbol is exported with the proper attribute. References
+to symbols with the symbolic attribute cannot be rebound. References to symbols
+with the nosymbolic attribute can be rebound. References to symbols with the
+nosymbolic- attribute can be rebound if the symbols are variables. For function
+symbols, calls using a function pointer can be rebound, while direct function
+calls cannot be rebound. The nosymbolic- attribute is the default, and is
+provided for compatibility with previous versions of AIX, but its use is not
+recommended.
+
+If you are not using the run-time linker, you should not use the nosymbolic
+attribute, because intra-module function calls will be made indirectly through a
+function descriptor using global-linkage code. Otherwise, the attribute of
+exported symbols has no effect for modules used with programs that do not use
+the run-time linker.
+
+You can specify an explicit export attribute for symbols listed in an export
+file. Most symbols without an explicit attribute are exported with the default
+export attribute, as specified with the symbolic, nosymbolic, or nosymbolic-
+options.
+
+Imported symbols have no export attribute. If a symbol is imported from another
+module, all references to the symbol can be rebound. However, if a symbol is
+imported at a fixed address, all references are bound to this fixed address and
+cannot be rebound by the run-time linker. The system loader must resolve
+deferred imports. The run-time linker never resolves or rebinds references to
+deferred imports.
+
+For exports of non-imported symbols, the following rules are used.
+
+  o If a symbol has the list attribute, it is listed in the loader section
+    symbol table, but the L_EXPORT flag is not set in the symbol table entry.
+    The run-time linker ignores such symbols.
+  o If a symbol was exported with an explicit attribute, the explicit attribute
+    is used.
+  o If the symbol is a BSS symbol, it is exported with the nosymbolic attribute.
+  o Otherwise, the symbol is exported with the global attribute, as specified by
+    the symbolic, nosymbolic, or nosymbolic- option. The default global
+    attribute is nosymbolic-.
+
+Address Maps
+
+The ld command generates address maps, listing the layout of symbols in the
+output object file. If you use the map (or R) option, unresolved symbols and
+imported symbols are listed first, followed by the symbols in each section in
+address order. If you use the calls (or C) option, each symbol that is listed id
+followed by a list of references from that symbol to other symbols. If you use
+the xref (or X) option, each symbol that is listed is followed by a list of
+references to that symbol from other symbols. If you use the smap, scalls, or
+sxref option, the address map contains the same information as listed by the
+map, calls, or xref option, respectively, but symbols are listed in alphabetical
+order.
+
+Internal symbols, with a storage class C_HIDEXT, are printed with the characters
+< and > (angle brackets) surrounding the symbol name. Names of external symbols,
+with a storage class C_EXT, are printed without the angle brackets.
+
+Information listed about each symbol includes:
+
+  o An indication of whether the symbol is imported, exported, or the entry
+    point. A * is used to mark the entry point, I is used to mark imported
+    symbols, and E is used to mark exported symbols.
+  o Its address (except for imported symbols)
+  o Length and alignment (for CSECTs and BSS symbols)
+  o Storage-mapping class
+  o Symbol type
+  o Symbol number (used to differentiate between symbols of the same name)
+  o Symbol name
+  o Input file information
+
+Storage-mapping classes and symbol types are defined in the /usr/include/syms.h
+file. In the address maps, only the last two characters are shown, except that
+storage-mapping class XMC_TC0 is shown as T0.
+
+The input file information depends on the type of input file. For object files,
+source files names obtained from C_FILE symbols table entries are listed. If the
+object is from an archive file, the object file name is listed in the following
+format:
+ArchiveFileName[ObjectName]
+
+A shared object name is listed between { } (braces). If a shared object is
+defined by an import file, the name of the import file is listed before the
+shared object name.
+
+Import symbols have a symbol type of ER, but they have associated file input
+information. Undefined symbols are also listed with a symbol type of ER, but all
+other columns, except the symbol number, are left blank.
+
+The -T and -D flags (or pT or pD options) affect the addresses printed in these
+address maps. For machine-level debugging, it is helpful to choose address so
+that symbols are listed with the same addresses that they have at run time. For
+a 32-bit program that does not use privately loaded shared objects, you can
+choose the proper addresses by specifying the -bpT:0x10000000 and
+-bpD:0x20000000 options. These options are defined by default in the
+/etc/xlC.cfg or /etc/vac.cfg file.
+
+Environment Variables
+
+The following environment variables affect the execution of the ld command:
+
+LIBPATH If LIBPATH is defined, its value is used as the default libary path
+information. Otherwise, the default library path information is /usr/lib:/lib.
+If no -L flags are specified and no -blibpath option is specified, the default
+library path information is written in the loader section of the output file.
+Regardless of any options specified, LIBPATH is not used when searching for
+libraries that are specified from the command line.
+
+TMPDIR If the output file already exists or it is on a remote file system, the
+ld command generates a temporary output file. The temporary output file is
+created in the directory specified by TMPDIR. If TMPDIR is not defined, the
+temporary output file is created in the /tmp directory if the output file is
+remote, or in the same directory as the existing output file.
+
+OBJECT_MODE If neither the -b32 nor -b64 option is used, the OBJECT_MODE
+environment variable is examined to determine the linking mode. If the value of
+OBJECT_MODE is 32 or 64, 32-bit or 64-bit mode is used, respectively. If the
+value is 32_64 or any other value, the linker prints an error message and exits
+with a non-zero return code. Otherwise, 32-bit mode is used.
+
+Examples
+
+  1. To link several object files and produce an a.out file to run under the
+     operating system, enter:
+     ld /usr/lib/crt0.o pgm.o subs1.o subs2.o -lc
+
+     The -lc (lowercase letter L) links the libc.a library. A simpler way to
+     accomplish this is to use the cc command (the compiler) to link the files
+     as follows:
+     cc  pgm.o  subs1.o  subs2.o
+
+  2. To specify the name of the output file, enter:
+     cc  -o pgm  pgm.o  subs1.o  subs2.o
+
+     This creates the output in the file pgm.
+  3. To relink pgm if only the object file subs1.o has changed, enter:
+     cc -o pgm subs1.o pgm
+
+     The CSECTs that originally came from object files pgm.o and subs2.o are
+     read from the file pgm. This technique can speed the linking process if a
+     program consists of many input files, but only a few files change at a
+     time.
+  4. To link with library subroutines, enter:
+     cc  pgm.o  subs1.o  subs2.o  mylib.a  -ltools
+
+     This links the object modules pgm.o, subs1.o, and subs2.o, the subroutines
+     from the mylib.a archive, and the subroutine from the library specified by
+     -l (lowercase letter L) flag. (This means the /usr/lib/libtools.a file).
+  5. To generate a shared object, enter:
+     ld -o shrsub.o subs1.o subs2.o -bE:shrsub.exp -bM:SRE -lc
+
+     This links the object files subs1.o, subs2.o, and the subroutines from the
+     library libc.a specified by -lc flag. It exports the symbols specified in
+     the file shrsub.exp and stores the linked shared object in file shrsub.o.
+     The -bM:SRE sets the shared object flag in the linked object file.
+  6. To link with the shared object shrsub.o generated above, enter:
+     cc -o pgm pgm.o shrsub.o -L '.'
+
+     This links the object file pgm.o with the exported symbols of shrsub.o. The
+     linked output is stored in the object file pgm. The -L '.' adds the current
+     directory to the library search path that the system loader uses to locate
+     the shrsub.o shared object. At run time, this program is loaded only if it
+     is run from a directory containing an instance of the shrsub.o file or if
+     the shrsub.o file is found in the /usr/lib standard library directory. To
+     allow the program to be run from anywhere, use the option -L `pwd`.
+
+     The list of directories searched by the system loader can be seen using the
+     dump command.
+  7. To link a program using the libc.a library as a non-shared library, enter:
+     cc -o pgm pgm.o -bnso -bI:/lib/syscalls.exp
+
+     This links pgm.o with the necessary support libraries and names the output
+     file pgm. For the cc command, the libc.a library is a necessary support
+     library and is normally link-edited to the user's program as a shared
+     library. In this example, the -bnso option directs the ld command to link
+     with the libc.a library as a non-shared library, and the
+     -bI:/lib/syscalls.exp directs the ld command to import the system call
+     functions that are actually contained in the kernel or /usr/lib/boot/unix
+     file. Whenever linking with the -bnso option, any symbols that were both
+     imported and exported (that is, passed through) in a shared object must be
+     explicitly imported, as is done by the -bI:/lib/syscalls.exp option in this
+     example.
+
+         Note: Any time that /usr/lib/libc.a is linked non-shared, the flag
+         -bI:/lib/syscalls.exp must be used. The application can also have to be
+         linked again whenever an updated release of the operating system is
+         installed. Any application that is statically linked is NOT binary
+         portable from any fix or release level of AIX to any other fix or
+         release level.
+
+AIX Version 4.2 Only Examples
+
+  1. To link with one library non-shared and the remaining libraries shared,
+     enter:
+     cc -o pgm pgm.o -bstatic -llib1 -bshared -llib2
+
+     The cc command links liblib1.a non-shared, but liblib2.a is linked shared.
+     Because -lc is automatically included when you link with the cc command,
+     the last -bstatic or -bshared option affects whether libc.a is linked
+     shared or statically.
+  2. To link a shared object prepared for run-time linking, enter:
+     ld -o libxxx.so subs1.o subs2.o -bE:shrsub.exp -G -lc
+
+     This links the object files subs1.o, subs2.o, and the subroutines from the
+     library libc.a specified by -lc flag. It exports the symbols specified in
+     the file shrsub.exp and stores the linked shared object in file shrsub.o.
+     Symbols exported from shrsub.o will have the nosymbolic attribute, so that
+     references within with resulting shrsub.o module can be rebound by the
+     run-time linker.
+
+     You can either link with libxxx.so directly, or you can put libxxx.so into
+     an archive library by entering:
+     ar rv libxxx.a libxxx.so
+
+  3. To link a program that uses the run-time linker, enter:
+     cc -o pgm pgm.o -lxxx -brtl
+
+     This links the object file pgm.o with the symbols of libxxx.a. The linked
+     output is stored in the object file . When the program pgm begins running,
+     the run-time linker will be invoked, allowing symbols to be bound to
+     alternate definitions.
+  4. To create a shared object that imports a symbol foo from the main program,
+     create an import file foo.imp that contains the lines:
+     #! .
+
+     foo
+
+     Link the shared object with the command:
+     ld -o shr.o xxx.o -bM:SRE -lc -bI:foo.imp
+
+     If you choose, you can put the shared object in an archive with the
+     command:
+     ar cr libxxx.a shr.o
+
+     When you link your main program, be sure that it defines foo, and link with
+     the command
+     cc -o program prog.o -lxxx
+
+     The symbol foo will be exported automatically from your program. The
+     run-time linker is not need in this example.
+  5. To create a shared object containing an unnamed Fortran common block and
+     link it with a main program that uses the same common block, you must
+     export the common block from the shared object and link your program with
+     the run-time linker. Create an export file listing #BLNK_COM along with
+     other functions and variables you want exported. (#BLNK_COM is the name
+     used internally by the xlf 3.2 compiler for an unnamed common block.)
+
+     Link the shared object with the command:
+     ld -o shr.o xxx.o -bM:SRE -lxlf -lm -lc -bE:xxx.exp
+
+     If you choose, you can put the shared object in an archive with the
+     command:
+     ar cr libxxx.a shr.o
+
+     When you link your main program, use the command link with the command:
+     xlf -o program prog.o -lxxx -brtl
+
+     The unnamed common block will be exported automatically from your main
+     program. When your program runs, the run-time linker will rebind all
+     references to the unnamed common block in shr.o to the unnamed common block
+     in your main program.
+
+Files
+
+/usr/lib/lib*.a Specifies libraries used for linking programs.
+
+a.out Specifies the default output file name.
+
+Related Information
+
+The ar command, as command, nm command, dump command, strip command.
+
+The a.out file format.
+
+The load subroutine, loadbind subroutine, loadquery subroutine, unload
+subroutine.
+
+How to Create a Shared Library in AIX General Programming Concepts: Writing and
+Debugging Programs.
+
+Shared Library Overview in AIX General Programming Concepts: Writing and
+Debugging Programs.
+-------------------------------------------------------------------------------
+  
+                                   

@@ -1,0 +1,35 @@
+Typing "gmake" in this directory will create 2 executables.  The first
+(definemld1x1) reads in ASCII mixed layer depth data from a 1x1 degree
+dataset and puts it into netcdf format in both the original (monthly) form,
+and also as a yearly average.  The Slab Ocean Model option in the CAM reads
+only the yearly averaged mixed layer depths.  The original 1x1 data are from
+Monterey and Levitus.  The data are maintained by Steve Worley in the
+Data Support Section of SCD (see
+http://dss.ucar.edu/datasets/ds285.0/data/woa94).  Please go to this
+web page and download the file named mld.pd.tar.
+
+The second executable, definemldbdy, runs after definemld1x1.  It takes as
+input the yearly average 1x1 degree mixed layer depth netcdf file just
+described, and bins it to the grid defined by a second netcdf file.  If
+building mixed layer depths for the Slab Ocean Model, this second netcdf file
+should be the boundary dataset on which Q fluxes from a control run will also
+be put.  A convenient starting point is a copy of the SST boundary dataset
+used in the control run for SOM.  Since the 1x1 mixed layer data have missing
+values over land, a nearest-neighbor fill algorithm is employed to define
+reasonable values over the entire globe.  The data are then capped at 200
+meters, and an optional number of successive applications of a 1-2-1 smoother
+(default is 10 applications) in both x and y are applied.  The data are then
+written to the output netcdf file.
+
+The most probable sequence of events is therefore something like:
+
+definemld1x1 -m mldfile.nc -v                                
+  (build 1x1 netcdf file)
+
+definemldbdy -s 10 -v -i mldfile.nc -o pcmdi_sst_cam_bcT42_clim.032000.nc 
+  (put that data on a T42 grid)
+
+The final step before running the Slab Ocean Model is to run defineqflux (cvs
+co definesomic) to define the Q flux values on this same boundary dataset.
+That program requires as input the monthly-averaged history files from a
+prescribed-ice CAM run.

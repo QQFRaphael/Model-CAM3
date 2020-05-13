@@ -1,0 +1,272 @@
+#! /bin/csh -f
+#
+# This is a script that tests scam to make sure it is bit for bit with cam.
+# This script can be run from any working directory.
+# TDIFF and QDIFF values output at the end of this script should all be 0
+# Right now this script runs cam at t42 there is no real reason why it
+# cant be run at t5 - you will just need to pick some lat,lon other than 95,46
+# appropriate to the resolution you are validating
+# make sure the following environment variables are set correctly
+#
+# Run this script interactively on the CGD machine "bangkok"
+#
+# $Id: testscript,v 1.1.2.7.2.1 2005/04/08 18:26:32 mvr Exp $
+#
+
+limit stacksize unlimited
+
+setenv MYDIR `pwd`
+
+set dollarzero=$0
+if ( $dollarzero == "testscript" ) then
+    setenv TESTSCRIPTDIR "."
+else
+    setenv TESTSCRIPTDIR $dollarzero:h
+endif
+setenv TOP_DIR `cd $TESTSCRIPTDIR ; pwd`
+setenv CAMROOT `cd $TOP_DIR/../.. ; pwd`
+
+setenv QTDIR /usr/lib/qt-3.3
+setenv PGI /usr/local/pgi-pgcc-pghf-5.2-4
+setenv CSMDATA /fs/cgd/csm/inputdata
+setenv PATH ${PGI}/linux86/bin:${PATH}
+setenv NCARG_ROOT /usr/local
+setenv NETCDF_ROOT /usr/local/netcdf-3.6.0-pgi-pgcc-pghf-5.2-4
+setenv INC_NETCDF $NETCDF_ROOT/include
+setenv LIB_NETCDF $NETCDF_ROOT/lib
+
+#==============================================================
+# Horizontal bars indicate a change of directory
+#==============================================================
+mkdir -p $MYDIR/cam.obj
+cd $MYDIR/cam.obj
+echo "First we build and run CAM to create an IOP file with which to run SCAM."
+
+#configure cam - set BFB_CAM_SCAM_IOP to output SCAM IOP history file
+echo -n "Configuring CAM... "
+$CAMROOT/bld/configure -s -debug -cppdefs '-DBFB_CAM_SCAM_IOP'
+echo done.
+
+#build namelist for cam - output fields needed for scam in fincl2
+echo -n "Building CAM namelist... "
+cat >! namelist.scam << EOF
+&camexp
+ caseid         = 'camrun'
+ NDENS    = 1,1
+ MFILT    = 1,10
+ nhtfrq   = 0,1
+ nelapse                = 6
+ nsrest         = 0
+ fincl2='Ps','u','v','t','q','omega','phis','Prec','lhflx','shflx',
+        'Tsair','Tg','divq3d','divT3d','dcldice','dcldliq','beta',
+        'fixmas','afixq','afixcldl','afixcldi','dqfxq','dqfxcldl',
+        'dqfxcldi','CLAT'
+ mss_irt = 0
+/
+EOF
+$CAMROOT/bld/build-namelist -infile namelist.scam >& /dev/null
+set ncdata      = `grep "\bncdata\b"      namelist | awk '{print $3}'| sed "s/'//g"`
+set ozone       = `grep "\bbndtvo\b"      namelist | awk '{print $3}'| sed "s/'//g"`
+set lsmini      = `grep "\bfinidat\b"     namelist | awk '{print $3}'| sed "s/'//g"`
+set absems      = `grep "\babsems_data\b" namelist | awk '{print $3}'| sed "s/'//g"`
+set aeroptics   = `grep "\baeroptics\b"   namelist | awk '{print $3}'| sed "s/'//g"`
+set aermas      = `grep "\bbndtvaer\b"    namelist | awk '{print $3}'| sed "s/'//g"`
+set lsmsrf      = `grep "\bfsurdat\b"     namelist | awk '{print $3}'| sed "s/'//g"`
+set lsmpft      = `grep "\bfpftcon\b"     namelist | awk '{print $3}'| sed "s/'//g"`
+set sst         = `grep "\bbndtvs\b"      namelist | awk '{print $3}'| sed "s/'//g"`
+set aermas      = `grep "\bbndtvaer\b"    namelist | awk '{print $3}'| sed "s/'//g"`
+echo done.
+
+# make cam
+echo -n "Compiling CAM (output in compile_cam.log) ... "
+gmake realclean >&! compile_cam.log
+set retry = 0
+tryagain:
+sleep 0
+set retry = `expr $retry + 1`
+if ( $retry == 10 ) then
+    echo can not build cam executable
+    echo FAIL >! $MYDIR/Teststatus.out
+    exit 1
+endif
+gmake -j4 >>&! compile_cam.log  || goto tryagain
+echo done.
+
+echo -n "Running CAM (output in cam_run.log) ... "
+./cam < namelist >&! cam_run.log  || ( echo "can not execute cam" ; echo FAIL >! $MYDIR/Teststatus.out ; exit 1 )
+echo done.
+
+# create cam iop data from history tape and copy it to scam directory
+# just use ncks to strip out one column for scam
+echo -n "Converting CAM output to SCAM IOP file ... "
+set scam_iopdata='camrun.cam2.h1.0000-09-01-00000_lat_46_lon95.nc'
+ncks -O -d lat,45 -d lon,94 camrun.cam2.h1.0000-09-01-00000.nc $scam_iopdata
+cp $scam_iopdata $MYDIR
+echo done.
+
+echo ""
+echo "Now we build and run SCAM using the IOP file."
+#==============================================================
+cd $MYDIR
+echo -n "Configuring SCAM (output in config_scam.log) ... "
+$TOP_DIR/configure -batch >&! config_scam.log
+echo done.
+
+echo -n "Compiling SCAM (output in compile_scam.log) ... "
+set retry = 0
+tryagain2:
+sleep 0
+set retry = `expr $retry + 1`
+if ( $retry == 10 ) then
+    echo can not build scam executable
+    echo FAIL >! $MYDIR/Teststatus.out
+    exit 1
+endif
+gmake -j4  >&! compile_scam.log || goto tryagain2
+echo done. 
+
+# Next block creates input file indicated by $scam_ncdata
+# create initial data for scam using CAM dataset (add OMEGA to CAM NCDATA)
+echo -n "Converting CAM initial file to a SCAM initial file ... "
+set scam_ncdata = $ncdata:t
+rm -f $scam_ncdata
+cp $ncdata .
+chmod 644 $scam_ncdata
+ncks -A -vomega -d time,0 cam.obj/camrun.cam2.h1.0000-09-01-00000.nc $scam_ncdata >& /dev/null
+# above command overwrites dimensions so we will replace them with the originals
+ncks -A -vlon $ncdata $scam_ncdata  >& /dev/null
+# since previous command overwrites the global dimensions 
+# we need to put back the original lat and lon dimensions
+ncks -A -vlon -d time,0 $ncdata $scam_ncdata >& /dev/null
+ncrename -vomega,OMEGA $scam_ncdata
+echo done.
+
+# create a scam pressure file from iop dataset
+echo -n "Creating a SCAM pressure file ... "
+ncks -O -vlon,lat,lev,ilev,gw,hyam,hybm,hyai,hybi $scam_iopdata press26.nc
+echo done.
+
+#setup scam quickstart file
+echo -n "Creating a SCAM quickstart file ... "
+cat >! quickstart.scm << EOF
+# SCAM Defaults File #
+runtype="2"
+basedate="901"
+basesecs="0"
+iopstartoffset="0"
+globaldatadir="./"
+iopdatadir="./"
+boundarydatadir="./"
+userdatadir="./userdata/"
+histfile="hist.nc"
+lat="37.673090"
+lon="-95.625"
+steplen="1200"
+endstep="6"
+savefreq="1"
+timedisplayformat="0"
+showsettings="0"
+analysisfile="$scam_ncdata"
+modelfile="$scam_ncdata"
+userfile=""
+iopfile="$scam_iopdata"
+lsminifile="$lsmini"
+ozonfile="$ozone"
+pressfile="press26.nc"
+absemsfile="$absems"
+aeropticsfile="$aeroptics"
+aermassfile="$aermas"
+lsmsurffile="$lsmsrf"
+lsmpftfile="$lsmpft"
+sstfile="$sst"
+sicfile=""
+savefields="QDIFF TDIFF "
+switch_desc1="Logical Switch 1"
+switch1="0"
+switch_desc2="Logical Switch 2"
+switch2="0"
+switch_desc3="Logical Switch 3"
+switch3="0"
+switch_desc4="Logical Switch 4"
+switch4="0"
+switch_desc5="Logical Switch 5"
+switch5="0"
+switch_desc6="Logical Switch 6"
+switch6="0"
+switch_desc7="Logical Switch 7"
+switch7="0"
+switch_desc8="Logical Switch 8"
+switch8="0"
+switch_desc9="Logical Switch 9"
+switch9="0"
+switch_desc10="Logical Switch 10"
+switch10="0"
+switch_desc11="Logical Switch 11"
+switch11="0"
+switch_desc12="Logical Switch 12"
+switch12="0"
+switch_desc13="Use surface props"
+switch13="0"
+switch_desc14="Use relaxation"
+switch14="0"
+switch_desc15="Use 3D forcing"
+switch15="0"
+switch_desc16="Perturb Initial Conditions"
+switch16="0"
+switch_desc17="Perturb Forcing"
+switch17="0"
+switch_desc18="Fix CAM div3d Forcing"
+switch18="0"
+switch_desc19="Use Diurnal Averaging"
+switch19="0"
+switch_desc20="CRM Mode"
+switch20="0"
+EOF
+echo done.
+
+# run scam using quickstart
+echo -n "Running SCAM based on CAM output ... "
+rm -f userdata/scam_output.nc
+./scam -ng -o userdata/scam_output.nc quickstart.scm >&! scam_run.log
+echo done.
+
+# Now test the output
+echo -n "Comparing answers to ensure SCAM gives bit-for-bit answers as CAM ... "
+ncdump -ff -p 9,17 -v QDIFF,TDIFF userdata/scam_output.nc | egrep //\.\*DIFF | sed s/^\ \*// | sed s/\[,\;\].\*\$// | uniq >&! diffs.out
+if ( `cat diffs.out | wc -l` == "1" & `cat diffs.out` == "0" ) then
+    echo PASS
+else
+    echo FAIL
+    echo FAIL >! $MYDIR/Teststatus.out
+    echo Please see the file userdata/scam_output.nc
+    exit(1)
+endif
+
+# Now run the crm
+echo -n "Running the CRM ... "
+$TOP_DIR/crm $TOP_DIR/userdata/crmtest26.in userdata/crmoutput.txt >& /dev/null 
+echo done.
+
+# Now test the output
+echo -n "Comparing CRM output to output from previous tag ... "
+if ( `diff userdata/crmoutput.txt $TOP_DIR/userdata/crmtest26.out` == "" ) then 
+    echo PASS
+else
+    echo FAIL
+    echo FAIL >! $MYDIR/Teststatus.out
+    echo Please compare the files userdata/crmoutput.txt and userdata/crmtest26.out
+    exit(1)
+endif
+
+#clean up
+echo -n "Cleaning up ... "
+#==============================================================
+cd $MYDIR
+gmake realclean >& /dev/null
+#==============================================================
+rm -rf quickstart.scm press26.nc cami* camrun.cam2.h1* userdata/scam_output.nc \
+       cam.obj userdata/crm*.nc userdata/*crm.nc *.log userdata/crmoutput.txt \
+       ui/*.log ui/*.out diffs.out 
+echo done.
+echo PASS >! $MYDIR/Teststatus.out
+echo "SCAM and CRM testing successful!"

@@ -1,0 +1,257 @@
+<!DOCTYPE UI><UI version="3.0" stdsetdef="1">
+<class>IOPDateSelection</class>
+<widget class="QDialog">
+    <property name="name">
+        <cstring>IOPDateSelection</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>219</width>
+            <height>415</height>
+        </rect>
+    </property>
+    <property name="sizePolicy">
+        <sizepolicy>
+            <hsizetype>1</hsizetype>
+            <vsizetype>1</vsizetype>
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+        </sizepolicy>
+    </property>
+    <property name="caption">
+        <string>IOP Date Selection</string>
+    </property>
+    <widget class="QLabel">
+        <property name="name">
+            <cstring>FilenameLbl</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>11</x>
+                <y>20</y>
+                <width>200</width>
+                <height>30</height>
+            </rect>
+        </property>
+        <property name="font">
+            <font>
+                <family>adobe-helvetica</family>
+                <bold>1</bold>
+            </font>
+        </property>
+        <property name="frameShape">
+            <enum>Box</enum>
+        </property>
+        <property name="frameShadow">
+            <enum>Plain</enum>
+        </property>
+        <property name="lineWidth">
+            <number>2</number>
+        </property>
+        <property name="text">
+            <string></string>
+        </property>
+    </widget>
+    <widget class="QLabel">
+        <property name="name">
+            <cstring>IndexTL</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>10</x>
+                <y>60</y>
+                <width>40</width>
+                <height>20</height>
+            </rect>
+        </property>
+        <property name="font">
+            <font>
+                <family>adobe-helvetica</family>
+                <pointsize>10</pointsize>
+                <bold>1</bold>
+            </font>
+        </property>
+        <property name="frameShape">
+            <enum>MShape</enum>
+        </property>
+        <property name="frameShadow">
+            <enum>Raised</enum>
+        </property>
+        <property name="text">
+            <string>Index</string>
+        </property>
+    </widget>
+    <widget class="QLabel">
+        <property name="name">
+            <cstring>DateTL</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>80</x>
+                <y>60</y>
+                <width>40</width>
+                <height>20</height>
+            </rect>
+        </property>
+        <property name="font">
+            <font>
+                <family>adobe-helvetica</family>
+                <pointsize>10</pointsize>
+                <bold>1</bold>
+            </font>
+        </property>
+        <property name="text">
+            <string>Date</string>
+        </property>
+    </widget>
+    <widget class="QLabel">
+        <property name="name">
+            <cstring>HourTL</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>140</x>
+                <y>60</y>
+                <width>40</width>
+                <height>20</height>
+            </rect>
+        </property>
+        <property name="font">
+            <font>
+                <family>adobe-helvetica</family>
+                <pointsize>10</pointsize>
+                <bold>1</bold>
+            </font>
+        </property>
+        <property name="text">
+            <string>Hour</string>
+        </property>
+    </widget>
+    <widget class="QPushButton">
+        <property name="name">
+            <cstring>OKPB</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>110</x>
+                <y>370</y>
+                <width>100</width>
+                <height>35</height>
+            </rect>
+        </property>
+        <property name="font">
+            <font>
+            </font>
+        </property>
+        <property name="text">
+            <string>&amp;OK</string>
+        </property>
+        <property name="default">
+            <bool>true</bool>
+        </property>
+        <property name="toolTip" stdset="0">
+            <string>Select a saved initial-conditions dataset</string>
+        </property>
+    </widget>
+    <widget class="QPushButton">
+        <property name="name">
+            <cstring>SelectNewDatasetPB</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>0</x>
+                <y>330</y>
+                <width>220</width>
+                <height>35</height>
+            </rect>
+        </property>
+        <property name="text">
+            <string>&amp;Select New Dataset</string>
+        </property>
+    </widget>
+    <widget class="QPushButton">
+        <property name="name">
+            <cstring>CancelPB</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>0</x>
+                <y>370</y>
+                <width>110</width>
+                <height>35</height>
+            </rect>
+        </property>
+        <property name="text">
+            <string>&amp;Cancel</string>
+        </property>
+    </widget>
+    <widget class="QListBox">
+        <property name="name">
+            <cstring>SelectDateLB</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>10</x>
+                <y>80</y>
+                <width>200</width>
+                <height>240</height>
+            </rect>
+        </property>
+        <property name="sizePolicy">
+            <sizepolicy>
+                <hsizetype>1</hsizetype>
+                <vsizetype>1</vsizetype>
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+            </sizepolicy>
+        </property>
+        <property name="font">
+            <font>
+                <family>adobe-helvetica</family>
+                <pointsize>10</pointsize>
+            </font>
+        </property>
+        <property name="vScrollBarMode">
+            <enum>AlwaysOn</enum>
+        </property>
+    </widget>
+</widget>
+<connections>
+    <connection>
+        <sender>SelectDateLB</sender>
+        <signal>selected(int)</signal>
+        <receiver>IOPDateSelection</receiver>
+        <slot>CommitSelection(int)</slot>
+    </connection>
+    <connection>
+        <sender>OKPB</sender>
+        <signal>clicked()</signal>
+        <receiver>IOPDateSelection</receiver>
+        <slot>CommitSelection()</slot>
+    </connection>
+    <connection>
+        <sender>SelectNewDatasetPB</sender>
+        <signal>clicked()</signal>
+        <receiver>IOPDateSelection</receiver>
+        <slot>SelectFile()</slot>
+    </connection>
+    <connection>
+        <sender>CancelPB</sender>
+        <signal>clicked()</signal>
+        <receiver>IOPDateSelection</receiver>
+        <slot>close()</slot>
+    </connection>
+</connections>
+<includes>
+    <include location="local" impldecl="in implementation">IOPSelectDateDlg.ui.h</include>
+</includes>
+<slots>
+    <slot>CancelChanges()</slot>
+    <slot access="protected">CommitSelection()</slot>
+    <slot access="protected">CommitSelection( int )</slot>
+    <slot access="protected">SelectFile()</slot>
+</slots>
+<layoutdefaults spacing="6" margin="11"/>
+</UI>

@@ -1,0 +1,2212 @@
+<!DOCTYPE html PUBLIC "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+  <meta http-equiv="Content-Type"
+ content="text/html; charset=iso-8859-1">
+  <meta name="Generator" content="Microsoft Word 97">
+  <meta name="GENERATOR"
+ content="Mozilla/4.78 [en] (X11; U; Linux 2.4.8-26mdkenterprise i686) [Netscape]">
+  <title>SCAM User's Guide</title>
+</head>
+<body text="#000000" bgcolor="#ffffff" link="#0000ee" vlink="#551a8b"
+ alink="#ff0000">
+<blockquote>
+  <center><b><u><font size="+4">SCAM User's Guide</font></u></b></center>
+</blockquote>
+<center><b>Version 1.4</b><br>
+<b>June 2004</b><br>
+&nbsp;
+<p><b>J. J. Hack, J. E. Truesdale, J. A. Pedretti and J. C. Petch</b>
+</p>
+<hr width="100%"></center>
+<p><br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+</p>
+<p><b><font size="+3">Contents</font></b>
+</p>
+<ul>
+  <li> <a href="#1.%20Introduction">1. Introduction</a></li>
+  <ul>
+    <li> <a
+ href="#1.1%20Basic%20description%20of%20the%20NCAR%20CCM%20SCAM%20Framework">1.1
+Basic
+Description of the NCAR CAM SCAM Framework</a></li>
+    <li> <a
+ href="#1.2%20Potential%20for%20solution%20differences%20across%20CCM%20program%20libra">1.2
+Potential for solution differences across CAM program libraries</a></li>
+  </ul>
+  <li> <a href="#2.%20Building%20SCAM">2. Building SCAM</a></li>
+  <ul>
+    <li> <a href="#2.1%20Preliminary%20Setup">2.1 Preliminary Setup</a></li>
+    <li> <a
+ href="#2.2%20Obtaining%20the%20Source%20Code%20and%20Datasets">2.2
+Obtaining the
+Source Code and Datasets</a></li>
+    <li> <a
+ href="#2.3%20Explanation%20of%20the%20SCAM%20Subdirectory%20Organization">2.3
+Explanation
+of the SCAM Sub directory Organization</a></li>
+    <li> <a href="#2.4%20Configuring%20the%20Makefile">2.4 Building
+SCAM
+executable and GUI<br>
+      </a></li>
+    <li> <a href="#2.5%20Making%20the%20SCAM%20Executable">2.5
+Recompiling
+the SCAM Executable</a></li>
+    <li> <a href="#2.6%20Running%20SCAM">2.6 Running SCAM</a></li>
+    <li> <a href="#2.7%20Changing%20between%20CAM%20Versions">2.7
+Changing
+between CAM versions</a></li>
+    <li> <a href="#2.8%20Optional%20Configurations">2.8 Optional
+Configurations</a></li>
+    <li> <a href="#2.9%20Troubleshooting">2.9 Troubleshooting</a></li>
+  </ul>
+  <li> <a href="#3.%20The%20User%20Interface">3. The User Interface</a></li>
+  <ul>
+    <li> <a href="#3.1%20Overview">3.1 Overview</a></li>
+    <li> <a href="#3.2%20Starting%20SCAM%20/%20The%20Main%20Window">3.2
+Starting SCAM / The
+Main Window</a></li>
+    <li> <a href="#3.3%20Loading%20Datasets">3.3 Loading Datasets</a></li>
+    <li> <a href="#3.4%20Setting%20Options">3.4 Setting Options</a></li>
+    <li> <a href="#3.5%20Monitoring%20and%20Modifying%20a%20Field">3.5
+Monitoring and Modifying
+a Field</a></li>
+    <li> <a href="#3.6%20Running%20the%20Model">3.6 Running the Model</a></li>
+    <li> <a href="#3.7%20Saving%20Data">3.7 Saving Data</a></li>
+    <li> <a href="#3.8%20Post-Run%20Analysis">3.8 Post-Run Analysis</a></li>
+    <li> <a href="#3.9%20Restarting">3.9 Restarting</a></li>
+    <li> <a href="#3.9%20Restarting">3.10 Command Line Options</a></li>
+  </ul>
+  <li> <a href="#4.%20Modifying%20the%20Code">4. Modifying the Code</a></li>
+  <ul>
+    <li> <a
+ href="#4.1%20Adding%20New%20Files%20to%20the%20Model%20directories">4.1
+Adding New
+Model Source Code Files</a></li>
+    <li> <a href="#4.2%20Adding%20New%20Fields%20to%20View%20or%20Save">4.2
+Adding New Fields
+to View or Save</a></li>
+    <li> <a href="#4.2%20Adding%20New%20Fields%20to%20View%20or%20Save">4.3
+Model Initialization</a></li>
+  </ul>
+  <li> <a href="#5.%20Using%20SCAM%20with%20an%20IOP%20Dataset">5.
+Using
+SCAM with an IOP
+Dataset</a></li>
+  <ul>
+    <li> <a href="#5.1%20Introduction">5.1 Introduction</a></li>
+    <li> <a href="#5.2%20The%20Standard%20IOP%20Dataset%20for%20SCAM">5.2
+The Standard IOP Dataset
+for SCAM</a></li>
+    <li> <a
+ href="#5.3%20A%20Detailed%20Example%20Using%20SCAM%20With%20an%20IOP%20Dataset.">5.3
+A
+Detailed Example Using SCAM With an IOP Dataset</a></li>
+    <ul>
+      <li> <a
+ href="#5.3.1%20Changing%20and%20Initializing%20the%20Model">5.3.1
+Changing and
+Initializing the Model</a></li>
+      <li> <a href="#5.3.2%20Running%20the%20Model">5.3.2 Running the
+Model</a></li>
+    </ul>
+  </ul>
+  <li> <a href="#6.%20Acknowledgements">6. Acknowledgments</a></li>
+  <li> <a
+ href="#Appendix%20A:%20Format%20of%20SCAM%20NetCDF%20Datasets">Appendix
+A: Format
+of SCAM NetCDF Datasets</a></li>
+</ul>
+<hr width="100%">
+<center><a name="1. Introduction"></a><b><font size="+3">1. Introduction</font></b></center>
+<hr width="100%">
+<p>Numerical modeling of the climate system and its sensitivity to
+anthropogenic
+forcing is a highly complex scientific problem. Progress toward
+accurately
+representing our climate system using global numerical models is
+primarily
+paced by uncertainties in the representation of non resolvable physical
+processes, most often treated by what is known as physical
+parameterization.
+A principal example of the parameterization problem is how to
+accurately
+include the overall effects of moist processes, i.e., the various
+components
+of the hydrologic cycle, into the governing meteorological equations.
+Since
+water in any phase is a strongly radiatively active atmospheric
+constituent,
+and since changes in water phase are a major source of diabatic heating
+in the atmosphere, the large-scale moisture field plays a fundamental
+role
+in the maintenance of the general circulation and climate. Clouds
+themselves
+are a central component in the physics of the hydrologic cycle since
+they
+directly couple dynamical and hydrological processes in the atmosphere
+through the release of the latent heat of condensation and evaporation,
+through precipitation, and through the vertical redistribution of
+sensible
+heat, moisture and momentum. They play a comparable role in the
+large-scale
+thermodynamic budget through the reflection, absorption, and emission
+of
+radiation and also play an important role in the chemistry of the
+Earth's
+atmosphere. Evaluating the many parametric approaches which attempt to
+represent these types of processes in atmospheric models can be both
+scientifically
+complex and computationally expensive.
+</p>
+<p>An alternative approach to testing climate model parameterizations
+in
+global atmospheric models is in what are called single column models or
+SCMs. As the name suggests, an SCM is analogous to a grid column of a
+more
+complete global climate model, where the performance of the
+parameterized
+physics for the column is evaluated in isolation from the rest of the
+large-scale
+model. Various forms of "observations" can be used to specify the
+effects
+of neighboring columns, as well as selected effects of parameterized
+processes
+(other than those being tested) within the column, such as surface
+energy
+exchanges. The SCM approach lacks the more complete feedback mechanisms
+available to an atmospheric column imbedded in a global model, and
+therefore
+cannot provide a sufficiently thorough framework for evaluating
+competing
+parametric techniques. It can, however, provide an inexpensive first
+look
+at the characteristics of a particular parameterization approach
+without
+having to sort out all the complex nonlinear feedback processes that
+would
+occur in a global model.
+</p>
+<p>Because of the large computational expense associated with
+evaluating
+new parameterizations using a complete atmospheric general circulation
+model, we have developed a highly flexible and computationally
+inexpensive
+single column modeling environment for the investigation of
+parameterized
+physics targeted for global climate models. In particular, this
+framework
+is designed to facilitate the development and evaluation of physical
+parameterizations
+for the NCAR Community Atmosphere Model (CAM). The SCM modeling
+environment
+provides a framework for making initial assessments of physical
+parameterization
+packages and allows for the incorporation of both in situ forcing
+datasets
+[e.g., Atmospheric Radiation Measurement (ARM) data] and synthetic,
+user specified,
+forcing datasets, to help guide the refinement of parameterizations
+under
+development. Diagnostic data which can be used to evaluate model
+performance
+can also be trivially incorporated. The computational design of the SCM
+framework allows assessments of both the scientific and computational
+aspects
+of the physics parameterizations for the NCAR CAM because the coding
+structures
+at the physics module levels are identical. We believe that this
+framework
+will have widespread utility and will help to enrich the pool of
+researchers
+working on the problem of physical parameterization since few have
+access
+to or can afford to test new approaches in atmospheric GCMs. Another
+strength
+of our approach is that it will provide a common framework in which to
+investigate the scientific requirements for the successful
+parameterization
+of subgrid-scale processes.
+</p>
+<p><a name="1.1 Basic description of the NCAR CCM SCAM Framework"></a><br>
+<b>1.1 Basic description of the NCAR CAM SCAM Framework</b>
+</p>
+<p>The NCAR single column CAM (SCAM) is a one-dimensional
+time dependent
+model in which the local time-rate-of-change of the large-scale state
+variables
+(e.g., temperature, moisture, momentum, cloud water, etc.) depends on
+specified
+horizontal flux divergences, a specified vertical motion field (from
+which
+the large-scale vertical advection terms are evaluated), and
+subgrid-scale
+sources, sinks and eddy transports. The subgrid-scale contributions are
+determined by the particular collection of physical parameterizations
+being
+investigated. Because an SCM lacks the horizontal feedbacks that occur
+in complete three-dimensional models of the atmosphere, the governing
+equations
+are only coupled (incompletely) through the parameterized physics. In a
+practical sense this means that the thermodynamic and momentum
+components
+of the governing equations are generally independent of one another,
+where
+typical configurations of SCAM would consider each of these budgets
+independently. The thermodynamic configuration consists of
+<br>
+<br>
+</p>
+<center>
+<p><img src="gif/formula1.gif" nosave="" height="40" width="262"
+ align="middle">&nbsp;
+(1),
+<br>
+<img src="gif/formula2.gif" nosave="" height="36" width="193"
+ align="middle">&nbsp;
+(2),</p>
+</center>
+<p><br>
+<br>
+where the terms S<sub>LS </sub>and Q<sub>LS </sub>schematically
+denote
+the large-scale horizontal flux divergence forcing terms. The terms Q<sub>physics</sub>
+and S<sub>physics</sub> schematically denote the collection of
+parameterized
+physics terms. Similarly, the momentum equations take the form
+<br>
+&nbsp;&nbsp;
+<br>
+</p>
+<center>
+<p><img src="gif/formula3.gif" nosave="" height="36" width="202"
+ align="middle">&nbsp;
+(3),
+<br>
+<img src="gif/formula4.gif" nosave="" height="35" width="199"
+ align="middle">&nbsp;
+(4),</p>
+</center>
+<p><br>
+where the large-scale horizontal flux divergence and parameterized
+physics
+terms are denoted by&nbsp;<img src="gif/uls.gif" nosave="" height="17"
+ width="26" align="middle">,&nbsp;<img src="gif/uphys.gif" nosave=""
+ height="22" width="48" align="middle">,&nbsp;<img src="gif/vls.gif"
+ nosave="" height="17" width="26" align="middle">,
+and&nbsp;<img src="gif/vphys.gif" nosave="" height="20" width="53"
+ align="middle">.
+</p>
+<p>The SCAM numerically integrates these equations starting from
+"user specified"
+initial conditions. We will discuss the initialization process shortly.
+The right-hand side of equations (1) - (4) are either evaluated
+numerically
+or arbitrarily specified. The terms&nbsp;<img src="gif/qls.gif"
+ nosave="" height="16" width="26" align="middle">,&nbsp;<img
+ src="gif/sls.gif" nosave="" height="16" width="24" align="middle">,&nbsp;<img
+ src="gif/uls.gif" nosave="" height="17" width="26" align="middle">,
+and&nbsp;<img src="gif/vls.gif" nosave="" height="17" width="26"
+ align="middle">
+are specified quantities, as is the vertical motion profile,&nbsp;<img
+ src="gif/w.gif" nosave="" height="8" width="10">,
+since they represent a degree of freedom which is not available to a
+single column
+modeling framework. The vertical advection terms (e.g.,&nbsp;<img
+ src="gif/formula5.gif" nosave="" height="15" width="56" align="middle">)
+are explicitly evaluated by the SCM using either the CAM Eulerian
+advection
+formalism, the CAM semi-Lagrangian advection formalism, or some
+combination
+of the two. The default configuration is analogous to the CAM, where
+water
+vapor and other constituents are advected using the semi-Lagrangian
+procedure,
+while temperature and momentum are advected with the CAM Eulerian
+finite-differences.
+Alternatively, if the large-scale vertical advection terms are
+available
+in any of the SCAM forcing datasets, the user can modify the SCAM
+dynamical
+driver to use these terms in place of the default large-scale vertical
+advection calculation. Note, all large-scale terms on the right-hand
+side
+of eq. (1) - (4) are defined as a positive tendency in any of the
+datasets
+provided with the SCAM. For example, the large-scale vertical advection
+term&nbsp;<img src="gif/formula6.gif" nosave="" height="15" width="78"
+ align="middle">
+would be defined exactly as it appears on the right hand side of
+equation
+(2) in all datasets. This sign convection is consistent with the way in
+which the large-scale advection information is provided for ARM
+Intensive
+Observing Period observations used for single column modeling
+applications.
+</p>
+<p>Finally, the remaining physical parameterization terms are
+explicitly
+evaluated using the standard CAM physics packages or an alternative
+physical parameterization package as configured by the
+user. The coding constructs (e.g., calling tree, parameter lists, etc.)
+are identical to what is contained in the CAM. The SCAM operates in one
+of two standard modes. The first mode allows the user to select an
+arbitrary
+atmospheric column from anywhere on the globe. The SCAM will build an
+initial
+condition for this column (along with all the necessary boundary
+datasets,
+such as surface properties, ozone path lengths, etc.) from one of two
+data
+sources. Presently these data sources are monthly average
+climatological
+properties from ECMWF analyses or from model generated (i.e., CAM)
+results.
+At this point in time, the horizontal flux divergence forcing
+tendencies
+are specified to be zero when using this configuration of the SCAM.
+There
+are some important modeling implications for the solutions when
+specifying
+a zero horizontal forcing. They will be discussed in future versions of
+this document, along with alternative ways of treating these terms. The
+second mode of operation makes use of what we refer to as Intensive
+Observing
+Period (IOP) data. This data provides transient forcing information to
+SCAM physics, where the source of such data will most frequently be
+from observational field programs such as GATE, ARM, and TOGA COARE. An
+alternative to field program data might be a synthetically generated
+dataset
+designed to stress certain aspects of a parameterization technique. We
+expect that such datasets would generally incomplete when it comes to
+providing
+all the data required to initialize and integrate the SCAM. Therefore,
+when using the IOP option, the SCAM first builds an initial condition
+using
+the appropriate climatological profiles and surface quantities using
+global
+analysis data, and incorporates the appropriate model specific boundary
+condition data for the column closest to where the IOP data is located.
+It then overwrites this data with whatever IOP data is available. In
+this
+way the model is guaranteed to have all the data necessary to perform a
+numerical integration. This procedure may introduce inconsistencies in
+the initial and boundary value states which could result in undesirable
+systematic errors in the solution. Once again, this puts the burden on
+the user to completely understand what has been assumed for the purpose
+of integrating the SCAM using IOP data. At the moment, the IOP datasets
+consist of the GATE dataset, a TOGA COARE dataset (ascii data for both
+were obtained from the CSU single column modeling web site:
+http://kiwi.atmos.colostate.edu/scm/scm.html),
+and an ARM dataset (for which the ascii data was obtained from the from
+the ARM intercomparison web site:
+http://wetfly.llnl.gov/scm/scm_intercomp/).
+Over time, we will assemble additional IOP forcing datasets from new
+field
+experiments, revisions of existing IOP datasets, and will explore the
+use
+of GCM and analysis generated forcing in regions where detailed
+observational
+data may not exist. See <a
+ href="#Table%201:%20Required%20Dimensions%20and%20Variables%20in%20SCAM%20NetCDF%20Datas">Table
+1</a> for a summary of the format of the SCAM NetCDF datasets.
+</p>
+<p><a
+ name="1.2 Potential for solution differences across CCM program libra"></a><br>
+<b>1.2 Potential for solution differences across physics program
+libraries</b>
+</p>
+<p>There have been several releases of the single column model, some of
+which have incorporated changes to the GUI only, and&nbsp; others that
+have included GUI updates along with changes to the the latest physics
+program library.&nbsp; Generally speaking, there are two types of
+updates
+made to the physics algorithms: minor changes causing round off
+differences
+and major parameterization updates.&nbsp; Experience has shown that
+even
+small round off changes can introduce nontrivial differences in the
+solutions
+produced by the single column model.&nbsp; For example, the old and new
+solutions will track each other to a high degree of accuracy and
+suddenly
+diverge, resulting in fundamentally different solution
+characteristics.&nbsp;
+This is a property of branch points in the physics codes that can
+result
+in non deterministic solutions, and should not necessarily be cause for
+alarm.&nbsp;&nbsp; Once a significant difference is introduced in a
+solution
+because of a branch point, the lack of dynamical feedbacks can limit
+the
+chances that the solutions will once again converge.&nbsp; Below are
+plots
+showing solution difference attributable to minor algorithmic changes
+(compare
+temperature errors for ccm3.2 and ccm3.6) and major changes to physical
+parameterizations (compare temperature differences between ccm3.6 and
+cam2.0)&nbsp;
+The solutions represent the temperature error time series for the
+CCM3.2,
+CCM3.6, and CAM2 physics algorithms when forced with the ARM Summer
+1995
+IOP dataset.
+<br>
+Although it can be argued that CAM2 solution has the same large scale
+structure and biases for the major convective events, it includes
+fundamental
+changes to the atmospheric physics and is expected to produce a
+different
+solution than either the ccm3.2 or ccm3.6 physics.
+</p>
+<blockquote>&nbsp;</blockquote>
+<img src="gif/tdiff3.2.gif" nosave="" height="353" width="332"
+ align="bottom">TDIFF(CCM3.2)&nbsp;<img src="tdiff3.6.gif" height="354"
+ width="333">TDIFF
+(CCM3.6)
+<p><img src="tdiff-cam2.gif" height="352" width="331">TDIFF (CAM2)
+<br>
+</p>
+<hr width="100%">
+<center><a name="2. Building SCAM"></a><b><font size="+3">2. Building
+SCAM</font></b>
+<br>
+<hr width="100%"></center>
+<p><a name="2.1 Preliminary Setup"></a><b>2.1 Preliminary Setup</b>
+</p>
+<p>SCAM is now a part of the CAM distribution.&nbsp; To run CAM in
+single column mode requires a fortran compiler and all of the libraries
+needed to compile CAM.&nbsp; Additionally you will also need the QT
+library which is freely available for the Linux platform from <a
+ href="http://www.trolltech.com">http://www.trolltech.com</a>.&nbsp;
+Most distributions of Linux already have a minimal version of QT
+installed but these installations normally lack the development header
+files<br>
+and binaries to build a QT GUI.&nbsp; You can check if the QT 'moc' and
+'uic' binaries are available by using your distribution's package
+manager or by using the locate utility. (Ex. typing 'locate uic | grep
+bin' will list all files containing the letters uic and residing in a
+bin directory.)&nbsp; If you don't have QT installed or are lacking the
+required QT binaries you can download and build the QT library from
+trolltech.&nbsp; SCAM also requires the NCAR Graphics library to enable
+plotting.&nbsp; You can download the NCAR Graphics library from <a
+ href="http://ngwww.ucar.edu/">http://ngwww.ucar.edu/</a> .<br>
+</p>
+<p>Building SCAM depends on the following utilities: Except for the
+fortran compiler all of them should already exist on your platform.<br>
+</p>
+<dir><li>
+cpp - the C preprocessor; standard on every unix system.</li>
+<li>
+Gnu make - Gnu's freely available version of make. This may be
+installed
+variously as gnumake, gmake, or make. To find out if a particular
+version
+of make is the Gnu version, type `<tt>make -v</tt>'. In case it is not
+installed on your system, information on obtaining the source code for
+Gnu make is available at <a href="http://www.fsf.org/order/ftp.html">http://www.fsf.org/order/ftp.html</a>.</li>
+<li>
+C and FORTRAN90 compilers - standard on most systems (NB:&nbsp; Linux
+users
+must purchase either the Portland Group or Layhe compiler.&nbsp; At the
+time of this writing Intel was also providing an unsupported C++ and
+Fortran 90 compiler.&nbsp; Users have reported success compiling CAM
+using this free alternative compiler.&nbsp; Although the Intel compiler
+is currently unsupported the modification needed to make it work with
+SCAM should be minor.&nbsp; <br>
+</li>
+</dir>
+<a name="2.2 Obtaining the Source Code and Datasets"></a><b>2.2
+Obtaining
+the Source Code and Datasets</b>
+<p>Use
+Netscape or your favorite web browser to download the CAM source
+code and datasets. The following link will take you to a registration
+page for obtaining the CAM source code. <a
+ href="http://www.ccsm.ucar.edu/php/ccsmAgreement.php?indexId=4">http://www.ccsm.ucar.edu/php/ccsmAgreement.php?indexId=4</a>
+<br>
+</p>
+<p>Follow the links for downloading the source and datasets. The size
+of the complete distribution, including datasets, is approximately xx
+mb.
+Once you have downloaded the file to your local machine you will need
+to
+extract them. The file <i>cam-&lt;version&gt;.tar.gz</i> contains
+CAM/SCAM source code for compiling the model and SCAM GUI. This file is
+a compressed tar file which
+must be uncompressed and "untarred" as follows:
+</p>
+<p><tt><font color="#000000">gunzip -c
+scam-&lt;version&gt;.&lt;system&gt;.tar.gz
+| tar xvf -</font></tt>
+</p>
+<p>This will create the directory `<i>cam-&lt;version&gt;'</i>
+containing
+the CAM/SCAM source code and configuration files.
+</p>
+<p>The datasets needed to run scam are in a separate tar file.&nbsp;
+Once they are installed locally please set the environment variable
+CSMDATA to point to the root directory of the installation.&nbsp; The
+SCAM configure script will use this environment variable to create the
+proper links to the SCAM datasets.<br>
+</p>
+<p><a name="2.3 Explanation of the SCAM Subdirectory Organization"></a><b>2.3
+Explanation of the SCAM Sub directory Organization</b></p>
+<p>After untarring the source distribution change directory to the SCAM
+root directory located under<br>
+cam1/models/atm/cam/tools/scam.&nbsp; The SCAM root directory will
+contain the files `<i>configure</i>', `<i>INSTALL</i>',
+and `<i>GNUmakefile</i>' and the sub directories described below.
+</p>
+<dir><li> <i>scm_init</i> - model initialization code shared between
+the
+different
+model versions.</li>
+<li> <i>mymods</i> - default location for your modified model code</li>
+<li> <i>obj</i> - configuration file, object files</li>
+<li> <i>userdata - </i>default location for data files generated by
+scam</li>
+<li> <i>lib </i>- files needed by NCAR Graphics routines</li>
+<li> <i>html</i> - location of SCAM User's Guide (this document) and
+home
+page
+in html format.</li>
+<li> <i>utils</i> - separate stand-alone utilities.</li>
+<li><span style="font-style: italic;">data</span> - directory which
+will contain SCAM datasets<br>
+</li>
+</dir>
+Users will mainly be concerned with the model directories, the userdata
+directory, and the configure shell script.
+<br>
+<p><a name="2.4 Configuring the Makefile"></a><b>2.4 Building SCAM
+Executable and GUI</b><br>
+<br>
+The user must configure the Makefiles for the desired target
+architecture.
+Currently the only supported architecture is Intel PC/Linux. <br>
+</p>
+<p>Before trying to configure and build SCAM you should set the
+following environment variables</p>
+<ul>
+  <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; NCARG_ROOT (point to
+the root of the ncarg library)</li>
+  <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; QTDIR&nbsp; (point to
+the root of the QT header files, binaries, and libraries)</li>
+  <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; PGI (or root
+environment variables for your compiler)</li>
+  <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; LD_LIBRARY_PATH
+(points to library directories for QT, NCARG, and your fortran compiler)</li>
+  <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; PATH (add bin
+directories for the compiler, netcdf, qt, and ncarg packages to your
+search path)</li>
+  <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CSMDATA&nbsp; (points
+to the root of the cam datasets directory)<br>
+  </li>
+</ul>
+<p>All of the site specific configuration is
+done by executing gmake from the scam root directory (type
+`<tt>./gmake</tt>').&nbsp; You will be asked to supply values for a few
+parameters
+as described below.&nbsp; In most cases the configure scripts should be
+able to identify the
+proper packages, just type return to select the default value.&nbsp;
+The
+configure process will then test your system's FORTRAN and C compilers
+to
+make certain they work properly together. <br>
+</p>
+<p>During the configuration you will be queried about
+the following variables. </p>
+<ul>
+  <li>QT Library location = root of header, library, and binary qt files</li>
+  <li>Output file precision = output files written in single or double
+precision</li>
+  <li>NETCDF header and library files </li>
+  <li>NCAR Graphics header and library files</li>
+  <li>C compiler - default c compiler for your machine.</li>
+  <li>FORTRAN77 compiler - default f77 compiler for your machine.</li>
+  <li>FORTRAN90 compiler - default f90 compiler for your machine.</li>
+  <li>PATH for CAM Source</li>
+  <li>PLEV - the number of vertical levels in the model. The default
+value is
+26. If you change this to another value, you must supply a new pressure
+level data file in the same netCDF format as the pressure level file
+supplied
+in the distribution, i.e. "press26.nc", containing the pressure levels
+in the form of hybrid a and b coordinates for the new vertical
+resolution.</li>
+  <li>PCNST - the number of advected constituents. The default value is
+1,
+which
+represents advection of water. Change this if you are going to advect
+more
+constituents.</li>
+  <li>ALT_SOURCE_PATH - this determines where to look first for
+alternate
+versions
+of source files. The directory mymods is searched first by default, but
+any directory paths you add here will be searched for source files in
+order,
+before mymods and the cam standard directories. (For users familiar
+with
+`make', this works by modifying the VPATH variable.)</li>
+  <li>NETCDF_ROOT - the complete path to the directory containing
+lib/libnetcfd.a
+and include/netcdf.h.</li>
+  <li>STACK/STATIC - determines how the model code will be compiled.
+Static
+will
+result in larger executables, so if disk space is a concern, you might
+want to try stack.</li>
+  <li>OPTIMIZE/DEBUG - determines how the model code will be compiled.
+Optimized
+code will typically run much faster, but if you want to use a debugger
+(e.g., dbx) to debug your code, choose debug.</li>
+</ul>
+If the configure process completes without errors the model and gui
+code should start compiling.&nbsp; Depending on how strict your FORTRAN
+compiler is,
+you may see several warning messages during the compilation; these can
+(usually) be safely ignored. If the final link fails due to errors, see
+<a
+ href="file:///fs/cgd/data0/jet/scam202dev84_scam01/cam1/models/atm/cam/tools/scam/html/userguide.html#2.9%20Troubleshooting">Section
+2.9, "Troubleshooting"</a> for suggestions on what may have gone wrong.
+The output of this process will be the scam and scamgui executables.<br>
+<p><a name="2.5 Making the SCAM Executable"></a><b>2.5 Recompiling the
+SCAM
+Executable</b><br>
+<br>
+To recompile the model, after changing source just type `<tt>gmake</tt>'<span
+ style="font-style: italic;"></span><br>
+</p>
+<p>If you wish to recompile the fortran source from scratch type `<tt>gmake
+clean</tt>'&nbsp; and `<tt>gmake</tt>' in the root directory.&nbsp; `<tt>gmake
+clean</tt>' will remove all scam object files.&nbsp; typing `<tt>gmake</tt>'
+then starts a fresh compilation. <br>
+&nbsp;<br>
+If you wish to recompile both the SCAM executable and SCAM GUI from
+scratch type `<tt>gmake realclean</tt>' followed by&nbsp; `<tt>gmake</tt>'.&nbsp;
+This will remove all intermediate files as well as allow the user to
+reconfigure<br>
+the model.<br>
+</p>
+<p><a name="2.6 Running SCAM"></a><b>2.6 Running SCAM</b>
+</p>
+<p>Congratulations! If you have made it this far, you have successfully
+built SCAM. If you have installed the datasets as suggested, you're
+done.
+(If the datasets have been installed in a different location, you need
+to edit one more file, "<i>.scam_defaults</i>", to change the paths to
+the datasets; see <a href="#2.8%20Optional%20Configurations">Section
+2.8, "Optional
+Configurations".</a>) Just type `<tt>./scam</tt>' in the scam root
+directory
+and you should be off and running. See <a
+ href="#3.%20The%20User%20Interface">Section
+3., "The User Interface"</a>, for detailed instructions on how to use
+the
+model.
+</p>
+<p><a name="2.7 Changing between CAM Versions"></a><b>2.7 Changing
+Between
+CAM versions</b>
+</p>
+<p>Although previous versions of SCAM allowed you to switch between
+current
+and previous version of the Community Climate Model physics, the
+current
+version only supports the CAM3.0 physics code.
+</p>
+<p><a name="2.8 Optional Configurations"></a><b>2.8 Optional
+Configurations</b>
+</p>
+<p>The file "<i>.scam_defaults</i>" is used by SCAM at startup to set
+some
+application defaults, including where to look for the initialization
+datasets.
+If the initialization datasets have been installed in a location other
+than "<i>../data/</i>" relative to the SCAM root directory, you will
+need
+to edit the variables "<i>globaldatadir</i>", "<i>boundarydatadir</i>"
+and "<i>iopdatadir</i>" which define the directories containing the
+initialization
+datasets before you start SCAM for the first time. Another variable you
+may want to edit is "<i>./userdatadir</i>", which defines the directory
+which will be used when showing file open or save dialogs. The initial
+value for this is "<i>userdata</i>" which refers to the directory of
+the
+same name in the scam root directory.
+</p>
+<p>Note that the "<i>.scam_defaults" </i>file is regenerated by SCAM
+by
+selecting "Save Defaults" from within the Options dialog ( see <a
+ href="#3.4%20Setting%20Options">Section
+3.4, "Setting Options"</a> ), so other than this one-time modification,
+you normally won't need to edit this file again since you can specify
+all
+of the values through SCAM (except for the two "datadir" variables).
+<br>
+&nbsp;
+</p>
+<p><a name="2.9 Troubleshooting"></a><b>2.9 Troubleshooting</b>
+</p>
+<p>Because of the complexity of SCAM it is possible for problems to
+occur
+at several junctures. Below is a collection of commonly encountered
+problems
+and suggested solutions.
+</p>
+<p><b><u>Problems with configuration</u></b>
+</p>
+<dir><b><font color="#000000">Problem</font></b>: When you execute the
+configure script, the script will not accept your choice of a NetCDF
+directory
+even though you know that it contains "<i>libnetcdf.a"</i> and "<i>netcdf.inc</i>."
+<p><b><font color="#000000">Solution</font></b>: Most likely, the
+problem
+is with the naming of the directories which contain the library and
+include
+file. The configure script is expecting the library to be in a
+sub directory
+called "<i>lib</i>" and the include file to be in a sub directory
+called
+"<i>include</i>."&nbsp; If your particular installation has a different
+directory structure, just make a directory called "<i>netcdf</i>" in
+the
+directory that contains the scam root directory, make two
+sub directories
+called "<i>lib</i>" and "<i>include</i>" and copy the files "<i>libnetcdf.a</i>"
+and "<i>netcdf.inc</i>" into the two new sub directories "<i>lib</i>"
+and
+"<i>include</i>" respectively (or make symbolic links). Execute "<tt>./configure</tt>"
+again, and this time it will find them automatically.</p>
+</dir>
+<b><u>Problems with Makefiles</u></b>
+<dir><b><font color="#000000">Problem</font></b>: When you execute
+make,
+you get an error message along the lines of: "<tt>make: Fatal error: No
+arguments to build</tt>."
+<dir>&nbsp;</dir>
+<b><font color="#000000">Solution</font></b>: The error message
+indicates
+that you are not using the Gnu version of make. To check if a
+particular
+version of make is a Gnu version, try typing `<tt>make -v</tt>' (or
+`gmake
+-v', etc.). You should get a message saying, "GNU Make version ...". If
+you don't, then ask your system administrator for help. Note that the
+makefile
+in the root directory is named GNUmakefile. This is because the syntax
+of the makefile can only be interpreted by Gnu make.
+<p><b>Problem</b>: When you execute make, you get an error "<tt>*** No
+rule to make target `header.h', needed by `file.d'.&nbsp; Stop.</tt>"
+</p>
+<p><b>Solution</b>: The dependency files in the <i>obj</i> directory
+are
+inconsistent with your file system and you need to force them to be
+reconstructed.
+Execute&nbsp; `<tt>rm obj/*.d</tt>' and then `<tt>make</tt>'.
+</p>
+<p><b><font color="#000000">Problem</font></b>: When building on Linux
+platforms, you get unresolved reference errors at the final link stage
+that refer to netCDF library functions (e.g., nf_open, nf_close, etc.).
+</p>
+<p><b><font color="#000000">Solution</font></b>: The error message
+indicates
+that you have the wrong version of the netCDF library "<i>libnetcdf.a</i>"
+installed. The precompiled version of the library that is available on
+the Unidata ftp site was built using a compiler which is incompatible
+with
+pgf77. You can download a compatible version <a
+ href="ftp://ftp.cgd.ucar.edu/pub/jhack/scam/linux/netcdf.tar.gz">here</a>.
+</p>
+<p><b><u>Problems with execution</u></b></p>
+</dir>
+<dir><b>Problem</b>: On startup, SCAM shows a warning message, "Error
+encountered
+while loading SCAM startup defaults file .scam_defaults" followed by
+the
+message, "Fatal: Couldn't load start-up defaults file .scam_defaults,"
+and then quits.
+<p><b>Solution</b>: This usually indicates that there is a problem with
+the paths to the datasets in the defaults file; a more explicit message
+is written to the terminal. You may need to edit the file
+.scam_defaults
+to change the paths/filenames to reflect the location of the datasets
+on
+your systems.
+</p>
+<p><b>Problem</b>: SCAM seems to start, but nothing appears on your
+monitor.
+</p>
+<p><b>Solution</b>: This may be a problem with your DISPLAY environment
+variable. If it is set to ":0.0" or ":0" you need to change this to
+"unix:0"
+(using `<tt>setenv DISPLAY unix:0</tt>').
+</p>
+<p><b>Problem</b>: When attempting to use the post-plotting function,
+SCAM
+generates a number of error messages regarding failed GKS color
+requests,
+and then aborts.
+</p>
+<p><b>Solution</b>: There is a bug in some versions of NCAR graphics
+that
+causes it to abort when there are not enough colors available to
+display
+the requested colors. One solution is to reduce the number of colors
+that
+your workstation is using. Many workstations only have 256 colors
+available,
+and some applications grab a very large number of them, e.g., Netscape.
+Try quitting from these applications and trying the post-plot again.
+</p>
+<p><b>Problem</b>: SCAM is in the middle of a model run when it
+suddenly
+crashes without generating any error message.
+</p>
+<p><b>Solution</b>: There is probably more than one condition that
+could
+trigger this problem, but certainly one cause could be a bad data value
+in your dataset. SCAM performs only modest data integrity checking
+while
+it is reading in datasets. Non-physical data values will usually be
+input
+to the model without generating errors. The result of this is often a
+floating
+point division error somewhere in the model code, many levels removed
+from
+where the bad data value is first used. One method of tracking down the
+problem is to use the diagnostic features of SCAM's user interface:
+bring
+up plot windows showing T, Q, etc., and during a run and look for
+strange
+values appearing. Also, the CAM model code may generate error messages
+on the standard output that can point you in the right direction.
+</p>
+<p><b>Problem</b>: SCAM crashes on startup with a bus error.
+</p>
+<p><b>Solution</b>: An incorrectly formed call to addfield() can cause
+this. If you pass the wrong number or kind of arguments to addfield(),
+the compiler and linker won't catch it because there is no type
+checking
+of parameters in FORTRAN. Use a debugger to track down exactly where
+SCAM
+is crashing, and if it is in a call to addfield(), there is likely to
+be
+a problem with the parameters. See <a
+ href="#4.2%20Adding%20New%20Fields%20to%20View%20or%20Save">Section
+4.2, "Adding New Fields to View or Save"</a>&nbsp;&nbsp; for more
+details
+on the addfield() call syntax.
+</p>
+<p><b>Problem</b>: SCAM does not seem to be using the correct source
+files.
+</p>
+<p><b>Solution</b>: This might be caused by an incorrectly specified
+ALT_SOURCE_PATH
+variable (set by the configure script). Make uses this variable to find
+the source files to compile by searching the list in order to find the
+first occurrence of a given file. To see the list of directories that
+make
+is searching, type `<tt>make showpath</tt>'. To see the list of source
+files with paths that are being used, type `<tt>make showsrc</tt>'. Try
+rerunning the configure script.
+</p>
+<p><b>Problem</b>: SCAM will not save the history file in the directory
+that you specified.
+</p>
+<p><b>Solution</b>: This can be caused by specifying a directory that
+does
+not exist; that you don't have write permission in; that is full; or
+that
+is on a separate file system. Try specifying a different pathname.
+</p>
+<p><b>***Note</b>: In addition to the problems and solutions given
+below,
+occasionally problems occur that have no easily explainable cause,
+often
+when parts of the code have been recompiled. At this point you should
+try
+to rebuild everything from scratch by typing `<tt>make clean</tt>' and
+then `<tt>make</tt>'.
+<br>
+&nbsp;</p>
+</dir>
+<hr width="100%">
+<center><a name="3. The User Interface"></a><b><font size="+3">3. The
+User
+Interface</font></b>
+<br>
+<hr width="100%"></center>
+<p><a name="3.1 Overview"></a><b>3.1 Overview</b>
+</p>
+<p>The SCAM interface is meant to provide the user with an intuitive
+tool
+for dataset selection and modification, model execution and post
+plotting
+of model output. Typically, an SCAM session consists of the following
+tasks:
+</p>
+<dir><li>
+Loading Datasets</li>
+<li>
+Selecting Save Fields</li>
+<li>
+Monitoring/Modifying a Field</li>
+<li>
+Saving Initial Conditions</li>
+<li>
+Running the Model</li>
+<li>
+Plotting Saved Data</li>
+</dir>
+SCAM also has the ability to "restart" the model from a previously
+loaded
+set of data. The following sections describe these tasks.
+<br>
+&nbsp;
+<p><a name="3.2 Starting SCAM / The Main Window"></a><b>3.2 Starting
+SCAM
+/ The Main Window</b>
+</p>
+<p>When SCAM is started the main window (shown in <a href="#figure1">figure
+1</a>) will appear, although the list of fields will be blank until the
+model is initialized by <a href="#3.3%20Loading%20Datasets">loading
+datasets</a>.&nbsp;
+The top row of buttons provide access to the main functions of SCAM.
+Beneath
+these are the model control buttons that control the starting and
+stopping
+of the model code - they are only active when data has been loaded. To
+the right of the model controls is the time display area, showing the
+current
+step the model is executing, and the user setable ending step. The
+user
+can also select hours or days from the pull down menu to change the
+units
+in which the time is displayed. Below the controls is a list of data
+fields
+that the model is outputting. Selecting fields from this list causes a
+continuously updated plot of that field to be displayed. To scroll
+quickly
+to a particular field, start typing the name of the field. Fields that
+appear in red are <a
+ href="#3.5%20Monitoring%20and%20Modifying%20a%20Field">modifiable</a>.
+<br>
+&nbsp;
+<br>
+&nbsp;
+<br>
+</p>
+<center>
+<p><a name="figure1"></a><img src="gif/mainwin.gif" nosave=""
+ height="531" width="520" align="middle"><br>
+<font size="-1">Figure 1. <b>SCAM Main</b></font></p>
+</center>
+<p><a name="3.3 Loading Datasets"></a><b>3.3 Loading Datasets</b>
+</p>
+<p>Press the "Load" button in the main window to popup a Data Type
+Selection
+dialog (shown in <a href="#figure2">figure 2</a>). This dialog allow
+you
+to specify the type of the datasets you want to load: Global Model
+Data,
+Global Analysis Data, IOP Data, Initial Conditions Data, User Data, or
+Quick-Start. (See <a
+ href="#1.1%20Basic%20description%20of%20the%20NCAR%20CCM%20SCAM%20Framework">Section
+1.1, "Basic description of the NCAR CAM SCAM Framework"</a> for a
+discussion
+of the different dataset types, and <a href="#3.4%20Setting%20Options">Section
+3.4, "Setting Options"</a> for a description of Quick-Start files.)
+Depending
+on the type of dataset you selected, you will be presented with another
+dialog that will allow you to specify more details about the data to be
+loaded; each of the different possibilities is discussed separately
+below.
+In all cases, once the datasets have been successfully loaded, the main
+window will be updated and the Model Controls and the list of viewable
+fields will become active.
+<br>
+<br>
+</p>
+<center>
+<p><a name="figure2"></a><img src="gif/selectdata.gif" nosave=""
+ height="403" width="330" align="middle"><br>
+<font size="-1">Figure 2. <b>Data Selection Dialog</b></font></p>
+</center>
+<p><b><u>Global Data</u></b>
+</p>
+<p>If you select Global Analysis Data or Global Model Data a window
+(shown
+in <a href="#figure3">figure 3</a>) will popup with a map of the world
+overlaid with a grid of lines corresponding to the available columns in
+the datasets. Click on any of the grid points to select the column of
+data
+to use (a default column will already be selected); alternatively, you
+may enter a latitude or longitude directly by editing the values
+displayed
+- when you press "return", the nearest latitude and longitude available
+in the datasets will be displayed. The selected column will appear
+highlighted
+in red. You may select a date and time from which to start the run
+using
+the pull down menus to the right of the latitude and longitude entries.
+<br>
+&nbsp;
+<br>
+&nbsp;
+<br>
+<br>
+</p>
+<center>
+<p><a name="figure3"></a><img src="gif/global.gif" nosave=""
+ height="469" width="670" align="middle"><br>
+<font size="-1">Figure 3. <b>Global Datasets Selection</b></font></p>
+</center>
+<p><b><u>IOP Data</u></b>
+</p>
+<p>If you select IOP Data from the Datasets Selection Dialog, a Date
+Selection
+Dialog (shown in <a href="#figure4">figure 4</a>) will popup
+containing
+a scrollable list of the observation time points available in the
+dataset.
+The name of the dataset is shown at the top. The format of each item in
+the list is the index of the time slice, followed by the date (in
+YYMMDD
+format), followed by the number of hours from midnight GMT.
+</p>
+<p>Select a starting time for the run by clicking on one of the
+timepoints
+in the scrollable list, then press "OK." The dataset will be loaded
+with
+the starting time point set to your selection. To change the dataset,
+press
+the "Select New Dataset" button to get a file selection dialog. SCAM
+will
+verify that all the necessary data fields are present in the file. Note
+that IOP datasets generally do not contain all of the information
+needed
+to run the model; SCAM uses the default Global Analysis initial
+conditions
+dataset to retrieve the rest of the information needed. If you want to
+use different initial conditions or boundary datasets, you can change
+them
+in the Options dialog (see
+<a href="#3.4%20Setting%20Options">Section 3.4,
+"Setting Options"</a> for details).
+<br>
+&nbsp;
+<br>
+</p>
+<center>
+<p><a name="figure4"></a><img src="gif/iop.gif" nosave="" height="429"
+ width="190" align="middle"><br>
+<font size="-1">Figure 4. <b>IOP Date Selection Dialog</b></font></p>
+</center>
+<p><b><u>User Data</u></b>
+</p>
+<p>User datasets are similar to IOP datasets, but only provide data for
+an arbitrary number of fields. Like IOP datasets, they may contain a
+time
+series of values to force the model, or they may contain only a single
+time point to provide an initial condition. Forcing data for fields
+that
+are required by the model that are not provided in the User Data will
+be
+extracted from the Global Analysis dataset.
+</p>
+<p>If you select User Data from the Datasets Selection Dialog, a
+standard
+file selection dialog will popup to allow you to select a user created
+file to use. The IOP date selection dialog will pop up to allow you to
+select a starting date within the user dataset, assuming there is more
+than one time point in the file.
+<br>
+&nbsp;
+</p>
+<p><a name="3.4 Setting Options"></a><b>3.4 Setting Options</b>
+</p>
+<p>From the main window, click on Options to pop up the Options tab
+dialog
+(shown in <a href="#figure5">figure 5</a>) from where you control all
+of
+the customizable features of SCAM. The various options are organized
+into
+the four categories listed below. When you click `OK', the model will
+be
+reinitialized with the new settings. Clicking cancel will close the
+dialog
+without making any changes. Note that you can only change options after
+a dataset has been chosen, and at the start of a run.
+<br>
+&nbsp;
+</p>
+<ul>
+  <li> <b>History Output</b></li>
+  <ul>
+    <li> <u>Select Fields to Save </u>- all of the fields that are
+highlighted in
+this list will be output to the history file in NetCDF format.</li>
+    <li> <u>Output Frequency</u> - sets the frequency at which SCAM
+writes
+history
+data to disk. Whether this is an instantaneous or average value is
+controlled
+by one of the arguments provided in the addfield call for each
+individual
+field.</li>
+    <li> <u>Model Step Length</u> - sets the length of the time step
+used
+in the
+model. If you edit the value directly (by typing it in, as opposed to
+using
+the arrows), you need to press &lt;RETURN&gt; to make your changes take
+effect.</li>
+  </ul>
+  <li> <b>Set Model Logical Switches</b></li>
+  <ul>
+    <li>There are 12 switches that you can set in the GUI whose values
+are
+passed
+to the model code. In the model code, they are available as the array
+of
+logicals named "<tt>switch</tt>" in the common block defined in
+"comgui.h".
+To use them, you need to include the file "<i>comgui.h</i>" in your
+source
+code, and test the value of the logical as in "<tt>if ( switch(1) .eq.
+.true. ) then ....</tt>". The descriptive name that you can assign to
+them
+in this dialog is not available in the model code, but is included in
+the
+SCAM history files. Depressing the button sets the corresponding switch
+array element to <tt>.TRUE.</tt> This feature allows you to modify the
+model behavior without recompiling.</li>
+  </ul>
+</ul>
+<ul>
+  <li> <b>Startup Files</b></li>
+  <ul>
+    <li> <u>Set Defaults</u> - saves the model datasets, latitude,
+longitude, saved
+fields list, save frequency, end step, time format, and switch states
+to
+the SCAM defaults file ".<i>scam_defaults</i>" so that every time you
+start
+up SCAM, you will start off with those options set the way you like.
+All
+initialization datasets except for IOP datasets are saved as filenames
+without paths, i.e., they are assumed to reside in the "<i>data</i>"
+directory
+in the usual location. IOP datasets are saved using full pathnames, so
+they can be located anywhere on your file system.</li>
+    <li> <u>Quick-Start Files</u> - saves the current configuration to
+a
+file of
+your choosing, allowing you to start SCAM from this file at a later
+date
+with the same settings. To start SCAM using a quick-start file named "<i>foobar.scm</i>",
+you would type `<tt>scam foobar.scm</tt>' or if SCAM was already
+running,
+you would press "Load Data" in the main window, then select the
+Quick-Start
+option in the following dialog. Quick-Start filenames are included in
+the
+NetCDF history file under the attribute "case". See "Save Defaults"
+above
+for details on saved filenames.</li>
+    <li> <u>Initial Conditions Dataset</u> - saves all the attributes
+mentioned
+above, and also saves the fields that you have modified using the field
+plot discussed below in <a
+ href="#3.5%20Monitoring%20and%20Modifying%20a%20Field">Section
+3.5, "Monitoring and Modifying a Field"</a>. To use the file as input
+in
+a later session, choose "Initial Conditions" from the Load Data
+selection
+dialog, and select the desired file. You can only create an initial
+conditions
+dataset at time step zero. See "Save Defaults" above for details on
+saved
+filenames.</li>
+    <li> <u>Current Settings</u> - displays the current settings for
+reference.</li>
+    <br>
+&nbsp;
+  </ul>
+  <li> <b>IOP Settings</b></li>
+  <ul>
+    <li> <u>Use 3D forcing</u> - if vertical advection terms are
+available
+in the
+selected IOP dataset, this option causes the model to be forced with
+combined
+vertical and horizontal advection terms, as opposed to horizontal
+advection
+terms and omega. The controlling logical variable in the model code is
+"<tt>use_3dfrc</tt>", declared in "<i>comiop.h</i>"; the relevant code
+is located in stepon.F. (This option is not enabled if the required
+fields
+are missing from IOP dataset.)</li>
+    <li> <u>Use specified surface properties</u><b> </b>- if surface
+fields are
+available in the selected IOP dataset, this option causes the model to
+be constrained to using the prescribed surface properties (i.e., latent
+and sensible heat fluxes, and ground temperature). The controlling
+logical
+variable in the model code is "<tt>use_srfprop</tt>", declared in "<i>comiop.h</i>";
+the relevant code is located in stepon.F.(This option is not enabled if
+the required fields are missing from IOP dataset.)</li>
+    <li> <u>Use relaxation</u><b> </b>- this option enables
+relaxation of
+predicted
+T and Q fields to observed values. on enables relaxation of predicted T
+and Q fields to observed values. The controlling logical variable in
+the
+model code is "<tt>use_relax</tt>", declared in "<i>comiop.h</i>." The
+relevant code is located in stepon.F; it may require modification
+depending
+on the particulars of the run.</li>
+    <li> <u>Perturb initial conditions</u> - perturbs initial T and Q
+fields. The
+controlling logical variable in the model code is "<tt>use_pert_init</tt>",
+declared in "<i>comiop.h</i>." The relevant code is located in
+inidat.F;
+it may require modification depending on the particulars of the run.)</li>
+    <li> <u>Perturb forcing</u> - perturbs Omega field every time it
+is
+read in
+from IOP dataset. The controlling logical variable in the model code is
+"<tt>use_pert_frc</tt>", declared in "<i>comgui.h</i>." The relevant
+code
+is located in stepon.F; it may require modification depending on the
+particulars
+of the run.)</li>
+    <br>
+&nbsp;
+  </ul>
+  <li> <b>Datasets</b></li>
+  <ul>
+    <li>This is where you can select which datasets the model will use:
+Global
+Model and Global Analysis initial conditions data; Time-Invariant,
+Sea-Surface
+Temp (time-variant), Ozone, and Land Surface boundary conditions data.
+To change a selection, click the button labeled "choose" to the right
+of
+each file name to open a file selection dialog. (N.B.: currently only
+one
+of each of these datasets is provided with the distribution.) Any files
+that you select will be checked for the presence of required variables,
+and compatibility with the initial conditions dataset, i.e., the
+latitudes
+and longitudes at each gridpoint must agree.</li>
+  </ul>
+</ul>
+<center><a name="figure5"></a><img src="gif/option.gif" nosave=""
+ height="605" width="611" align="middle">
+<br>
+<font size="-1">Figure 5. <b>Options Dialog - History Output</b></font></center>
+<p><a name="3.5 Monitoring and Modifying a Field"></a><b>3.5 Monitoring
+and Modifying a Field</b>
+</p>
+<p>Fields to be monitored can be selected from the alphabetically
+sorted
+field list in the main window. All fields in the list can be monitored.
+Select a field to be monitored by clicking on the desired field name or
+by starting to type the name and then pressing enter when you see the
+desired
+field highlighted. This will pop up a Field Plot window displaying a
+plot
+of the column of data and a set of buttons labeled "Autoscale",
+"Points",
+"Reset", "Save", and "Dismiss" (shown in <a href="#figure6">Figure 6</a>).
+Any number of Field Plot windows may be open simultaneously, with each
+plot being&nbsp; updated at each time step as the model is running;
+however,
+having too many fields displayed at the same time will degrade
+performance.
+</p>
+<p>Some fields can be directly modified: these fields appear in red in
+the field list. They represent initial conditions for selected
+prognostic
+variables and some selected user specified forcing functions; they
+can
+only be modified at time step zero. Non modifiable (Diagnostic) fields
+are
+generated via diagnostic calculations in the CAM model code; these
+fields
+will always have an initial value of zero.
+</p>
+<p>A modifiable field may be changed by:
+</p>
+<ul>
+  <li>Selecting and dragging a data point.</li>
+  <li>Editing the field's values directly. Press the push button
+labeled
+"Points"
+to popup a list of points and values, highlight the value you wish to
+edit,
+and edit it in the text entry area at the bottom of the list.</li>
+</ul>
+Modifications can only take place before the model has been started.
+Any
+modifications can be immediately undone by clicking on the "Reset"
+button.
+This resets the field to its original state before editing.
+<p>Point lists are updated at each time step. Consequently having
+multiple
+Point List windows open while running the model can significantly
+degrade
+performance. They are most useful when stepping the model one step at a
+time.
+</p>
+<p>The range of the X-axis (or Y-axis in the case of one-dimensional
+fields)
+may be set for both modifiable and diagnostic field plots. Click on the
+push button labeled "Autoscale" to automatically change the scale to
+fit
+all the points within the viewable area. For more control, you can set
+the scale and units of both axes separately by double clicking just to
+the left of the vertical axis, and just below the horizontal axis. This
+will popup a dialog where you can set the range and the multiplier for
+each axis. An example of using the multiplier would be if the data was
+expressed in units of kg/sec but you wanted to see the plot in units of
+g/sec: you would enter a value of 1000 in the "Multiplier" field and
+change
+the "Units" field to "g/sec". For one-dimensional fields you can also
+change
+the time window over which data is displayed; the default is 24 hours.
+For two-dimensional fields, you can also change the vertical
+coordinates
+from millibars to kilometers.
+</p>
+<p>Clicking on the "Save" button will save the image of the field plot
+to an XBM format file. The resulting file can then be viewed with a
+number
+of image display tools, including the freeware image manipulation tool
+"xv."
+<br>
+&nbsp;
+<br>
+&nbsp;
+<br>
+<br>
+</p>
+<center>
+<p><a name="figure6"></a><img src="gif/plot.gif" nosave="" height="369"
+ width="380" align="middle"><br>
+<font size="-1">Figure 6. <b>Plot Window</b></font></p>
+</center>
+<p><br>
+</p>
+<p><a name="3.6 Running the Model"></a><b>3.6 Running the Model</b>
+</p>
+<p>Any time after the data is loaded the model can be run. To start the
+model, push the button labeled "Run" in the main window (shown in <a
+ href="#figure1">Figure
+1</a>). The model will start time stepping and will continue until the
+value of the current time reaches the ending time. To stop the model
+before
+it reaches the end press the button again and the model will halt. It
+is
+also possible to advance the model one step at a time by clicking on
+the
+"Step" button; continuing to depress the "Step" button will result in
+the
+model single stepping repeatedly until the button is released.
+<br>
+&nbsp;
+</p>
+<p><a name="3.7 Saving Data"></a><b>3.7 Saving Data</b>
+</p>
+<p>SCAM always saves the output of the model to the "<i>userdata</i>"
+sub directory
+with the name "<i>.scamhist.tmp.nnnn</i>" where "nnnn" is the process
+id.
+At any time after the model has stopped running, whether it stops by
+itself
+after reaching the end time or because you pressed the Run/Stop button,
+you can change the name and location of the the history file by
+clicking
+the "Save Data" button in the main window. You will be asked to provide
+a filename for the history file, with the default location of the
+userdata
+directory. It is suggested that you use one ending in ".nc" because the
+post-plotting dialog filters files to choose from using the filter
+"*.nc".
+If you continue to run the model after saving the data, the saved
+history
+file will continue to be updated until the model stops. Note that if
+you
+do not change the filename from its default, it will be overwritten on
+the next run. Also see the comments about saving data in <a
+ href="#4.2%20Adding%20New%20Fields%20to%20View%20or%20Save">Section
+4.2, "Adding New Fields to View or Save."</a>
+<br>
+&nbsp;
+</p>
+<p><a name="3.8 Post-Run Analysis"></a><b>3.8 Post-Run Analysis</b>
+</p>
+<p>SCAM utilizes NCAR graphics to produce contour plots of saved field
+data. Post plots are produced from field data that has been saved to a
+history file. Press the "Post Plot" button in the SCAM main window
+(shown
+in <a href="#figure1">Figure 1</a>) to pop up the "Post Plotting"
+window
+(shown in <a href="#figure7">Figure 7</a>). Select the fields for
+which
+you want to create plots from the popup menu labeled "Field", then
+click
+on the "Show Plots" button; a window will pop up for each field
+selected,
+displaying a color contour plot or line plot of the field (shown in <a
+ href="#figure8">Figure
+8</a>). You may resize the windows, change the time range which will be
+displayed, or show the average value at each level over the selected
+time
+interval; in all cases, press "Show Plots" to update the windows. To
+close
+a window, deselect it from the list, and press the "Show Plots" button.
+More than one history file may be viewed at the same time: just click
+on
+the Post Plot button again, open up another file, and select the fields
+you want to see; this feature is helpful if you want to compare the
+results
+from two different runs. You may also save the plots in CGM or
+Postscript
+format: just click on either of the "Save Plot to&nbsp; &lt;format&gt;
+File"
+buttons.
+<br>
+<br>
+</p>
+<center>
+<p><a name="figure7"></a><img src="gif/post.gif" nosave="" height="459"
+ width="280" align="middle"><br>
+<font size="-1">Figure 7. <b>Post Plotting</b></font>
+</p>
+<p><a name="figure8"></a><img src="gif/qdiff.gif" nosave="" height="541"
+ width="512" align="middle"><br>
+<font size="-1">Figure 8. <b>Plot Window</b></font></p>
+</center>
+<p><a name="3.9 Restarting"></a><b>3.9 Restarting</b>
+</p>
+<p>To restart the model at time step zero, press the "Restart Button"
+in
+the main window. This will cause the model to be initialized with the
+same
+conditions it was started with, including any changes that were made to
+modifiable fields. If you save a history file at the end of a run,
+restarting
+will not affect it; you may save as many history files as you like
+(useful
+if you change the value of one of the Model Logical Switches between
+runs).
+</p>
+<p><a name="3.10 Command Line Options"></a><b>3.10 Command Line Options</b>
+</p>
+<p>SCAM supports the following command line options: <tt>scam [-ng
+[-o&lt;outputfile&gt;]
+[-t&lt;timesteps&gt;]] [&lt;start-up file&gt;]</tt>
+</p>
+<ul>
+  <li>-ng:&nbsp; run scam without the graphical user interface.&nbsp;
+If this
+option is specified,&nbsp; the name of a startup file must be provided.</li>
+  <li>-o&lt;outputfile&gt;:&nbsp;&nbsp; save output history file in
+"outputfile."</li>
+  <li>-t&lt;steps&gt;:&nbsp;&nbsp; run the model for "steps" timesteps.</li>
+  <li>-r&lt;repetitions&gt;: repeat model run, output is saved in
+&lt;outputfile&gt;0,
+&lt;outputfile&gt;1, ....,&lt;outputfile&gt;repetitions-1</li>
+  <li>&lt;startupfile&gt;:&nbsp; the file containing the model startup
+parameters.&nbsp;
+The startup files can be created by selecting the "Create Quick-start"
+option in the <a href="#3.4%20Setting%20Options">Options Dialog</a>.
+Quick-start
+files are plain text files, so it is possible to modify a quick-start
+file
+created by scam as long as the same format for the individual entries
+is
+maintained.</li>
+</ul>
+<hr width="100%">
+<center><a name="4. Modifying the Code"></a><b><font size="+3">4.
+Modifying
+the Code</font></b>
+<br>
+<hr width="100%"></center>
+<p><a name="4.1 Adding New Files to the Model directories"></a>
+<br>
+<b>4.1 Adding New Files to the Model directories</b>
+</p>
+<p>Add files containing new or user modified code in the mymods
+directory,
+or place it in a new directory of your choosing (providing that you
+have
+added it to the ALT_SOURCE_PATH variable described in <a
+ href="#2.4%20Configuring%20the%20Makefile">Section
+2.4, "Configuring the Makefile"</a>). All that remains to do is to type
+`make'.&nbsp; Make will search the mymods directory first for any
+source code and then search the standard cam directory path for needed<br>
+files.<br>
+</p>
+<p><a name="4.2 Adding New Fields to View or Save"></a><br>
+<b>4.2 Adding New Fields to View or Save</b>
+</p>
+<p>To add a new field to the list of fields that you can view or save
+requires creating the appropriate addfld and outfld calls.&nbsp; The
+addfield call in added to the bldfld subroutine of history.F90. The
+format is as follows:
+</p>
+<dir><b><tt>&nbsp;call addfld('field_name',field_units, number of
+model levels,'A',</tt></b><b><tt>phys_decomp</tt></b><b><tt>)</tt></b>
+<p>where:
+</p>
+<p>field_name = (Character&nbsp; String) Abbreviated name of the field
+you want to add (must not
+contain any spaces). <br>
+field_units = (Character String) Units of field<br>
+number of model levels = (Integer) If surface field use 1, otherwise
+use plev for
+fields reported on full levels, and plevp for fields reported on
+interface levels. <br>
+'A' = (Character&nbsp; String) This field is averaged over the
+reporting interval.&nbsp; The reporting interval defaults to every time
+step.<br>
+&nbsp;decomposition type = phys_decomp or dyn_decomp
+</p>
+</dir>
+<p>The outfld call is place in the model code.&nbsp; Its syntax follows
+the standard CAM outfld call.<br>
+</p>
+<p><b>4.3 Model Initialization</b>
+</p>
+<p>Initialization of the model in SCAM differs somewhat from the
+standard CAM initialization. It has been slightly simplified due to the
+different
+nature of SCAM compared to the full CAM.&nbsp; In CAM, the calls to the
+major initialization routines "inital," "inti," "initext" and
+"intht"&nbsp;
+occur in the main program cam.F;&nbsp; they are called just once per
+run.&nbsp;
+In contrast, in SCAM the calls to the above routines occur in
+init_model.F
+in the same order, but they may be&nbsp; called repeatedly, once for
+each
+time the model is initialized via the user interface (e.g., after
+selecting
+new datasets, or restarting). Additionally, some of the initialization
+routines found in CAM are absent from SCAM, primarily those relating to
+initialization of file input/output devices, and the decomposition of
+space
+into latitudes and longitudes.&nbsp; As a general rule, if some
+initialization
+of the model needs to be performed before the time stepping routine is
+invoked, init_model.F is the best place to put the necessary
+initialization
+code.
+<br>
+&nbsp;
+<br>
+</p>
+<center>
+<p></p>
+<hr width="100%"><br>
+<a name="5. Using SCAM with an IOP Dataset"></a><b><font size="+3">5.
+Using SCAM with an IOP Dataset</font></b>
+<br>
+<hr width="100%"></center>
+<p><a name="5.1 Introduction"></a><b>5.1 Introduction</b>
+</p>
+<p>This section describes the contents and standard format of the
+Intensive
+Observation Period (IOP) datasets available for SCAM, and a typical
+example
+of how the model is used with this type of data. In this section it is
+assumed that the IOP dataset has already been created; sample IOP
+datasets
+are distributed with SCAM.
+</p>
+<p>An IOP dataset can provide a large amount of information for use
+with
+a single column model. For many users it is likely that some of the
+available
+data will not be used to force the model, in which case it may be used
+as a method of validating SCAM output. For example, the ground
+temperature
+within SCAM can be constrained to the value measured during the IOP or
+it can be predicted. If the model predicts the ground temperature then
+the value in the IOP dataset can be used to `validate' the models
+prediction.
+In general the less data used to constrain the model the more
+validating
+diagnostics will be available.It may be the case that some fields
+required
+for forcing SCAM are not available in the IOP dataset; if this is the
+case
+then the user should decide on the best method for dealing with this
+situation.
+For example, if the horizontal wind speed is not available the user
+must
+decide if this field will have a strong influence on their
+investigation;
+if so, then the dataset is not suitable for their use. If, however, the
+horizontal wind speed is of only secondary importance, then they may
+decide
+to use a climatological value which should be included in the dataset
+or
+read into the model at the relevant time.
+<br>
+</p>
+<p><a name="5.2 The Standard IOP Dataset for SCAM"></a><b>5.2 The
+Standard
+IOP Dataset for SCAM</b>
+</p>
+<p>As a general guide, the terms used to force or constrain SCAM can be
+separated into the 3 following categories.
+</p>
+<ul>
+  <li>Essential [E] - the SCAM cannot function satisfactorily without
+this
+information.</li>
+  <li>Important [I] - these terms are important in forcing the SCAM but
+it
+can
+be run without them if some basic assumptions are made. It is important
+for the user to understand what assumptions are made if the terms are
+missing,
+and the effect this will have on the model.</li>
+  <li>Optional [O] - these are terms which are not required by the SCAM
+but
+may
+be included to constrain the model physics or force the model in a
+format
+other than its basic form, i.e., latent and sensible heat may be
+predicted
+by SCAM or prescribed by the IOP dataset.</li>
+</ul>
+For some users, some of the essential fields may be replaced with a
+climatology
+or other prescribed values. This depends on validation techniques and
+the
+principles being investigated by the user.
+<p><a
+ href="#Table%202:%20The%20Various%20Terms%20Included%20in%20the%20Standard%20IOP%20Dataset">Table
+2</a> shows the essential, important and optional forcing terms for a
+typical
+SCAM IOP dataset. This dataset can be expanded upon by the user to
+contain
+any number of other fields but the list is complete for any currently
+available
+datasets. The datasets used in SCAM must be in NetCDF format (Rew et
+al.,
+1993) and <a
+ href="#Table%202:%20The%20Various%20Terms%20Included%20in%20the%20Standard%20IOP%20Dataset">Table
+2 </a>describes the NetCDF long and short names which should be used
+(when
+creating a dataset for use in SCAM it is essential that short name used
+is identical to that shown). Surface values such as ground temperature
+should be a function of time only, profiles such as temperature should
+be a function of pressure level (top down) and time respectively. If
+any
+of the essential [E] terms are missing then the dataset can not be used
+in the IOP format.
+</p>
+<p>If any of the important [I] terms are missing then the model will
+display
+a warning and replace these with a default value. For pt, u and v zero
+will be used; a missing pt will influence the interpolation of omega
+onto
+model levels and interfaces, a missing u or v will influence parts of
+SCAM
+physics. If the Tg or Ts are missing then they will be set to the
+temperature
+at the lowest level; a missing Ts will influence the temperature
+interpolation
+onto the lowest model level, a missing Tg will influence some of the
+model
+physics such as radiation. If any of the substitutions described here
+are
+not suitable for a users experiments then the user should include the
+values
+required in the IOP dataset.
+</p>
+<p>The optional [O] terms, shflx and lhflx can be included to constrain
+the surface physics in the model (the ground temperature can be used in
+this way but is categorized as important [I] because it is required as
+an initial condition). The hydrometeor terms are rarely available in
+IOP
+datasets but may be included if a bulk microphysical scheme is
+incorporated
+into SCAM.
+&nbsp;<br>
+</p>
+<p><a name="5.3 A Detailed Example Using SCAM With an IOP Dataset."></a><b>5.3
+A Detailed Example Using SCAM With an IOP Dataset.</b>
+</p>
+<p>In the following example we will make 2 versions of the model, run
+SCAM
+using IOP data, and compare the results.
+</p>
+<p><a name="5.3.1 Changing and Initializing the Model"></a><u>5.3.1
+Changing
+and Initializing the Model</u>
+</p>
+<p>Here it is assumed that we have a working version of the standard
+SCAM
+and we are going to modify it. In this example we will add a new
+condensation
+scheme called `foobar.F', which for one experiment will replace the
+standard
+`cond.F'. The file foobar.F contains a tracer which should be advected,
+and a variable `acr', the auto conversion rate which we will use as a
+diagnostic.
+The auto conversion rate is a function of height and time and has SI
+units
+of (s<sup>-1</sup>). To do this the
+following
+steps should be taken:
+</p>
+<ul>
+  <li>Add the file foobar.F to the mymods directory.</li>
+  <li>Add a call to `addfld()' in the routine scm_histfield_ini in the
+file
+cam_stubs.new/history.F90 or in the initialization subroutine for your
+parameterization) as follows:</li>
+  <p><tt>call addfld ('ACR','kg/kg/s ',pver , 'A','</tt><tt>Autoconversion
+Rate</tt><tt>',phys_decomp)</tt> &nbsp;</p>
+  <li>Add a call to `outfld()' in mymods/foobar.F as follows:&nbsp; </li>
+  <p><tt>call outfld('ACR', acr, pcols, lchnk)</tt> &nbsp; </p>
+  <li>Make a copy of the file `aphys.F', and edit it to include a call
+to `foobar'
+next to the call to `cond'. A logical statement around the 2 schemes
+can
+be used to control which scheme is to be used, using one of the
+switches
+described in&nbsp; <a href="#3.4%20Setting%20Options">Section 3.4,
+"Setting
+Options."</a> We'll use switch(2). Save the modified version of
+`aphys.F'
+in the `mymods' directory .</li>
+  <li>Since there is an additional tracer associated with foobar.F,
+PCONST
+must
+be changed from 3 to 4. This is done by executing the configure script
+and assigning a value of 4 to PCNST.</li>
+  <br>
+Rebuild the model by typing `make'.
+  <p>We should now be able to run two versions of the column model, a
+standard
+version or a version which uses foobar.F. Either version can be run by
+turning switch number 2 on or off in the options dialog.</p>
+</ul>
+<p><br>
+<a name="5.3.2 Running the Model"></a><u>5.3.2 Running the Model</u>
+</p>
+<p>Once we have the new code in place under the control of the `foobar
+switch' we can then run the model. For this example we will use the ARM
+IOP dataset which is distributed with SCAM. This is the Summer 1995 IOP
+from the ARM Southern Great Plains (SGP) site. For this example we will
+choose a 10 day period beginning on the 20th of July. We will
+concentrate
+on Temperature, and Specific Humidity as diagnostics.
+</p>
+<p>The following is a brief guide to running the model:
+</p>
+<ul>
+  <li>From the Main window select `Load Data' button.</li>
+  <li>Select `IOP Data'.</li>
+  <li>If the default is not `arm0795v1.nc', use `Select New Dataset' to
+choose
+this.</li>
+  <li>Scroll through the dates and select the description `128 - 950720
+00:10'
+to select a starting time of 00:10 GMT on July 20, 1995.</li>
+  <li>Select `Options' from the Main window. Select `T - Temperature',
+and `Q
+- Specific Humidity' from the list of saved fields (these may already
+be
+highlighted). Change the description of switch 2 in the Logical
+Switches
+section to "foobar" so that you will know what the switch settings mean
+when you get around to analyzing the history data at a later time.
+Leave
+the switch turned off for now.</li>
+  <li>Change the time display to display days instead of hours, then
+set the
+ending time to 10 days.</li>
+  <li>Select `Run' from the model controls. When the model is finished,
+select
+`Save' and give the name `standard.nc'.</li>
+  <li>Select `Restart' from the Main window.</li>
+  <li>Select `Options' and change the foobar switch to the `on'
+(depressed)
+position.</li>
+  <li>Run the model again for 10 days, saving the history file at the
+end,
+using
+the name `foobar.nc'.</li>
+</ul>
+Once the model has finished the postplotting routine can be used to
+examine
+the two history files, or you can quit from SCAM and use a tool of
+preference
+to examine the data. Differencing the files `standard.nc' and
+`foobar.nc'
+(using some netCDF tool) can provide information on the influence
+foobar.F
+had on SCAM.
+<center>
+<p></p>
+<hr width="100%"><br>
+<a name="6. Acknowledgements"></a><b><font size="+3">6. Acknowledgments</font></b></center>
+<p>
+</p>
+<hr width="100%"><br>
+&nbsp;
+<p>The authors wish to acknowledge contributions to earlier versions of
+the SCAM modeling tool made by Mike Hoswell, David Ence, John Pedretti,
+and Karen Swett. This work has been supported by the Computer Hardware
+Advanced Mathematics Model Physics (CHAMMP) program and the Climate
+Change
+Prediction Program (CCPP) which are administered by the Office of
+Energy
+Research under the Office of Health and Environmental Research in the
+Department
+of Energy Environmental Sciences Division.
+<br>
+&nbsp;
+</p>
+<p></p>
+<hr width="100%"><br>
+&nbsp;
+<p><a name="Appendix A: Format of SCAM NetCDF Datasets"></a><b><font
+ face="HELVETICA"><font size="+2">Appendix
+A: Format of SCAM NetCDF Datasets</font></font></b>
+<br>
+&nbsp;
+<table border="1" cellpadding="8" width="612">
+  <tbody>
+    <tr>
+      <td valign="top" colspan="3">
+      <center><a
+ name="Table 1: Required Dimensions and Variables in SCAM NetCDF Datas"></a><b><font
+ face="Arial,Helvetica"><font size="+1">Table
+1: Required Dimensions and Variables in SCAM NetCDF Datasets</font></font></b></center>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top" width="20%">
+      <center><b><font face="Arial,Helvetica">Dataset Type</font></b></center>
+      </td>
+      <td valign="top" width="22%">
+      <center><b><font face="Arial,Helvetica">Dimensions</font></b></center>
+      </td>
+      <td valign="top" width="59%">
+      <center><b><font face="Arial,Helvetica">Required Variables</font></b></center>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top" width="20%"><b><font face="Arial,Helvetica">Global
+Model</font></b></td>
+      <td valign="top" width="22%"><b><font face="Arial,Helvetica">lon,
+lev, lat,
+time</font></b></td>
+      <td valign="top" width="59%"><b><font face="Arial,Helvetica">lon,
+lat, lev,
+time, date, datesec, hyam, hyai, hybi, hybm, PHIS, U, V, T, PS, ORO,
+TS1,
+TS2, TS3, TS4, OMEGA</font></b></td>
+    </tr>
+    <tr>
+      <td valign="top" width="20%"><b><font face="Arial,Helvetica">Global
+Analysis</font></b></td>
+      <td valign="top" width="22%"><b><font face="Arial,Helvetica">lon,
+lev, lat,
+time</font></b></td>
+      <td valign="top" width="59%"><b><font face="Arial,Helvetica">lon,
+lat, lev,
+time, date, datesec, hyam, hyai, hybi, hybm, PHIS, U, V, T, PS, ORO,
+OMEGA</font></b></td>
+    </tr>
+    <tr>
+      <td valign="top" width="20%"><b><font face="Arial,Helvetica">IOP</font></b></td>
+      <td valign="top" width="22%"><b><font face="Arial,Helvetica">lon,
+lev, lat,
+time</font></b></td>
+      <td valign="top" width="59%"><b><font face="Arial,Helvetica">lon,
+lat, lev,
+phis, tsec, T, q, bdate, divT, divq, Ps, omega</font></b></td>
+    </tr>
+    <tr>
+      <td valign="top" width="20%"><b><font face="Arial,Helvetica">LSM</font></b></td>
+      <td valign="top" width="22%"><b><font face="Arial,Helvetica">lon,
+lat, time</font></b></td>
+      <td valign="top" width="59%"><b><font face="Arial,Helvetica">numlon,
+latixy,
+longxy, surf2d, soic2d, silt2d, clay2d, pctlak, pctwet</font></b></td>
+    </tr>
+    <tr>
+      <td valign="top" width="20%"><b><font face="Arial,Helvetica">Ozone</font></b></td>
+      <td valign="top" width="22%"><b><font face="Arial,Helvetica">lon,
+lev, lat,
+time</font></b></td>
+      <td valign="top" width="59%"><b><font face="Arial,Helvetica">lat,
+lev, time,
+date, datesec, OZONE</font></b></td>
+    </tr>
+    <tr>
+      <td valign="top" width="20%"><b><font face="Arial,Helvetica">Pressure</font></b></td>
+      <td valign="top" width="22%"><b><font face="Arial,Helvetica">lev</font></b></td>
+      <td valign="top" width="59%"><b><font face="Arial,Helvetica">hyam,
+hyai,
+hybi, hybm</font></b></td>
+    </tr>
+    <tr>
+      <td valign="top" width="20%"><b><font face="Arial,Helvetica">Time
+Variant&nbsp;</font></b></td>
+      <td valign="top" width="22%"><b><font face="Arial,Helvetica">lon,
+lev, lat,
+time</font></b></td>
+      <td valign="top" width="59%"><b><font face="Arial,Helvetica">date,
+datesec,
+SST</font></b></td>
+    </tr>
+    <tr>
+      <td valign="top" width="20%"><b><font face="Arial,Helvetica">Time
+Invariant</font></b></td>
+      <td valign="top" width="22%"><b><font face="Arial,Helvetica">lon,
+lev, lat,
+time</font></b></td>
+      <td valign="top" width="59%"><b><font face="Arial,Helvetica">ALBVSS,
+ALBVSW,
+ALBNIS, ALBNIW, FRCTST, RGHNSS, EVAPF, VEGTYP, SNWJAN, SNWJLY, SGH</font></b></td>
+    </tr>
+    <tr>
+      <td valign="top" width="20%"><b><font face="Arial,Helvetica">User</font></b></td>
+      <td valign="top" width="22%"><b><font face="Arial,Helvetica">lon,
+lev, lat,
+time</font></b></td>
+      <td valign="top" width="59%"><b><font face="Arial,Helvetica">bdate,
+lon,
+lat, lev, tsec</font></b></td>
+    </tr>
+  </tbody>
+</table>
+<table border="1" cellpadding="8" width="545">
+  <tbody>
+    <tr>
+      <td valign="top" colspan="4">
+      <center><a
+ name="Table 2: The Various Terms Included in the Standard IOP Dataset"></a><b><font
+ face="Arial,Helvetica"><font size="+1">Table
+2: The Various Terms Included in the Standard IOP Datasets Used for
+Forcing
+SCAM</font></font></b></center>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top" width="16%">
+      <center><b><font face="Arial,Helvetica">Short Name</font></b></center>
+      </td>
+      <td valign="top" width="56%">
+      <center><b><font face="Arial,Helvetica">Long Name</font></b></center>
+      </td>
+      <td valign="top" width="13%">
+      <center><b><font face="Arial,Helvetica">Type</font></b></center>
+      </td>
+      <td valign="top" width="14%">
+      <center><b><font face="Arial,Helvetica">Units</font></b></center>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top" width="16%"><b><font face="Arial,Helvetica">nbdate
+[E]</font></b></td>
+      <td valign="top" width="56%"><b><font face="Arial,Helvetica">Base
+Date&nbsp;</font></b></td>
+      <td valign="top" width="13%"><b><font face="Arial,Helvetica">long</font></b></td>
+      <td valign="top" width="14%"><b><font face="Arial,Helvetica">yymmdd</font></b></td>
+    </tr>
+    <tr>
+      <td valign="top" width="16%"><b><font face="Arial,Helvetica">time
+[E]</font></b></td>
+      <td valign="top" width="56%"><b><font face="Arial,Helvetica">Time
+after 0Z
+on nbdate&nbsp;</font></b></td>
+      <td valign="top" width="13%"><b><font face="Arial,Helvetica">long</font></b></td>
+      <td valign="top" width="14%"><b><font face="Arial,Helvetica">s</font></b></td>
+    </tr>
+    <tr>
+      <td valign="top" width="16%"><b><font face="Arial,Helvetica">lev
+[E]</font></b></td>
+      <td valign="top" width="56%"><b><font face="Arial,Helvetica">Pressure
+Levels</font></b></td>
+      <td valign="top" width="13%"><b><font face="Arial,Helvetica">float</font></b></td>
+      <td valign="top" width="14%"><b><font face="Arial,Helvetica">Pa</font></b></td>
+    </tr>
+    <tr>
+      <td valign="top" width="16%"><b><font face="Arial,Helvetica">lat
+[E]</font></b></td>
+      <td valign="top" width="56%"><b><font face="Arial,Helvetica">Latitude</font></b></td>
+      <td valign="top" width="13%"><b><font face="Arial,Helvetica">float</font></b></td>
+      <td valign="top" width="14%"><b><font face="Arial,Helvetica">deg N</font></b></td>
+    </tr>
+    <tr>
+      <td valign="top" width="16%"><b><font face="Arial,Helvetica">lon
+[E]</font></b></td>
+      <td valign="top" width="56%"><b><font face="Arial,Helvetica">Longitude</font></b></td>
+      <td valign="top" width="13%"><b><font face="Arial,Helvetica">float</font></b></td>
+      <td valign="top" width="14%"><b><font face="Arial,Helvetica">deg E</font></b></td>
+    </tr>
+    <tr>
+      <td valign="top" width="16%"><b><font face="Arial,Helvetica">phis
+[E]</font></b></td>
+      <td valign="top" width="56%"><b><font face="Arial,Helvetica">Surface
+Geopotential</font></b></td>
+      <td valign="top" width="13%"><b><font face="Arial,Helvetica">float</font></b></td>
+      <td valign="top" width="14%"><b><font face="Arial,Helvetica">m/s2</font></b></td>
+    </tr>
+    <tr>
+      <td valign="top" width="16%"><b><font face="Arial,Helvetica">t [E]</font></b></td>
+      <td valign="top" width="56%"><b><font face="Arial,Helvetica">Temperature</font></b></td>
+      <td valign="top" width="13%"><b><font face="Arial,Helvetica">float</font></b></td>
+      <td valign="top" width="14%"><b><font face="Arial,Helvetica">K</font></b></td>
+    </tr>
+    <tr>
+      <td valign="top" width="16%"><b><font face="Arial,Helvetica">divt
+[E]</font></b></td>
+      <td valign="top" width="56%"><b><font face="Arial,Helvetica">Horizontal
+T
+Advective Tendency</font></b></td>
+      <td valign="top" width="13%"><b><font face="Arial,Helvetica">float</font></b></td>
+      <td valign="top" width="14%"><b><font face="Arial,Helvetica">K/s</font></b></td>
+    </tr>
+    <tr>
+      <td><b><font face="Arial,Helvetica">vertdivt [O]</font></b></td>
+      <td><b><font face="Arial,Helvetica">Vertical T Advective Tendency</font></b></td>
+      <td><b><font face="Arial,Helvetica">float</font></b></td>
+      <td><b><font face="Arial,Helvetica">K/s</font></b></td>
+    </tr>
+    <tr>
+      <td valign="top" width="16%"><b><font face="Arial,Helvetica">q [E]</font></b></td>
+      <td valign="top" width="56%"><b><font face="Arial,Helvetica">Specific
+Humidity</font></b></td>
+      <td valign="top" width="13%"><b><font face="Arial,Helvetica">float</font></b></td>
+      <td valign="top" width="14%"><b><font face="Arial,Helvetica">kg/kg</font></b></td>
+    </tr>
+    <tr>
+      <td valign="top" width="16%"><b><font face="Arial,Helvetica">divq
+[E]</font></b></td>
+      <td valign="top" width="56%"><b><font face="Arial,Helvetica">Horizontal
+Q
+Advective Tendency</font></b></td>
+      <td valign="top" width="13%"><b><font face="Arial,Helvetica">float</font></b></td>
+      <td valign="top" width="14%"><b><font face="Arial,Helvetica">kg/kg/s</font></b></td>
+    </tr>
+    <tr>
+      <td><b><font face="Arial,Helvetica">vertdivq [O]</font></b></td>
+      <td><b><font face="Arial,Helvetica">Verical Q Advective Tendency</font></b></td>
+      <td><b><font face="Arial,Helvetica">float</font></b></td>
+      <td><b><font face="Arial,Helvetica">kg/kg/s</font></b></td>
+    </tr>
+    <tr>
+      <td valign="top" width="16%"><b><font face="Arial,Helvetica">ps
+[E]</font></b></td>
+      <td valign="top" width="56%"><b><font face="Arial,Helvetica">Surface
+Pressure</font></b></td>
+      <td valign="top" width="13%"><b><font face="Arial,Helvetica">float</font></b></td>
+      <td valign="top" width="14%"><b><font face="Arial,Helvetica">Pa</font></b></td>
+    </tr>
+    <tr>
+      <td valign="top" width="16%"><b><font face="Arial,Helvetica">omega
+[E]</font></b></td>
+      <td valign="top" width="56%"><b><font face="Arial,Helvetica">Vertical
+Pressure
+Velocity</font></b></td>
+      <td valign="top" width="13%"><b><font face="Arial,Helvetica">float</font></b></td>
+      <td valign="top" width="14%"><b><font face="Arial,Helvetica">Pa/s</font></b></td>
+    </tr>
+    <tr>
+      <td valign="top" width="16%"><b><font face="Arial,Helvetica">Ptend
+[I]</font></b></td>
+      <td valign="top" width="56%"><b><font face="Arial,Helvetica">Surface
+Pressure
+Tendency&nbsp;</font></b></td>
+      <td valign="top" width="13%"><b><font face="Arial,Helvetica">float</font></b></td>
+      <td valign="top" width="14%"><b><font face="Arial,Helvetica">Pa/s</font></b></td>
+    </tr>
+    <tr>
+      <td valign="top" width="16%"><b><font face="Arial,Helvetica">u [I]</font></b></td>
+      <td valign="top" width="56%"><b><font face="Arial,Helvetica">U
+Windspeed</font></b></td>
+      <td valign="top" width="13%"><b><font face="Arial,Helvetica">float</font></b></td>
+      <td valign="top" width="14%"><b><font face="Arial,Helvetica">m/s</font></b></td>
+    </tr>
+    <tr>
+      <td valign="top" width="16%"><b><font face="Arial,Helvetica">v [I]</font></b></td>
+      <td valign="top" width="56%"><b><font face="Arial,Helvetica">V
+Windspeed</font></b></td>
+      <td valign="top" width="13%"><b><font face="Arial,Helvetica">float</font></b></td>
+      <td valign="top" width="14%"><b><font face="Arial,Helvetica">m/s</font></b></td>
+    </tr>
+    <tr>
+      <td valign="top" width="16%"><b><font face="Arial,Helvetica">tg
+[O]</font></b></td>
+      <td valign="top" width="56%"><b><font face="Arial,Helvetica">Ground
+Temperature</font></b></td>
+      <td valign="top" width="13%"><b><font face="Arial,Helvetica">float</font></b></td>
+      <td valign="top" width="14%"><b><font face="Arial,Helvetica">K</font></b></td>
+    </tr>
+    <tr>
+      <td valign="top" width="16%"><b><font face="Arial,Helvetica">ts
+[O]</font></b></td>
+      <td valign="top" width="56%"><b><font face="Arial,Helvetica">Surface
+Air
+Temperature</font></b></td>
+      <td valign="top" width="13%"><b><font face="Arial,Helvetica">float</font></b></td>
+      <td valign="top" width="14%"><b><font face="Arial,Helvetica">K</font></b></td>
+    </tr>
+    <tr>
+      <td valign="top" width="16%"><b><font face="Arial,Helvetica">shflx
+[O]</font></b></td>
+      <td valign="top" width="56%"><b><font face="Arial,Helvetica">Surface
+Sensible
+Heat Flux</font></b></td>
+      <td valign="top" width="13%"><b><font face="Arial,Helvetica">float</font></b></td>
+      <td valign="top" width="14%"><b><font face="Arial,Helvetica">W/m2</font></b></td>
+    </tr>
+    <tr>
+      <td valign="top" width="16%"><b><font face="Arial,Helvetica">lhflx
+[O]</font></b></td>
+      <td valign="top" width="56%"><b><font face="Arial,Helvetica">Surface
+Latent
+Heat Flux</font></b></td>
+      <td valign="top" width="13%"><b><font face="Arial,Helvetica">float</font></b></td>
+      <td valign="top" width="14%"><b><font face="Arial,Helvetica">W/m2</font></b></td>
+    </tr>
+  </tbody>
+</table>
+</p>
+<p><font size="-1">This document last updated February 5, 2003.</font>
+<br>
+<font size="-1">Send comments to&nbsp; <a
+ href="mailto:scam@cgd.ucar.edu">scam@cgd.ucar.edu.</a></font>
+</p>
+</body>
+</html>

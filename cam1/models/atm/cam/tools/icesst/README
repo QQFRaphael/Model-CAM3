@@ -1,0 +1,107 @@
+This document describes how to build CAM-readable SST and sea ice
+concentration boundary datasets at an arbitrary resolution.  Two
+Fortran-based executables are required to complete the process.  The first
+(regrid) area averages or linearly interpolates input data to a target grid.
+The second (bcgen) computes a climatology and modifies monthly mean values to
+produce mid-month values such that linear time interpolation (e.g. as done in
+a model) will reproduce the monthly means.  Algorithms devised by Karl Taylor
+of PCMDI are used to accomplish these tasks.  His descriptions of these
+algorithms are included as Fortran comments in the file bcgen/bcgen.f90.  The
+final product is two boundary condition netcdf files suitable for input to
+CAM.  One contains climatological mid-month SST values and ice
+concentrations, and the other a multi-year time series of mid-month values of
+these quantities.
+
+Two netcdf files containing SST and sea ice concentration data, respectively,
+are required input to start the process.  The data are on a one-degree grid,
+and were created by Jim Hurrell and Dennis Shea of NCAR's Climate Analysis
+Section.  These input data contain monthly averaged values for some number of
+years.  Values over land are interpolated, so no land mask is required.  The
+files provided with this distribution are
+MODEL.had+oiv2.sst.mnly.49-01.unf.nc and
+MODEL.had+oiv2.ice.mnly.49-01.unf.nc.
+
+The codes have been tested on Linux, AIX, and IRIX systems.  In addition to
+an f90 compiler (pgf90 or lf95 on a PC) and gnumake, it is assumed that
+netcdf and ncl libraries are available.  ncl is only needed to generate the
+template netcdf file for regridding at the target resolution.  An example
+template file (regrid.T5.nc) is included in this distribution, so users
+without access to ncl can generate their own template files using some other
+mechanism.  If netcdf does not live in the default location of /usr/local,
+gnumake macros LIB_NETCDF (for libnetcdf.a) and INC_NETCDF (for netcdf.inc)
+need to be set either in the Makefile directly or as environment variables.
+
+An example session containing the commands needed to build a T5 dataset on a
+Linux PC are given next, followed by a description of what each of the
+commands does.  On Linux systems, lf95 is the default compiler.  pgf90 can
+also be used.  To do so, set USER_FC=pgf90, and change the definition of r16
+in regrid/precision.f90 to selected_real_kind(12).  The latter change is
+needed because pgf90 does not allow a real*16 data type.
+
+gmake
+cd regrid
+REGRID.pl T5
+./regrid -i MODEL.had+oiv2.ice.mnly.49-01.unf.nc -s \
+            MODEL.had+oiv2.sst.mnly.49-01.unf.nc -o regrid.T5.nc -v
+cp regrid.T5.nc ../bcgen
+cd ../bcgen
+./bcgen < namelist.T5
+
+
+An elaboration on the above steps follows.
+
+The first command (gmake) builds required executables in subdirectories
+regrid/ and bcgen/.
+
+"REGRID.pl T5" builds a template netcdf file named regrid.T5.nc, where T5 is
+the horizontal resolution.  Other resolutions supported by REGRID.pl are T21,
+T31, T42, T63, T85, T170, 10by15, 4by5, 2by2.5, and 1by1.25.  Non-supported
+resolutions will require modification of REGRID.pl (a perl script), but this
+is easy to figure out even if you don't know perl.
+
+The command "./regrid -i ..." converts the 1-degree data to the output grid.
+For resolutions coarser than the 1-degree input, by default the data are
+converted using area averaging, and finer resolutions default to linear
+interpolation.  These defaults can be overridden via a command-line argument
+(-l for linear, -a for area averaging).  If running in verbose mode (-v
+included on command line), points with both ice fraction greater than 50% and
+SST greater than 6 deg. C are printed.  This is only a diagnostic and not
+necessarily an indication of a problem.  After running regrid, the file
+regrid.<resolution>.nc will contain SST and ice concentration data at the
+desired output resolution.  If the code aborts with the message:
+
+ NC_UNLIMITED size already in use
+
+it usually means that the output file already has data in it at the target
+resolution.  To fix it, just recreate the template file with the command
+"REGRID.pl <resolution>".
+
+The last step (bcgen < namelist.T5) creates the climatological mid-month
+values and multi-year time series boundary data.  To run this code, first
+copy or link regrid.<resolution>.nc into the directory ../bcgen.  The file
+driver.f90 contains descriptions of the namelist variables.  Example
+namelists are provided for T5 and T42 resolutions.  The only reason
+resolution-specific namelists are used here is that the output file from
+regrid (one of the namelist items) has horizontal resolution embedded in its
+name.  At T42 one might for example run:
+
+./bcgen < namelist.T42
+
+In this example, output files outfilclim.T42.nc and outfilamip.T42.nc will
+contain the CAM-readable boundary condition SSTs (variable SST_cpl) and ice
+concentrations (variable ice_cov).  Versions of these variables prior to
+modification for retaining the monthly mean via linear interpolation are
+included in these files.  The variable names have "_prediddle" appended.
+
+The file namelist.T42.oldtt is provided to enable bit-for-bit reproducibility
+with already-existing datasets.  README.bfb lists the sequence of commands
+necessary to accomplish this.
+
+One important note on the climatological averaging period.  In general the
+namelist variables defining it should NOT change from 1982-2001.  The code
+checks for this and errors out if the values are set inappropriately.  It
+also prints a message explaining how to change the climatological averaging
+period if the user really wishes to do so.
+
+Jim Rosinski, NCAR
+April 16, 2003

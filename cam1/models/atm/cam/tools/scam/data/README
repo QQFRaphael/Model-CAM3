@@ -1,0 +1,4 @@
+This directory will be used by the configure script to link all
+datasets needed for SCAM.  Make sure the environment variable
+CSMDATA is set to point to the root location of SCAM datasets 
+before running the configure script (See INSTALL file).
